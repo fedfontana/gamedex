@@ -14,6 +14,8 @@ const config = {
 			'$types/*': 'src/types/*',
 			'$components': 'src/components',
 			'$components/*': 'src/components/*',
+			'$models': 'src/models',
+			'$models/*': 'src/models/*',
 		}
 	}
 };

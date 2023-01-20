@@ -1,80 +1,104 @@
 <script lang="ts">
-	const PLATFORMS = [
-		'PS5',
-		'PS4',
-		'PS3',
-		'PS2',
-		'PS1',
-		'PSP',
-		'PSVita',
-		'XBX',
-		'XB1',
-		'XB360',
-		'Steam',
-		'Epic Store',
-		'PC',
-		'DS',
-		'3DS',
-		'Switch',
-		'Wii',
-		'WiiU',
-		'GameCube',
-		'SNES',
-		'NES',
-		'GBA',
-		'GBC',
-		'Nintendo64',
-		'iOS',
-		'android',
-		'Sega Genesis',
-		'Atari 2600'
-	] as const;
-	type Platform = (typeof PLATFORMS)[number];
+	import { enhance } from '$app/forms';
+	import { STATUSES, PLATFORMS } from '$models/Game';
 
-	const STATUSES = [
-		'backlog',
-		'watchlist',
-		'wishlist',
-		'retired',
-		'playing',
-		'paused',
-		'finished'
-	] as const;
-	type Status = (typeof STATUSES)[number];
+	import type { FormFailureResponse } from './proxy+page.server';
+	export let form: FormFailureResponse;
+
+	$: console.log(form);
 </script>
 
+<!-- 
+	TODO: show something when the game is created
+	TODO: sometimes sending data too many times makes it so that the old values are not filled in?
+	TODO: add reset button?
+ -->
 
-<h2 class="mx-auto text-3xl font-semibold w-fit mb-12">Create new game</h2>
-<form class="flex flex-col gap-6 w-10/12 mx-auto">
-	<div class="flex flex-row gap-6 items-center justify-center">
+<form method="POST" use:enhance class="flex flex-col gap-6 w-10/12 mx-auto">
+	<h2 class="mx-auto text-3xl font-semibold w-fit mb-6">Create new game</h2>
+	<div class="flex flex-row gap-6 items-baseline justify-center">
 		<div class="form-control w-full max-w-md">
 			<label class="label" for="name">
 				<span class="label-text"> game name </span>
 			</label>
-			<input id="name" type="text" placeholder="Name" class="input input-bordered" />
+			<input
+				name="name"
+				type="text"
+				placeholder="Name"
+				class="input input-bordered {form?.errors?.name ? 'input-error' : ''}"
+				value={form?.values?.name ?? ''}
+				required
+			/>
+			{#if form?.errors?.name}
+				<label class="label flex flex-col items-baseline" for="name">
+					{#each form.errors.name as error}
+						<span class="label-text text-error">{error}</span>
+					{/each}
+				</label>
+			{/if}
 		</div>
 
 		<div class="form-control w-full max-w-md">
 			<label class="label" for="short_name">
 				<span class="label-text"> short game name </span>
 			</label>
-			<input id="short_name" type="text" placeholder="Short name" class="input input-bordered" />
+			<input
+				name="short_name"
+				type="text"
+				placeholder="Short name"
+				class="input input-bordered {form?.errors?.short_name ? 'input-error' : ''}"
+				value={form?.values?.short_name ?? ''}
+				required
+			/>
+			{#if form?.errors?.short_name}
+				<label class="label flex flex-col items-baseline" for="short_name">
+					{#each form.errors.short_name as error}
+						<span class="label-text text-error">{error}</span>
+					{/each}
+				</label>
+			{/if}
 		</div>
 	</div>
 
-	<div class="flex flex-row gap-4 items-center justify-center">
+	<div class="flex flex-row gap-4 items-baseline justify-center">
 		<div class="form-control w-full max-w-xs">
 			<label class="label" for="art_url">
 				<span class="label-text"> Art url </span>
 			</label>
-			<input id="art_url" type="text" placeholder="Art url" class="input input-bordered" />
+			<input
+				name="art_url"
+				type="text"
+				placeholder="Art url"
+				class="input input-bordered {form?.errors?.art_url ? 'input-error' : ''}"
+				value={form?.values?.art_url ?? ''}
+			/>
+			{#if form?.errors?.art_url}
+				<label class="label flex flex-col items-baseline" for="art_url">
+					{#each form.errors.art_url as error}
+						<span class="label-text text-error">{error}</span>
+					{/each}
+				</label>
+			{/if}
 		</div>
 
 		<div class="form-control w-full max-w-xs">
 			<label class="label" for="developer">
 				<span class="label-text"> Developer </span>
 			</label>
-			<input id="developer" type="text" placeholder="Developer" class="input input-bordered" />
+			<input
+				name="developer"
+				type="text"
+				placeholder="Developer"
+				class="input input-bordered {form?.errors?.developer ? 'input-error' : ''}"
+				value={form?.values?.developer ?? ''}
+			/>
+			{#if form?.errors?.developer}
+				<label class="label flex flex-col items-baseline" for="developer">
+					{#each form.errors.developer as error}
+						<span class="label-text text-error">{error}</span>
+					{/each}
+				</label>
+			{/if}
 		</div>
 
 		<div class="form-control w-full max-w-xs">
@@ -82,35 +106,65 @@
 				<span class="label-text"> Release date </span>
 			</label>
 			<input
-				id="release_date"
+				name="release_date"
 				type="date"
 				placeholder="Release date"
-				class="input input-bordered"
+				class="input input-bordered {form?.errors?.release_date ? 'input-error' : ''}"
+				value={form?.values?.release_date ?? ''}
 			/>
+			{#if form?.errors?.release_date}
+				<label class="label flex flex-col items-baseline" for="release_date">
+					{#each form.errors.release_date as error}
+						<span class="label-text text-error">{error}</span>
+					{/each}
+				</label>
+			{/if}
 		</div>
 	</div>
 
-	<div class="flex flex-row gap-4 items-center justify-center">
+	<div class="flex flex-row gap-4 items-baseline justify-center">
 		<div class="form-control w-full max-w-xs">
 			<label class="label" for="status">
 				<span class="label-text"> Status </span>
 			</label>
-			<select id="status" name="Status" class="select select-bordered">
+			<select
+				name="status"
+				class="select select-bordered {form?.errors?.status ? 'select-error' : ''}"
+				value={form?.values?.status ?? STATUSES[0]}
+			>
 				{#each STATUSES as status}
 					<option value={status}> {status} </option>
 				{/each}
 			</select>
+			{#if form?.errors?.status}
+				<label class="label flex flex-col items-baseline" for="status">
+					{#each form.errors.status as error}
+						<span class="label-text text-error">{error}</span>
+					{/each}
+				</label>
+			{/if}
 		</div>
 
 		<div class="form-control w-full max-w-xs">
 			<label class="label" for="platform">
 				<span class="label-text"> Platform </span>
 			</label>
-			<select id="platform" name="Platform" class="select select-bordered">
+			<select
+				name="platform"
+				class="select select-bordered {form?.errors?.platform ? 'select-error' : ''}"
+				value={form?.values?.platform ?? PLATFORMS[0]}
+			>
 				{#each PLATFORMS as platform}
 					<option value={platform}> {platform} </option>
 				{/each}
 			</select>
+			{#if form?.errors?.platform}
+				<label class="label flex flex-col items-baseline" for="platform">
+					{#each form.errors.platform as error}
+						<span class="label-text text-error">{error}</span>
+					{/each}
+				</label>
+			{/if}
 		</div>
 
 		<div class="form-control w-full max-w-xs">
@@ -118,16 +172,24 @@
 				<span class="label-text"> Play time </span>
 			</label>
 			<input
-				id="play_time"
+				name="play_time"
 				type="number"
 				min={0}
 				placeholder="Play time"
-				class="input input-bordered"
+				class="input input-bordered {form?.errors?.play_time ? 'input-error' : ''}"
+				value={form?.values?.plat_time ?? 0}
 			/>
+			{#if form?.errors?.play_time}
+				<label class="label flex flex-col items-baseline" for="play_time">
+					{#each form.errors.play_time as error}
+						<span class="label-text text-error">{error}</span>
+					{/each}
+				</label>
+			{/if}
 		</div>
 	</div>
 
-    <div class="w-10/12 mx-auto flex justify-end">
-        <button type="submit" class="btn btn-primary max-w-xs">Create game</button>
-    </div>
+	<div class="w-10/12 mx-auto flex justify-end">
+		<button type="submit" class="btn btn-primary max-w-xs">Create game</button>
+	</div>
 </form>

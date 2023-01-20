@@ -34,6 +34,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"daisyui": "^2.47.0"
+		"daisyui": "^2.47.0",
+		"zod": "^3.20.2"
 	}
 }
