@@ -3,7 +3,7 @@
 	import BoxIcon from './BoxIcon.svelte';
 	import CalendarIcon from './CalendarIcon.svelte';
 	import ConsoleIcon from './ConsoleIcon.svelte';
-    import Console from './ConsoleIcon.svelte';
+	import Console from './ConsoleIcon.svelte';
 	import TimerIcon from './TimerIcon.svelte';
 	export let data: PageData;
 	const { game } = data;
@@ -50,31 +50,37 @@
 				</span>
 			{/if}
 		</h2>
+
+		<!-- TODO fix this and add it back -->
+		<!-- {#if game.release_date && game.release_date > new Date()}
+			<Countdown end_time={game.release_date} />
+		{/if} -->
+		<!-- 
+			TODO: add 3 tabs with:
+			- useful links
+			- notes
+			- dlcs
+		 -->
 	</div>
 
 	<!-- right panel -->
 	<div class="flex flex-col gap-3 bg-base-300 shadow-xl p-4 rounded-xl flex-[2]">
 		<h3 class="text-lg font-semibold">Data</h3>
 		<span class="flex flex-row gap-1 items-center">
-            <ConsoleIcon size="30" />
+			<ConsoleIcon size="30" />
 			Platform: {game.platform}
 		</span>
 		<span class="flex flex-row gap-1 items-center">
-            <TimerIcon size="30" />
+			<TimerIcon size="30" />
 			Play time: {game.play_time} hour(s)
 		</span>
 		<span class="flex flex-row gap-1 items-center">
-            <BoxIcon size="30" />
+			<BoxIcon size="30" />
 			Status: {game.status}
 		</span>
 		<span class="flex flex-row gap-1 items-center">
-            <CalendarIcon size="30" />
-			Release date: {game.release_date?.toDateString() ?? "unknown"}
+			<CalendarIcon size="30" />
+			Release date: {game.release_date?.toDateString() ?? 'unknown'}
 		</span>
 	</div>
-
-	<!-- central part -->
-	<!-- {#if game.release_date && game.release_date > new Date()}
-        <Countdown end_time={game.release_date} />
-	{/if} -->
 </div>
