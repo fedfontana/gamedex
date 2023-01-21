@@ -25,7 +25,7 @@
 	<div class="flex flex-col gap-4 flex-[2]">
 		<!-- top part -->
 		<div class="max-w-xs rounded-xl overflow-hidden">
-			<img src={game.art_url} alt="{game.name} art" class="w-full" />
+			<img src={game.art_url ?? 'https://static-cdn.jtvnw.net/ttv-boxart/498566-500x640.jpg'} alt="{game.name} art" class="w-full" />
 		</div>
 		<div class="flex flex-col gap-2 w-fit mx-auto">
 			<button
