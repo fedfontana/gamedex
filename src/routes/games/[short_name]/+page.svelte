@@ -46,7 +46,7 @@
 			{game.name}
 			{#if game.developer}
 				<span class="text-2xl font-semibold text-gray-500">
-					by {game.developer ?? 'unknown developer'}
+					by {game.developer}
 				</span>
 			{/if}
 		</h2>
