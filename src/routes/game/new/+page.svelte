@@ -1,16 +1,15 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import Alert from '$components/Alert.svelte';
 	import { STATUSES, PLATFORMS } from '$models/Game';
-
 	import type { CreateGameFormResponse } from './proxy+page.server';
-	export let form: CreateGameFormResponse;
 
-	$: console.log("Form: ", form);
+	export let form: CreateGameFormResponse;
 
 	function form_string_to_int(v: any, default_value: number | undefined = 0) {
 		let parsed = parseInt(v as string);
 		if (isNaN(parsed)) return default_value;
-		console.log("Returning: ", parsed);
+		console.log('Returning: ', parsed);
 		return parsed;
 	}
 </script>
@@ -209,3 +208,13 @@
 		<button type="submit" class="btn btn-primary max-w-xs">Create game</button>
 	</div>
 </form>
+
+
+<!-- TODO: fix bug, after one try has been made, the error variant does not work for subsequent errors (resets on success) -->
+{#if form}
+	{#if (form?.form_errors?.length ?? 0) > 0 || Object.keys(form?.errors ?? {}).length > 0}
+		<Alert title="Error creating the game" kind="error" />
+	{:else}
+		<Alert title="Game created successfully" kind="success" />
+	{/if}
+{/if}
