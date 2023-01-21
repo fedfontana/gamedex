@@ -2,13 +2,10 @@
 
 Tech stack:
 - sveltekit
-    - with lib to handle forms
-    - zod for validation
+    - zod
     - typescript
-    - vitest
-    - infinite scrolling lib
     - tailwind
-- trpc
+    - daisy ui
 - db
     - mysql
     - local development on docker
@@ -16,18 +13,18 @@ Tech stack:
     - prisma
 
 ## V 0.1.0
-- Games
-    - Create
-    - List
-    - Delete
-    - select a single one
+- [X] Games
+    - [X] Create
+    - [X] List
+    - [X] Delete
+    - [X] select a single one
 
 ## V 0.2.0
 - single user login with jwt
 - edit games
   
 ## V 0.3.0
-- dark mode
+- theme switch
 - filter list
 - sort list
 
