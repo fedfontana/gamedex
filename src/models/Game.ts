@@ -70,10 +70,7 @@ export const Game = z.object({
     ),
     release_date: z.preprocess(
         v => v === "" ? null : v,
-        z.string()
-            .length(10, "Release date must be a valid date")
-            .trim()
-            .nullable(),
+        z.coerce.date().nullable()
     ),
     status: z.enum(STATUSES),
     platform: z.enum(PLATFORMS),
