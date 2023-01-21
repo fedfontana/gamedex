@@ -2,10 +2,17 @@
 	import { enhance } from '$app/forms';
 	import { STATUSES, PLATFORMS } from '$models/Game';
 
-	import type { FormFailureResponse } from './proxy+page.server';
-	export let form: FormFailureResponse;
+	import type { CreateGameFormResponse } from './proxy+page.server';
+	export let form: CreateGameFormResponse;
 
 	$: console.log(form);
+
+	function form_string_to_int(v: any, default_value: number | undefined = 0) {
+		let parsed = parseInt(v as string);
+		if (isNaN(parsed)) return default_value;
+		console.log("Returning: ", parsed);
+		return parsed;
+	}
 </script>
 
 <!-- 
@@ -16,6 +23,15 @@
 
 <form method="POST" use:enhance class="flex flex-col gap-6 w-10/12 mx-auto">
 	<h2 class="mx-auto text-3xl font-semibold w-fit mb-6">Create new game</h2>
+	{#if form?.form_errors !== undefined}
+		<div class="flex flex-col items-center gap-2">
+			{#each form?.form_errors as error}
+				<span class="text-error">
+					{error}
+				</span>
+			{/each}
+		</div>
+	{/if}
 	<div class="flex flex-row gap-6 items-baseline justify-center">
 		<div class="form-control w-full max-w-md">
 			<label class="label" for="name">
@@ -177,7 +193,7 @@
 				min={0}
 				placeholder="Play time"
 				class="input input-bordered {form?.errors?.play_time ? 'input-error' : ''}"
-				value={form?.values?.plat_time ?? 0}
+				value={form_string_to_int(form?.values?.play_time)}
 			/>
 			{#if form?.errors?.play_time}
 				<label class="label flex flex-col items-baseline" for="play_time">
