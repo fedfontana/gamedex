@@ -58,6 +58,7 @@ export const Game = z.object({
         v => v === "" ? null : v,
         z.string()
             .url("Art url must be a valid URL")
+            .max(256, "Art url must be shorter than 256 characters")
             .nullable(),
     ),
     developer: z.preprocess(
