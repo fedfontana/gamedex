@@ -70,10 +70,12 @@
 			<ConsoleIcon size="30" />
 			Platform: {game.platform}
 		</span>
-		<span class="flex flex-row gap-1 items-center">
-			<TimerIcon size="30" />
-			Play time: {game.play_time} hour(s)
-		</span>
+		{#if game.play_time > 0}
+			<span class="flex flex-row gap-1 items-center">
+				<TimerIcon size="30" />
+				Play time: {game.play_time} hour(s)
+			</span>
+		{/if}
 		<span class="flex flex-row gap-1 items-center">
 			<BoxIcon size="30" />
 			Status: {game.status}
