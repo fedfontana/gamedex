@@ -5,7 +5,7 @@
 </script>
 
 <div class="card lg:card-side bg-base-300 shadow-xl">
-	<figure>
+	<figure class="w-3/12">
 		<img
 			src={game.art_url || 'https://static-cdn.jtvnw.net/ttv-boxart/498566-500x640.jpg'}
 			alt="Album"

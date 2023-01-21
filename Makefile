@@ -4,7 +4,7 @@ MYSQL_USER=gamedex
 MYSQL_PASSWORD=gamedex_password
 MYSQL_CONTAINER_NAME=db
 
-.PHONY: up restore dump
+.PHONY: up restore dump logs
 up:
 	docker run --name $(MYSQL_CONTAINER_NAME) \
 		-v mysql_data:/var/lib/mysql \
@@ -14,6 +14,9 @@ up:
 		-e MYSQL_PASSWORD=$(MYSQL_PASSWORD) \
 		-p 3306:3306 \
 		-d mysql:8
+
+logs:
+	docker logs $(MYSQL_CONTAINER_NAME) -f
 
 down:
 	docker stop $(MYSQL_CONTAINER_NAME)
