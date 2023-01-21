@@ -10,7 +10,7 @@
 			<div class="btn btn-ghost btn-circle avatar">
 				<div class="w-10 rounded-full">
 					<img src="https://placeimg.com/80/80/people" alt="propic" />
-				</div>
+				</div>	
 			</div>
 			<ul class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
 				<li>

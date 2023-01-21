@@ -5,7 +5,7 @@
 	import type { CreateGameFormResponse } from './proxy+page.server';
 	export let form: CreateGameFormResponse;
 
-	$: console.log(form);
+	$: console.log("Form: ", form);
 
 	function form_string_to_int(v: any, default_value: number | undefined = 0) {
 		let parsed = parseInt(v as string);

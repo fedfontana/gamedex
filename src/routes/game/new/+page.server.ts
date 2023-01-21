@@ -7,7 +7,7 @@ import { Prisma } from "@prisma/client";
 export const actions: Actions = {
 	default: async ({ request }): Promise<CreateGameFormResponse> => {
 		const formData = Object.fromEntries(await request.formData());
-		console.log(formData);
+		console.log("Form data: ", formData);
 
 		try {
 			const game = Game.parse(formData);
