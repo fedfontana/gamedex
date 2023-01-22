@@ -25,12 +25,13 @@ Tech stack:
   - [X] same component as add game
   
 ## V 0.3.0
-- theme switch
-- filter list
-- sort list
-- infinite scrolling in list
-- working search box
-- less ugly home page
+- [X] theme switch
+  - [ ] change its location
+- [ ] filter list
+- [ ] sort list
+- [ ] infinite scrolling in list
+- [ ] working search box in home
+- [ ] less ugly home page
 
 ## V 0.4.0
 - add game dlcs

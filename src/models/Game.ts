@@ -83,3 +83,14 @@ export const Game = z.object({
 });
 
 export type Game = z.infer<typeof Game>;
+
+// Game = {
+//     name: string,
+//     short_name: string,
+//     art_url: url?,
+//     developer: string?,
+//     release_date: Date?,
+//     status: Status,
+//     platform: Platform?,
+//     play_time: int
+// }
