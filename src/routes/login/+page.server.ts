@@ -12,7 +12,6 @@ const LoginSchema = z.object({
 
 export const load: ServerLoad = async ({ cookies, url }) => {
 	if(is_logged_in(cookies)) {
-		console.log("Redirecting to next cause you're already logged in")
 		throw redirect(307, url.searchParams.get('next') ?? '/')
 	}
 }
@@ -23,13 +22,11 @@ export const actions: Actions = {
 
 		const rFormData = await request.formData();
 		const formData = Object.fromEntries(rFormData);
-		console.log("Form data: ", formData);
 
 		try {
 			const login_data = LoginSchema.parse(formData);
 
 			if (login_data.username !== env.ADMIN_USERNAME || login_data.password !== env.ADMIN_PASSWORD) {
-				console.log(env.ADMIN_USERNAME,  env.ADMIN_PASSWORD, login_data);
 				return {
 					logged_in: false,
 					values: { username: login_data.username },

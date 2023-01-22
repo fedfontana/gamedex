@@ -7,11 +7,11 @@ export const DELETE: RequestHandler = async ({ params, cookies }) => {
         throw error(401, "Unauthorized");
     }
     
-    const game = await prisma.game.delete({
+    await prisma.game.delete({
         where: {
             short_name: params.short_name,
         }
     });
-    console.log("Deleted game with short name: ", params.short_name, " ==> ", game);
+
     return new Response()
 }

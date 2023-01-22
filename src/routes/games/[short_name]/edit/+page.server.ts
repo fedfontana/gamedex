@@ -21,19 +21,16 @@ export const actions: Actions = {
         }
 
         const formData = Object.fromEntries(await request.formData());
-        console.log("Form data: ", formData);
 
         try {
             const game = Game.parse(formData);
-            const new_game = await prisma.game.update({
+            await prisma.game.update({
                 where: {
                     //TODO handle no game with that short_name
                     short_name: game.short_name,
                 },
                 data: game,
             });
-            
-            console.log("Edited: ", new_game);
 
             return {
                 values: formData,

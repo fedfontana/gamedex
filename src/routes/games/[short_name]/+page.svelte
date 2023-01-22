@@ -61,10 +61,11 @@
 			<Countdown end_time={game.release_date} />
 		{/if} -->
 		<!-- 
-			TODO: add 3 tabs with:
+			TODO: add 4 tabs with:
 			- useful links
 			- notes
 			- dlcs
+			- events
 		 -->
 	</div>
 

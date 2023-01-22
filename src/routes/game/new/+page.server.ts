@@ -20,21 +20,18 @@ export const actions: Actions = {
 		}
 
 		const formData = Object.fromEntries(await request.formData());
-		console.log("Form data: ", formData);
 
 		try {
 			const game = Game.parse(formData);
-			const new_game = await prisma.game.create({
+			await prisma.game.create({
 				data: game,
 			});
-			console.log("Created game: ", new_game);
 
 			return {
 				values: formData,
 				errors: {},
 			}
 		} catch (err) {
-			//console.error("Kwestho e' errore", err);
 			if (err instanceof ZodError) {
 				console.error(err.flatten());
 				return {

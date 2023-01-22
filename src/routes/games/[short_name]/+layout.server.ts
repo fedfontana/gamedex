@@ -9,7 +9,6 @@ export const load: LayoutServerLoad = async ({ params }) => {
         },
     });
 
-    console.log("GAME RETURN: ", game);
     if (game === null) {
         throw error(404, {
             message: `Game with short name "${params.short_name}" not found`

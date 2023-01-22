@@ -28,21 +28,15 @@
 					class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52"
 				>
 					<li>
-						<button
-							on:click={() => {
-								console.log('Goint to the backlog page');
-							}}>Backlog</button
-						>
+						<a href="/games">Backlog</a>
 					</li>
 					<li>
 						<button
 							on:click={async () => {
 								const res = await fetch('/logout', { method: 'DELETE' });
 								if (res.ok) {
-									console.log('Logged out');
 									$is_logged_in = false;
 								} else {
-									console.error('Error while logging you out');
 									logout_error = true;
 								}
 							}}>Logout</button

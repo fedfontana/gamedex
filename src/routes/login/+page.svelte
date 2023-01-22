@@ -14,7 +14,6 @@
 	$: {
 		if (tried_login && form) {
 			if (form.logged_in) {
-				console.log('Setting store to: ', form.logged_in);
 				$is_logged_in = true;
 				setTimeout(() => {
 					goto(next);

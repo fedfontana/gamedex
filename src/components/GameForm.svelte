@@ -14,12 +14,10 @@
 	function form_string_to_int(v: any, default_value: number | undefined = 0) {
 		let parsed = parseInt(v as string);
 		if (isNaN(parsed)) return default_value;
-		console.log('Returning: ', parsed);
 		return parsed;
 	}
 
 	function date_to_input_date_format(date: string | Date | null | undefined) {
-		console.log("Called with input:", date);
 		if (date === null || date === undefined) return '';
 		let d = new Date(date);
 		let year = d.getFullYear();
@@ -31,7 +29,6 @@
 </script>
 
 <!-- 
-	TODO: show something when the game is created
 	TODO: sometimes sending data too many times makes it so that the old values are not filled in?
 	TODO: add reset button?
  -->

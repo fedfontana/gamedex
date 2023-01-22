@@ -55,3 +55,7 @@ Tech stack:
     - bottom right: calendar with next events, game releases, dlc releases, game events (calendar shows their pic?)
     - bottom left: infinite scrolling list of upcoming games (even the ones with "unsure" dates, like "1st quarter 2023")
     - top: last visited games
+
+
+## Idk when
+- global stores for the various types of alerts, with ability to show more than one alert at a time with no overlap
