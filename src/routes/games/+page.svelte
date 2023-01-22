@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { PLATFORMS, STATUSES } from '$models/Game';
+	import { PLATFORMS, STATUSES, type Platform, type Status } from '$models/Game';
 	import { slide } from 'svelte/transition';
 	import type { PageData } from './$types';
 	import GameCard from './GameCard.svelte';
@@ -8,10 +8,22 @@
 
 	export let data: PageData;
 
-	let show_sort = false;
-	let show_filter = false;
-	let show_status_filters = false;
-	let show_platform_filters = false;
+	const SORT_OPTIONS = ['name', 'release date', 'play time'] as const;
+	type SortOption = (typeof SORT_OPTIONS)[number];
+
+	let options = {
+		query: '',
+		sort_enabled: false,
+		sort_ascending: false,
+		sort_col: 'name' as SortOption,
+		show_filters: false,
+		show_status_filters: false,
+		status_filters: [] as Status[],
+		show_platform_filters: false,
+		platform_filters: [] as Platform[]
+	};
+
+	$: console.log(options);
 </script>
 
 <!-- TODO: filters/sort options dont get preserved (should probably bind them) -->
@@ -39,7 +51,13 @@
 			<form method="POST" use:enhance>
 				<div class="form-control">
 					<div class="input-group">
-						<input type="text" name="query" placeholder="Search..." class="input input-bordered" />
+						<input
+							type="text"
+							name="query"
+							placeholder="Search..."
+							class="input input-bordered"
+							bind:value={options.query}
+						/>
 						<button class="btn btn-square" type="submit">
 							<SearchIcon />
 						</button>
@@ -83,25 +101,31 @@
 							type="checkbox"
 							name="sort_enabled"
 							class="toggle toggle-primary"
-							bind:checked={show_sort}
+							bind:checked={options.sort_enabled}
 						/>
 					</label>
 				</div>
-				{#if show_sort}
+				{#if options.sort_enabled}
 					<div class="w-10/12 mr-auto">
 						<div class="form-control" transition:slide>
 							<label class="label cursor-pointer justify-start gap-3">
-								<input type="checkbox" name="sort_ascending" class="toggle toggle-primary" />
+								<input
+									type="checkbox"
+									name="sort_ascending"
+									class="toggle toggle-primary"
+									bind:checked={options.sort_ascending}
+								/>
 								<span class="label-text"> Ascending </span>
 							</label>
 						</div>
 
-						{#each ['name', 'release date', 'play time'] as sort_option}
+						{#each SORT_OPTIONS as sort_option}
 							<div class="form-control" transition:slide>
 								<label class="label cursor-pointer justify-start gap-3">
 									<input
 										type="radio"
 										name="sort_col"
+										bind:group={options.sort_col}
 										value={sort_option}
 										class="radio checked:bg-primary-focus"
 									/>
@@ -119,66 +143,68 @@
 						<span class="label-text text-xl"> Filter results </span>
 						<input
 							type="checkbox"
-							name="filter_enabled"
+							name="show_filters"
 							class="toggle toggle-primary"
-							bind:checked={show_filter}
+							bind:checked={options.show_filters}
 						/>
 					</label>
 				</div>
-				{#if show_filter}
+				{#if options.show_filters}
 					<div class="w-10/12 mr-auto">
 						<!-- BEGIN STATUS FILTERS -->
-						<div class="form-control">
+						<div class="form-control" transition:slide>
 							<label class="label cursor-pointer">
 								<span class="label-text text-xl"> Status filters </span>
 								<input
 									type="checkbox"
 									name="status_filters_enabled"
 									class="toggle toggle-primary"
-									bind:checked={show_status_filters}
+									bind:checked={options.show_status_filters}
 								/>
 							</label>
 						</div>
 
-						{#if show_status_filters}
-							{#each STATUSES as status}
-								<div class="form-control" transition:slide>
-									<label class="label cursor-pointer justify-start gap-3">
-										<input
-											type="checkbox"
-											group="status_filters"
-											value={status}
-											class="checkbox checkbox-primary"
-										/>
-										<span class="label-text"> {status} </span>
-									</label>
-								</div>
-							{/each}
+						{#if options.show_status_filters}
+								{#each STATUSES as status}
+									<div class="form-control" transition:slide>
+										<label class="label cursor-pointer justify-start gap-3">
+											<input
+												type="checkbox"
+												name="status_filters"
+												bind:group={options.status_filters}
+												value={status}
+												class="checkbox checkbox-primary"
+											/>
+											<span class="label-text"> {status} </span>
+										</label>
+									</div>
+								{/each}
 						{/if}
 						<!-- END STATUS FILTERS -->
 
 						<!-- BEGIN PLATFORM FILTERS -->
-						<div class="form-control">
+						<div class="form-control" transition:slide>
 							<label class="label cursor-pointer">
 								<span class="label-text text-xl"> Platform filters </span>
 								<input
 									type="checkbox"
 									name="platform_filters_enabled"
 									class="toggle toggle-primary"
-									bind:checked={show_platform_filters}
+									bind:checked={options.show_platform_filters}
 								/>
 							</label>
 						</div>
 
-						{#if show_platform_filters}
+						{#if options.show_platform_filters}
 							<div class="grid grid-cols-2">
 								{#each PLATFORMS as platform}
 									<div class="form-control" transition:slide>
 										<label class="label cursor-pointer justify-start gap-3">
 											<input
 												type="checkbox"
-												group="platform_filters"
+												name="platform_filters"
 												value={platform}
+												bind:group={options.platform_filters}
 												class="checkbox checkbox-primary"
 											/>
 											<span class="label-text"> {platform} </span>
