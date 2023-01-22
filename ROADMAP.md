@@ -22,7 +22,7 @@ Tech stack:
 ## V 0.2.0
 - [X] single user login with jwt
 - [X] edit games
-  - [ ] same component as add game
+  - [X] same component as add game
   
 ## V 0.3.0
 - theme switch

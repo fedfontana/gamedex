@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Alert from '$components/Alert.svelte';
+	import { DAISYUI_THEMES } from '$src/constants';
 	import { is_logged_in } from '$src/stores';
 	let logout_error = false;
 </script>
@@ -13,13 +14,19 @@
 			<input type="text" placeholder="Search" class="input input-bordered w-80" />
 		</div>
 
+		<select data-choose-theme value="forest" class="select select-accent">
+			{#each DAISYUI_THEMES as theme}
+				<option value={theme}> {theme} </option>
+			{/each}
+		</select>
+
 		{#if $is_logged_in}
 			<div class="dropdown dropdown-end">
 				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 				<!-- svelte-ignore a11y-label-has-associated-control -->
 				<label tabindex="0" class="btn btn-ghost btn-circle avatar">
 					<div class="w-10 rounded-full">
-						<img src="/icon.png" alt="Admin's propics"/>
+						<img src="/icon.png" alt="Admin's propics" />
 					</div>
 				</label>
 				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
