@@ -1,11 +1,23 @@
 import { Game } from "$models/Game";
-import type { Actions } from "@sveltejs/kit";
+import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 import { ZodError } from "zod";
 import prisma from "$db";
 import { Prisma } from "@prisma/client";
+import { is_logged_in } from "$src/utils/user";
+
+export const load: ServerLoad = async ({ cookies }) => {
+	if(!is_logged_in(cookies)) {
+		throw redirect(307, "/login?next=/game/new");
+	}
+}
+
 
 export const actions: Actions = {
-	default: async ({ request }): Promise<CreateGameFormResponse> => {
+	default: async ({ request, cookies }): Promise<CreateGameFormResponse> => {
+		if(!is_logged_in(cookies)) {
+			throw error(401, "Unauthorized");
+		}
+
 		const formData = Object.fromEntries(await request.formData());
 		console.log("Form data: ", formData);
 
