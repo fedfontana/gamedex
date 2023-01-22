@@ -22,13 +22,21 @@
 		show_platform_filters: false,
 		platform_filters: [] as Platform[]
 	};
-
-	$: console.log(options);
 </script>
 
 <!-- TODO: filters/sort options dont get preserved (should probably bind them) -->
 <!-- TODO: add filter rest/ full reset/ sort reset -->
 <!-- TODO: subsections for each platform manufacturer in filters -->
+<!-- TODO: reactive game grid -->
+<!-- TODO: fix sidebar being in the middle -->
+<!-- TODO: add svelte:head with title in the whole website -->
+<!-- TODO: add special screen if no results are found -->
+<!-- TODO: add screen with button to add a game with that short_name if the user lands on /games/<short_name>[/edit] (only if logged in ofc) -->
+<!-- TODO: change filter icon and put it on the right -->
+<!-- TODO: add animation when new games pop up in the list (scale? fade? fly? ) -->
+<!-- TODO: move theme selection -->
+<!-- TODO: add new custom personal theme -->
+<!-- TODO: add license -->
 
 <div class="drawer">
 	<input id="filters-drawer" type="checkbox" class="drawer-toggle" />
@@ -55,7 +63,7 @@
 							type="text"
 							name="query"
 							placeholder="Search..."
-							class="input input-bordered"
+							class="input input-bordered flex-grow"
 							bind:value={options.query}
 						/>
 						<button class="btn btn-square" type="submit">
