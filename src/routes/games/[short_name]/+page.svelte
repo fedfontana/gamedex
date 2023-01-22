@@ -5,8 +5,8 @@
 	import BoxIcon from './BoxIcon.svelte';
 	import CalendarIcon from './CalendarIcon.svelte';
 	import ConsoleIcon from './ConsoleIcon.svelte';
-	import Console from './ConsoleIcon.svelte';
 	import TimerIcon from './TimerIcon.svelte';
+
 	export let data: PageData;
 	const { game } = data;
 

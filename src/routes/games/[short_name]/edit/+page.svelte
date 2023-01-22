@@ -8,6 +8,7 @@
     export let data: PageData;
 
     const { game } = data;
+    console.log(data);
 
 	export let form: EditGameFormResponse;
 

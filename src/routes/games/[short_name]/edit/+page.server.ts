@@ -6,24 +6,10 @@ import prisma from "$db";
 import { Prisma } from "@prisma/client";
 
 
-export const load: ServerLoad = async ({ cookies, url, params }) => {
+export const load: ServerLoad = async ({ cookies, url }) => {
     if (!is_logged_in(cookies)) {
         // url.pathname === '/games/<short_name>/edit"
         throw redirect(307, `/login?next=${url.pathname}`);
-    }
-
-    const game = await prisma.game.findUnique({
-        where: {
-            short_name: params.short_name,
-        },
-    });
-
-    if(!game) {
-        throw error(404, `Game with short name "${params.short_name}" not found`)
-    }
-
-    return {
-        game,
     }
 }
 
