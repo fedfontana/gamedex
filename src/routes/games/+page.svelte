@@ -37,6 +37,7 @@
 <!-- TODO: move theme selection -->
 <!-- TODO: add new custom personal theme -->
 <!-- TODO: add license -->
+<!-- TODO: change selected text color based on theme? -->
 
 <div class="drawer">
 	<input id="filters-drawer" type="checkbox" class="drawer-toggle" />
