@@ -1,13 +1,21 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import Alert from '$components/Alert.svelte';
-	import { onMount } from 'svelte';
+	import { is_logged_in } from '$src/stores';
 	import type { LoginFormResponse } from './proxy+page.server';
 
 	export let form: LoginFormResponse;
 
-    // let user_input_elem;
-    // onMount(() => user_input_elem.focus());
+	let tried_login = false;
+
+	$: {
+		if (tried_login && form) {
+			if(form.logged_in) {
+				console.log('Setting store to: ', form.logged_in);
+				$is_logged_in = true;
+			}
+		}
+	}
 </script>
 
 <form method="POST" use:enhance class="flex flex-col gap-12 w-[28rem] mx-auto">
@@ -36,7 +44,7 @@
 				class="input input-bordered {form?.errors?.username ? 'input-error' : ''}"
 				value={form?.values?.username ?? ''}
 				required
-                autofocus
+				autofocus
 			/>
 			{#if form?.errors?.username}
 				<label class="label flex flex-col items-baseline" for="username">
@@ -69,7 +77,13 @@
 	</div>
 
 	<div class="w-full mx-auto flex justify-end">
-		<button type="submit" class="btn btn-primary max-w-xs">Login</button>
+		<button
+			type="submit"
+			class="btn btn-primary max-w-xs"
+			on:click={() => {
+				tried_login = true;
+			}}>Login</button
+		>
 	</div>
 </form>
 
