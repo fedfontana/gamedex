@@ -36,6 +36,7 @@
 			<label class="label" for="name">
 				<span class="label-text"> game name </span>
 			</label>
+			<!-- svelte-ignore a11y-autofocus -->
 			<input
 				name="name"
 				type="text"
@@ -43,6 +44,7 @@
 				class="input input-bordered {form?.errors?.name ? 'input-error' : ''}"
 				value={form?.values?.name ?? ''}
 				required
+				autofocus
 			/>
 			{#if form?.errors?.name}
 				<label class="label flex flex-col items-baseline" for="name">
