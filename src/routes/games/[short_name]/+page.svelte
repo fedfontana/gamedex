@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Alert from '$components/Alert.svelte';
-import type { PageData } from './$types';
+	import { is_logged_in } from '$src/stores';
+	import type { PageData } from './$types';
 	import BoxIcon from './BoxIcon.svelte';
 	import CalendarIcon from './CalendarIcon.svelte';
 	import ConsoleIcon from './ConsoleIcon.svelte';
@@ -23,7 +24,6 @@ import type { PageData } from './$types';
 			console.error('Could not delete game for some reason. Res: ', res);
 		}
 	};
-
 </script>
 
 <div class="w-10/12 mx-auto flex flex-row gap-8 mt-10">
@@ -37,17 +37,19 @@ import type { PageData } from './$types';
 				class="w-full"
 			/>
 		</div>
-		<div class="flex flex-col gap-2 mx-auto w-48">
-			<button
-				class="btn btn-warning"
-				on:click={() => {
-					console.log('Edit game');
-				}}
-			>
-				edit
-			</button>
-			<label for="modal-delete-game" class="btn btn-error">delete</label>
-		</div>
+		{#if $is_logged_in}
+			<div class="flex flex-col gap-2 mx-auto w-48">
+				<button
+					class="btn btn-warning"
+					on:click={() => {
+						console.log('Edit game');
+					}}
+				>
+					edit
+				</button>
+				<label for="modal-delete-game" class="btn btn-error">delete</label>
+			</div>
+		{/if}
 	</div>
 
 	<!-- central panel -->
