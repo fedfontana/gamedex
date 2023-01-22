@@ -1,18 +1,24 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import Alert from '$components/Alert.svelte';
 	import { is_logged_in } from '$src/stores';
 	import type { LoginFormResponse } from './proxy+page.server';
 
 	export let form: LoginFormResponse;
 
+	let next = $page.url.searchParams.get('next') ?? '/';
 	let tried_login = false;
 
 	$: {
 		if (tried_login && form) {
-			if(form.logged_in) {
+			if (form.logged_in) {
 				console.log('Setting store to: ', form.logged_in);
 				$is_logged_in = true;
+				setTimeout(() => {
+					goto(next);
+				}, 2000);
 			}
 		}
 	}
@@ -90,7 +96,11 @@
 <!-- TODO: fix bug, after one try has been made, the error variant does not work for subsequent errors (resets on success) -->
 {#if form}
 	{#if form.logged_in}
-		<Alert title="Successfully logged in" kind="success" />
+		<Alert
+			title="Successfully logged in"
+			message="You will be redirected to {$page.url.origin}{next} in 2 seconds"
+			kind="success"
+		/>
 	{:else}
 		<Alert title="Error logging in" kind="error" />
 	{/if}

@@ -1,16 +1,26 @@
-import type { Actions } from "@sveltejs/kit";
+import { redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 import { ZodError } from "zod";
 import { z } from 'zod';
 import jwt from 'jsonwebtoken';
 import { env } from "$env/dynamic/private";
+import { is_logged_in } from "$src/utils/user";
 
 const LoginSchema = z.object({
 	username: z.string().min(1).max(64).trim(),
 	password: z.string().min(1).max(64),
 });
 
+export const load: ServerLoad = async ({ cookies, url }) => {
+	if(is_logged_in(cookies)) {
+		console.log("Redirecting to next cause you're already logged in")
+		throw redirect(307, url.searchParams.get('next') ?? '/')
+	}
+}
+
+
 export const actions: Actions = {
 	default: async ({ request, cookies }): Promise<LoginFormResponse> => {
+
 		const rFormData = await request.formData();
 		const formData = Object.fromEntries(rFormData);
 		console.log("Form data: ", formData);
