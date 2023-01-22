@@ -29,6 +29,8 @@ Tech stack:
 - filter list
 - sort list
 - infinite scrolling in list
+- working search box
+- less ugly home page
 
 ## V 0.4.0
 - add game dlcs
@@ -44,7 +46,10 @@ Tech stack:
 
 ## V 0.6.0
 - add general events (like e3, ...) with date, description, ...
-  
+- mobile friendly website
+- error pages
+- fix typescript types, todos and bugs
+- fix autofocus message in /login
 ## V 0.7.0
 - rework home:
     - bottom right: calendar with next events, game releases, dlc releases, game events (calendar shows their pic?)
