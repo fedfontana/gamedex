@@ -4,6 +4,7 @@ import { Game } from "$models/Game";
 import { ZodError } from "zod";
 import prisma from "$db";
 import { Prisma } from "@prisma/client";
+import type { FieldErrors } from "$types/types";
 
 
 export const load: ServerLoad = async ({ cookies, url }) => {
@@ -71,6 +72,6 @@ export type EditGameFormResponse = {
     values: {
         [k: string]: FormDataEntryValue,
     },
-    errors: ReturnType<ZodError["flatten"]>["fieldErrors"],
+    errors: FieldErrors,
     form_errors?: string[]
 }

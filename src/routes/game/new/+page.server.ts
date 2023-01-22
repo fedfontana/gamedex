@@ -4,6 +4,7 @@ import { ZodError } from "zod";
 import prisma from "$db";
 import { Prisma } from "@prisma/client";
 import { is_logged_in } from "$src/utils/user";
+import type { FieldErrors } from "$types/types";
 
 export const load: ServerLoad = async ({ cookies }) => {
 	if(!is_logged_in(cookies)) {
@@ -66,6 +67,6 @@ export type CreateGameFormResponse = {
 	values: {
 		[k: string]: FormDataEntryValue,
 	},
-	errors: ReturnType<ZodError["flatten"]>["fieldErrors"],
+	errors: FieldErrors,
 	form_errors?: string[]
 }
