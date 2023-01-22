@@ -20,13 +20,15 @@ Tech stack:
     - [X] select a single one
 
 ## V 0.2.0
-- single user login with jwt
-- edit games
+- [X] single user login with jwt
+- [X] edit games
+  - [ ] same component as add game
   
 ## V 0.3.0
 - theme switch
 - filter list
 - sort list
+- infinite scrolling in list
 
 ## V 0.4.0
 - add game dlcs
