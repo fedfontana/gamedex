@@ -9,7 +9,6 @@
     export let button_text: string = "Confirm";
 
     const deep_copy = (g: Game | undefined): Game | undefined => g ? JSON.parse(JSON.stringify(g)) : undefined;
-    let game = deep_copy(initial_data);
     
 	function form_string_to_int(v: any, default_value: number | undefined = 0) {
 		let parsed = parseInt(v as string);
@@ -26,6 +25,25 @@
 		return `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`
 	}
 
+
+	function to_form_values(g: Game | undefined): Omit<Game, "release_date"> & {release_date: string | null} {
+		let ng = deep_copy(g);
+		let new_game = {
+			name: ng?.name ?? '',
+			short_name: ng?.short_name ?? '',
+			art_url: ng?.art_url ?? '',
+			developer: ng?.developer ?? '',
+			platform: ng?.platform ?? PLATFORMS[0],
+			play_time: form_string_to_int(ng?.play_time),
+			release_date: date_to_input_date_format(ng?.release_date),
+			status: ng?.status ?? STATUSES[0],
+		}
+
+		return new_game;
+	} 
+
+    let game = to_form_values(initial_data);
+
 </script>
 
 <!-- 
@@ -34,7 +52,6 @@
  -->
 
 <form method="POST" use:enhance class="flex flex-col gap-6 w-10/12 mx-auto">
-	<h2 class="mx-auto text-3xl font-semibold w-fit mb-6">Create new game</h2>
 	{#if form_errors !== undefined && form_errors.length > 0}
 		<div class="flex flex-col items-center gap-2">
 			{#each form_errors as error}
@@ -55,7 +72,7 @@
 				type="text"
 				placeholder="Name"
 				class="input input-bordered {field_errors?.name ? 'input-error' : ''}"
-				value={game?.name ?? ''}
+				bind:value={game.name}
 				required
 				autofocus
 			/>
@@ -77,7 +94,7 @@
 				type="text"
 				placeholder="Short name"
 				class="input input-bordered {field_errors?.short_name ? 'input-error' : ''}"
-				value={game?.short_name ?? ''}
+				bind:value={game.short_name}
 				required
 			/>
 			{#if field_errors?.short_name}
@@ -100,7 +117,7 @@
 				type="text"
 				placeholder="Art url"
 				class="input input-bordered {field_errors?.art_url ? 'input-error' : ''}"
-				value={game?.art_url ?? ''}
+				bind:value={game.art_url}
 			/>
 			{#if field_errors?.art_url}
 				<label class="label flex flex-col items-baseline" for="art_url">
@@ -120,7 +137,7 @@
 				type="text"
 				placeholder="Developer"
 				class="input input-bordered {field_errors?.developer ? 'input-error' : ''}"
-				value={game?.developer ?? ''}
+				bind:value={game.developer}
 			/>
 			{#if field_errors?.developer}
 				<label class="label flex flex-col items-baseline" for="developer">
@@ -140,7 +157,7 @@
 				type="date"
 				placeholder="Release date"
 				class="input input-bordered {field_errors?.release_date ? 'input-error' : ''}"
-				value={date_to_input_date_format(game?.release_date)}
+				bind:value={game.release_date}
 			/>
 			{#if field_errors?.release_date}
 				<label class="label flex flex-col items-baseline" for="release_date">
@@ -160,7 +177,7 @@
 			<select
 				name="status"
 				class="select select-bordered {field_errors?.status ? 'select-error' : ''}"
-				value={game?.status ?? STATUSES[0]}
+				bind:value={game.status}
 			>
 				{#each STATUSES as status}
 					<option value={status}> {status} </option>
@@ -182,7 +199,7 @@
 			<select
 				name="platform"
 				class="select select-bordered {field_errors?.platform ? 'select-error' : ''}"
-				value={game?.platform ?? PLATFORMS[0]}
+				bind:value={game.platform}
 			>
 				{#each PLATFORMS as platform}
 					<option value={platform}> {platform} </option>
@@ -207,7 +224,7 @@
 				min={0}
 				placeholder="Play time"
 				class="input input-bordered {field_errors?.play_time ? 'input-error' : ''}"
-				value={form_string_to_int(game?.play_time ?? '0')}
+				bind:value={game.play_time} 
 			/>
 			{#if field_errors?.play_time}
 				<label class="label flex flex-col items-baseline" for="play_time">
@@ -219,7 +236,12 @@
 		</div>
 	</div>
 
-	<div class="w-10/12 mx-auto flex justify-end">
+	<div class="w-11/12 mx-auto flex justify-between">
+		<button class="btn btn-warning max-w-xs" on:click|preventDefault={() => { 
+			console.log("Initial: ", initial_data);
+			console.log("Current: ", game);
+			game = to_form_values(initial_data);
+		}}> Reset </button>
 		<button type="submit" class="btn btn-primary max-w-xs"> {button_text} </button>
 	</div>
 </form>
