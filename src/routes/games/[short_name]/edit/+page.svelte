@@ -11,7 +11,7 @@
 	$: initial_data = (form?.values ?? data.game) as any as Game | undefined;
 </script>
 
-<h2 class="mx-auto text-3xl font-semibold w-fit mt-6 mb-10">Edit {data.game.name} </h2>
+<h2 class="mx-auto text-3xl font-semibold w-fit mt-6 mb-10">Edit {data.game.name}</h2>
 
 <GameForm
 	form_errors={form?.form_errors}

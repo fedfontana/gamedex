@@ -3,13 +3,14 @@
 	import { STATUSES, PLATFORMS, Game } from '$models/Game';
 	import type { FieldErrors } from '$types/types';
 
-    export let initial_data: Game | undefined;
-    export let form_errors: string[] | undefined;
-    export let field_errors: FieldErrors | undefined;
-    export let button_text: string = "Confirm";
+	export let initial_data: Game | undefined;
+	export let form_errors: string[] | undefined;
+	export let field_errors: FieldErrors | undefined;
+	export let button_text: string = 'Confirm';
 
-    const deep_copy = (g: Game | undefined): Game | undefined => g ? JSON.parse(JSON.stringify(g)) : undefined;
-    
+	const deep_copy = (g: Game | undefined): Game | undefined =>
+		g ? JSON.parse(JSON.stringify(g)) : undefined;
+
 	function form_string_to_int(v: any, default_value: number | undefined = 0) {
 		let parsed = parseInt(v as string);
 		if (isNaN(parsed)) return default_value;
@@ -22,11 +23,12 @@
 		let year = d.getFullYear();
 		let month = d.getMonth() + 1;
 		let day = d.getDate();
-		return `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`
+		return `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`;
 	}
 
-
-	function to_form_values(g: Game | undefined): Omit<Game, "release_date"> & {release_date: string | null} {
+	function to_form_values(
+		g: Game | undefined
+	): Omit<Game, 'release_date'> & { release_date: string | null } {
 		let ng = deep_copy(g);
 		let new_game = {
 			name: ng?.name ?? '',
@@ -36,14 +38,13 @@
 			platform: ng?.platform ?? PLATFORMS[0],
 			play_time: form_string_to_int(ng?.play_time),
 			release_date: date_to_input_date_format(ng?.release_date),
-			status: ng?.status ?? STATUSES[0],
-		}
+			status: ng?.status ?? STATUSES[0]
+		};
 
 		return new_game;
-	} 
+	}
 
-    let game = to_form_values(initial_data);
-
+	let game = to_form_values(initial_data);
 </script>
 
 <!-- 
@@ -224,7 +225,7 @@
 				min={0}
 				placeholder="Play time"
 				class="input input-bordered {field_errors?.play_time ? 'input-error' : ''}"
-				bind:value={game.play_time} 
+				bind:value={game.play_time}
 			/>
 			{#if field_errors?.play_time}
 				<label class="label flex flex-col items-baseline" for="play_time">
@@ -237,11 +238,14 @@
 	</div>
 
 	<div class="w-11/12 mx-auto flex justify-between">
-		<button class="btn btn-warning max-w-xs" on:click|preventDefault={() => { 
-			console.log("Initial: ", initial_data);
-			console.log("Current: ", game);
-			game = to_form_values(initial_data);
-		}}> Reset </button>
+		<button
+			class="btn btn-warning max-w-xs"
+			on:click|preventDefault={() => {
+				game = to_form_values(initial_data);
+			}}
+		>
+			Reset
+		</button>
 		<button type="submit" class="btn btn-primary max-w-xs"> {button_text} </button>
 	</div>
 </form>
