@@ -30,7 +30,7 @@
 	<!-- left panel -->
 	<div class="flex flex-col gap-4 flex-[2]">
 		<!-- top part -->
-		<div class="max-w-xs rounded-xl overflow-hidden">
+		<div class="max-w-xs rounded-xl overflow-hidden shadow-xl">
 			<img
 				src={game.art_url ?? 'https://static-cdn.jtvnw.net/ttv-boxart/498566-500x640.jpg'}
 				alt="{game.name} art"
@@ -39,8 +39,8 @@
 		</div>
 		{#if $is_logged_in}
 			<div class="flex flex-col gap-2 mx-auto w-48">
-				<a href="/games/{game.short_name}/edit" class="btn btn-warning"> edit </a>
-				<label for="modal-delete-game" class="btn btn-error">delete</label>
+				<a href="/games/{game.short_name}/edit" class="btn btn-warning shadow-xl"> edit </a>
+				<label for="modal-delete-game" class="btn btn-error shadow-xl">delete</label>
 			</div>
 		{/if}
 	</div>
@@ -50,7 +50,7 @@
 		<h2 class="text-3xl font-semibold">
 			{game.name}
 			{#if game.developer}
-				<span class="text-2xl font-semibold text-gray-500">
+				<span class="text-2xl font-semibold text-accent">
 					by {game.developer}
 				</span>
 			{/if}
