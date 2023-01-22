@@ -31,7 +31,7 @@ export const actions: Actions = {
                 },
                 data: game,
             });
-
+            
             console.log("Edited: ", new_game);
 
             return {

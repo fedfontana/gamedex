@@ -39,14 +39,7 @@
 		</div>
 		{#if $is_logged_in}
 			<div class="flex flex-col gap-2 mx-auto w-48">
-				<button
-					class="btn btn-warning"
-					on:click={() => {
-						console.log('Edit game');
-					}}
-				>
-					edit
-				</button>
+				<a href="/games/{game.short_name}/edit" class="btn btn-warning"> edit </a>
 				<label for="modal-delete-game" class="btn btn-error">delete</label>
 			</div>
 		{/if}
