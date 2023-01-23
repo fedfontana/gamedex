@@ -63,6 +63,8 @@
 <!-- TODO: add license -->
 <!-- TODO: change selected text color based on theme? -->
 <!-- TODO: automatically close sidebar when search is successfull -->
+<!-- TODO: fix double scrolling bar on ther right in the list of games -->
+<!-- TODO: escape / from game names -->
 
 <div class="drawer">
 	<input id="filters-drawer" type="checkbox" class="drawer-toggle" />
