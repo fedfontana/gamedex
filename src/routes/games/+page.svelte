@@ -1,17 +1,17 @@
 <script lang="ts">
-	import { enhance, type SubmitFunction } from '$app/forms';
 	import { PLATFORMS, STATUSES, type Platform, type Status } from '$models/Game';
 	import { slide } from 'svelte/transition';
 	import type { PageData } from './$types';
 	import GameCard from './GameCard.svelte';
 	import SearchIcon from './SearchIcon.svelte';
 	import { applyAction, deserialize } from '$app/forms';
-	import { invalidateAll } from '$app/navigation';
+	import { SORT_OPTIONS, type SortOption } from '$src/utils/enums';
+	import type { Game } from '@prisma/client';
 
 	export let data: PageData;
+	export let form: { games: Game[] } | undefined;
 
-	const SORT_OPTIONS = ['name', 'release date', 'play time'] as const;
-	type SortOption = (typeof SORT_OPTIONS)[number];
+	$: games = form?.games ?? data.games;
 
 	let options = {
 		query: '',
@@ -45,11 +45,6 @@
 
 		const result = deserialize(await response.text());
 
-		if (result.type === 'success') {
-			// re-run all `load` functions, following the successful update
-			await invalidateAll();
-		}
-
 		applyAction(result);
 	};
 </script>
@@ -76,7 +71,7 @@
 		<!-- PAGE CONTENT -->
 
 		<div class="grid grid-cols-3 w-full gap-y-12 gap-x-8 my-12">
-			{#each data.games as game}
+			{#each games as game}
 				<GameCard {game} />
 			{/each}
 		</div>

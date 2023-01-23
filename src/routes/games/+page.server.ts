@@ -1,6 +1,7 @@
 import prisma from "$src/db"
 import type { Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
+import { z, ZodError } from 'zod';
 
 const GAMES_PER_PAGE = 30;
 
@@ -11,7 +12,6 @@ export const load: PageServerLoad = async () => {
 }
 
 
-import { z, ZodError } from 'zod';
 
 // Form data:  {
 //     query: 'ciao',
@@ -25,10 +25,14 @@ import { z, ZodError } from 'zod';
 //     platform_filters: 'PS4'
 // }
 
+const SORT_COLS = ['name', 'release_date', 'play_time'] as const;
+type SortCol = (typeof SORT_COLS)[number];
+
+// TODO refine type of filters
 const FilterSortSchema = z.object({
     query: z.preprocess(
         v => {
-            if(typeof v === 'string') {
+            if (typeof v === 'string') {
                 return v.trim() === '' ? null : v.trim()
             }
             return null;
@@ -39,7 +43,15 @@ const FilterSortSchema = z.object({
         v => v === 'true',
         z.boolean(),
     ),
-    sort_col: z.string().trim().nullish(),
+    sort_col: z.preprocess(
+        v => {
+            if (typeof v === 'string') {
+                return v.replace(' ', '_');
+            }
+            return null;
+        },
+        z.enum(SORT_COLS).nullish(),
+    ),
     sort_ascending: z.preprocess(
         v => v === 'true',
         z.boolean(),
@@ -54,7 +66,7 @@ const FilterSortSchema = z.object({
     ),
     status_filters: z.preprocess(
         v => {
-            if(typeof v === 'string') {
+            if (typeof v === 'string') {
                 return v.split(',').map(e => e.trim())
             }
             return [];
@@ -67,7 +79,7 @@ const FilterSortSchema = z.object({
     ),
     platform_filters: z.preprocess(
         v => {
-            if(typeof v === 'string') {
+            if (typeof v === 'string') {
                 return v.split(',').map(e => e.trim()).filter(e => e.length > 0)
             }
             return [];
@@ -76,16 +88,34 @@ const FilterSortSchema = z.object({
     ),
 });
 
-
 export const actions: Actions = {
     default: async ({ request }) => {
         const formData = Object.fromEntries(await request.formData());
-        console.log("Form data: ",formData);
-        try { 
+        console.log("Form data: ", formData);
+        try {
             const options = FilterSortSchema.parse(formData);
             console.log("parsed options: ", options);
-        } catch(err) {
-            if(err instanceof ZodError) {
+
+            const sort_options: { [k in SortCol]?: 'asc' | 'desc' } = {};
+            if (options.sort_enabled) {
+                sort_options[options.sort_col ?? 'name'] = options.sort_ascending ? 'asc' : 'desc';
+            }
+
+            //console.log("Sort options: ", sort_options);
+
+            const games = await prisma.game.findMany({
+                take: GAMES_PER_PAGE,
+                orderBy: sort_options,
+            });
+
+            console.log("Returning: ", games);
+
+            return {
+                games,
+            }
+
+        } catch (err) {
+            if (err instanceof ZodError) {
                 console.error("Zod error: ", err);
             }
         }
