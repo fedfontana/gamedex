@@ -63,6 +63,7 @@
 <!-- TODO: add new custom personal theme -->
 <!-- TODO: add license -->
 <!-- TODO: change selected text color based on theme? -->
+<!-- TODO: automatically close sidebar when search is successfull -->
 
 <div class="drawer">
 	<input id="filters-drawer" type="checkbox" class="drawer-toggle" />
@@ -118,15 +119,6 @@
 					}
 				} -->
 
-				<!-- {
-					MISSING
-					Game = {
-					    status: Status,
-							- filter ~~
-					    platform: Platform?,
-							- filter
-					}
-				} -->
 				<!-- BEGIN SORTING OPTIONS -->
 				<div class="form-control">
 					<label class="label cursor-pointer">

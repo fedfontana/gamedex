@@ -67,7 +67,7 @@ const FilterSortSchema = z.object({
     status_filters: z.preprocess(
         v => {
             if (typeof v === 'string') {
-                return v.split(',').map(e => e.trim())
+                return v.split(',').map(e => e.trim()).filter(e => e.length > 0);
             }
             return [];
         },
@@ -80,7 +80,7 @@ const FilterSortSchema = z.object({
     platform_filters: z.preprocess(
         v => {
             if (typeof v === 'string') {
-                return v.split(',').map(e => e.trim()).filter(e => e.length > 0)
+                return v.split(',').map(e => e.trim()).filter(e => e.length > 0);
             }
             return [];
         },
@@ -101,13 +101,34 @@ export const actions: Actions = {
                 sort_options[options.sort_col ?? 'name'] = options.sort_ascending ? 'asc' : 'desc';
             }
 
-            //console.log("Sort options: ", sort_options);
+
+            const query_options = options.query ? {
+                OR: [
+                    {
+                        name: {
+                            contains: options.query,
+                        },
+                    },
+                    {
+                        short_name: {
+                            contains: options.query,
+                        },
+                    },
+                    {
+                        developer: {
+                            contains: options.query,
+                        },
+                    },
+                ],
+            } : {};
 
             const games = await prisma.game.findMany({
-                take: GAMES_PER_PAGE,
+                //where: query_options,
                 orderBy: sort_options,
+                take: GAMES_PER_PAGE,
+                where: query_options,
             });
-
+            console.log("pippo l'intonaco\n\n\n");
             console.log("Returning: ", games);
 
             return {
