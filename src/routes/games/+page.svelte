@@ -7,11 +7,13 @@
 	import { applyAction, deserialize } from '$app/forms';
 	import { SORT_OPTIONS, type SortOption } from '$src/utils/enums';
 	import type { Game } from '@prisma/client';
+	import InfiniteScroll from '$components/InfiniteScroll.svelte';
 
 	export let data: PageData;
-	export let form: { games: Game[] } | undefined;
+	export let form: { games: Game[]; total_pages: number; page: number } | undefined;
 
-	$: games = form?.games ?? data.games;
+	let page = 1;
+	$: total_pages = form?.total_pages ?? data.total_pages; // in case something changes
 
 	let options = {
 		query: '',
@@ -32,7 +34,7 @@
 				formData.append(key, object[key]);
 				return formData;
 			}, new FormData());
-		
+
 		let form_data = getFormData(options);
 
 		const response = await fetch('/games', {
@@ -47,6 +49,20 @@
 
 		applyAction(result);
 	};
+
+	let infinite_elements: Game[] = [];
+
+	async function fetchData() {
+		console.log('Calling new data');
+		const response = await fetch(`/games?page=${page}&options=${encodeURIComponent(JSON.stringify(options))}`);
+		infinite_elements = (await response.json()).games as Game[];
+		console.log(infinite_elements);
+		console.log('Got ', infinite_elements.length, ' new entries');
+	}
+
+	let game_list_container;
+
+	$: games = [...(form?.games ?? data.games), ...infinite_elements];
 </script>
 
 <!-- TODO: add filter rest/ full reset/ sort reset -->
@@ -72,10 +88,19 @@
 		<label for="filters-drawer" class="btn btn-primary drawer-button">Open filters</label>
 		<!-- PAGE CONTENT -->
 
-		<div class="grid grid-cols-3 w-full gap-y-12 gap-x-8 my-12">
+		<div bind:this={game_list_container} class="grid grid-cols-3 w-full gap-y-12 gap-x-8 my-12 max-h-screen overflow-y-scroll">
 			{#each games as game}
 				<GameCard {game} />
 			{/each}
+			<InfiniteScroll
+				parent={game_list_container}
+				hasMore={total_pages > page}
+				threshold={2000}
+				on:loadMore={() => {
+					page++;
+					fetchData();
+				}}
+			/>
 		</div>
 
 		<!-- END PAGE CONTENT -->

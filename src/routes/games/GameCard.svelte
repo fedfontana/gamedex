@@ -45,7 +45,7 @@
 			</span>
 			<span class="flex flex-row gap-1 items-center">
 				<CalendarIcon size="25" />
-				Release date: {game.release_date?.toDateString() ?? 'unknown'}
+				Release date: {game.release_date ? (new Date(game.release_date)).toDateString() : 'unknown'}
 			</span>
 		</div>
 
