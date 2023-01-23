@@ -11,20 +11,6 @@ export const load: PageServerLoad = async () => {
     }
 }
 
-
-
-// Form data:  {
-//     query: 'ciao',
-//     sort_enabled: 'true',
-//     sort_ascending: 'true',
-//     sort_col: 'release date',
-//     show_filters: 'true',
-//     show_status_filters: 'true',
-//     status_filters: 'watchlist,playing',
-//     show_platform_filters: 'true',
-//     platform_filters: 'PS4'
-// }
-
 const SORT_COLS = ['name', 'release_date', 'play_time'] as const;
 type SortCol = (typeof SORT_COLS)[number];
 
