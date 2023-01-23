@@ -1,10 +1,12 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import { enhance, type SubmitFunction } from '$app/forms';
 	import { PLATFORMS, STATUSES, type Platform, type Status } from '$models/Game';
 	import { slide } from 'svelte/transition';
 	import type { PageData } from './$types';
 	import GameCard from './GameCard.svelte';
 	import SearchIcon from './SearchIcon.svelte';
+	import { applyAction, deserialize } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
 
 	export let data: PageData;
 
@@ -21,6 +23,34 @@
 		status_filters: [] as Status[],
 		show_platform_filters: false,
 		platform_filters: [] as Platform[]
+	};
+
+	// EventHandler<Event, HTMLFormElement>
+	const handleSubmit: svelte.JSX.EventHandler<Event, HTMLFormElement> = async (event) => {
+		const getFormData = (object: Record<string, any>) =>
+			Object.keys(object).reduce((formData, key) => {
+				formData.append(key, object[key]);
+				return formData;
+			}, new FormData());
+		
+		let form_data = getFormData(options);
+
+		const response = await fetch('/games', {
+			method: 'POST',
+			body: form_data,
+			headers: {
+				'x-sveltekit-action': 'true'
+			}
+		});
+
+		const result = deserialize(await response.text());
+
+		if (result.type === 'success') {
+			// re-run all `load` functions, following the successful update
+			await invalidateAll();
+		}
+
+		applyAction(result);
 	};
 </script>
 
@@ -57,7 +87,7 @@
 		<label for="filters-drawer" class="drawer-overlay" />
 		<div class="p-4 w-1/3 bg-base-100 text-base-content">
 			<!-- DRAWER CONTENT -->
-			<form method="POST" use:enhance>
+			<form method="POST" on:submit|preventDefault={handleSubmit}>
 				<div class="form-control">
 					<div class="input-group">
 						<input
@@ -174,20 +204,20 @@
 						</div>
 
 						{#if options.show_status_filters}
-								{#each STATUSES as status}
-									<div class="form-control" transition:slide>
-										<label class="label cursor-pointer justify-start gap-3">
-											<input
-												type="checkbox"
-												name="status_filters"
-												bind:group={options.status_filters}
-												value={status}
-												class="checkbox checkbox-primary"
-											/>
-											<span class="label-text"> {status} </span>
-										</label>
-									</div>
-								{/each}
+							{#each STATUSES as status}
+								<div class="form-control" transition:slide>
+									<label class="label cursor-pointer justify-start gap-3">
+										<input
+											type="checkbox"
+											name="status_filters"
+											bind:group={options.status_filters}
+											value={status}
+											class="checkbox checkbox-primary"
+										/>
+										<span class="label-text"> {status} </span>
+									</label>
+								</div>
+							{/each}
 						{/if}
 						<!-- END STATUS FILTERS -->
 
