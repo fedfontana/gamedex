@@ -122,11 +122,24 @@ export const actions: Actions = {
                 ],
             } : {};
 
+            const status_filters = options.show_status_filters ? {
+                status: {
+                    in: options.status_filters,
+                }
+            } : {};
+
+
+            const platform_filters = options.show_platform_filters ? {
+                platform: {
+                    in: options.platform_filters,
+                }
+            } : {};
+
             const games = await prisma.game.findMany({
                 //where: query_options,
                 orderBy: sort_options,
                 take: GAMES_PER_PAGE,
-                where: query_options,
+                where: { ...query_options, ...status_filters, ...platform_filters },
             });
             console.log("pippo l'intonaco\n\n\n");
             console.log("Returning: ", games);
