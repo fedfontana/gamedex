@@ -96,6 +96,7 @@
 <!-- TODO: fix double scrolling bar on ther right in the list of games -->
 <!-- TODO: escape / from game names -->
 <!-- TODO: fix icons: they have padding on the bottom, so they're off-center/misaligned -->
+<!-- TODO: add some sort of shadow/box around the paringation thingy at the bottom -->
 
 <div class="drawer relative">
 	<input id="filters-drawer" type="checkbox" class="drawer-toggle" />
@@ -103,7 +104,7 @@
 		<!-- TODO: remove the bottom padding from the svg, and then remove the pt-2 -->
 		<label
 			for="filters-drawer"
-			class="btn btn-primary btn-square drawer-button absolute top-4 right-4 z-50 flex items-center justify-center pt-2 p-2"
+			class="btn btn-primary btn-square drawer-button absolute top-6 left-12 z-50 flex items-center justify-center pt-2 p-2"
 		>
 			<FilterIcon size="35" />
 		</label>
