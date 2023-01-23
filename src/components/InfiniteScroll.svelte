@@ -10,18 +10,20 @@
 
 	$: {
 		if(parent) {
+			//console.log("Adding handlers")
 			parent.addEventListener('scroll', onScroll);
 			parent.addEventListener('resize', onScroll);
 		}
 	}
 
-	const onScroll: EventListener = (e) => {
-		console.log('Calling onScroll');
+	const onScroll: EventListener = e => {
+		//console.log('Calling onScroll');
 		const offset = parent.scrollHeight - parent.clientHeight - parent.scrollTop;
 		console.log('Offset: ', offset);
 
 		if (offset <= threshold) {
 			if (!isLoadMore && hasMore) {
+				console.log("LOAD MORE");
 				dispatch('loadMore');
 			}
 			isLoadMore = true;
@@ -32,6 +34,7 @@
 
 	onDestroy(() => {
 		if(!parent) return;
+		//console.log("removing handlers")
 		parent.removeEventListener('scroll', null);
 		parent.removeEventListener('resize', null);
 	});

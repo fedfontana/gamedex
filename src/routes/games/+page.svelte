@@ -54,13 +54,13 @@
 	let infinite_elements: Game[] = [];
 
 	async function fetchData() {
-		console.log('Calling new data');
+		//console.log('Calling new data');
 		const response = await fetch(
 			`/games?page=${page}&options=${encodeURIComponent(JSON.stringify(options))}`
 		);
 		infinite_elements = (await response.json()).games as Game[];
 		console.log(infinite_elements);
-		console.log('Got ', infinite_elements.length, ' new entries');
+		//console.log('Got ', infinite_elements.length, ' new entries');
 	}
 
 	let game_list_container;
@@ -97,7 +97,7 @@
 
 		<div
 			bind:this={game_list_container}
-			class="grid grid-cols-3 gap-y-12 gap-x-8 w-10/12 mx-auto my-12 overflow-y-scroll"
+			class="grid grid-cols-3 gap-y-12 gap-x-8 w-10/12 mx-auto overflow-y-scroll"
 		>
 			{#each games as game}
 				<GameCard {game} />
