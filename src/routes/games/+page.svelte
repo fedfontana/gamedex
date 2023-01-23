@@ -7,13 +7,11 @@
 	import { applyAction, deserialize } from '$app/forms';
 	import { SORT_OPTIONS, type SortOption } from '$src/utils/enums';
 	import type { Game } from '@prisma/client';
-	import InfiniteScroll from '$components/InfiniteScroll.svelte';
 	import FilterIcon from './FilterIcon.svelte';
 
 	export let data: PageData;
 	export let form: { games: Game[]; total_pages: number; page: number } | undefined;
 
-	let page = 1;
 	$: total_pages = form?.total_pages ?? data.total_pages; // in case something changes
 
 	let options = {
@@ -47,25 +45,24 @@
 		});
 
 		const result = deserialize(await response.text());
-
+		list_games = undefined;
 		applyAction(result);
 	};
 
-	let infinite_elements: Game[] = [];
+	let list_games: Game[] | undefined = undefined;
+	let page = 1;
 
-	async function fetchData() {
-		//console.log('Calling new data');
+	const load_game_page = async (page: number) => {
+		if (page < 1 || page > total_pages) return;
+
 		const response = await fetch(
 			`/games?page=${page}&options=${encodeURIComponent(JSON.stringify(options))}`
 		);
-		infinite_elements = (await response.json()).games as Game[];
-		console.log(infinite_elements);
-		//console.log('Got ', infinite_elements.length, ' new entries');
-	}
 
-	let game_list_container;
+		list_games = (await response.json()).games as Game[];
+	};
 
-	$: games = [...(form?.games ?? data.games), ...infinite_elements];
+	$: games = list_games ?? form?.games ?? data.games;
 </script>
 
 <!-- TODO: add filter rest/ full reset/ sort reset -->
@@ -89,29 +86,50 @@
 <div class="drawer relative">
 	<input id="filters-drawer" type="checkbox" class="drawer-toggle" />
 	<div class="drawer-content">
-		<!-- TODO: fix animation -->
-		<label for="filters-drawer" class="btn btn-primary btn-square drawer-button absolute top-4 right-4 z-50 flex items-center justify-center pt-2 p-2">
+		<!-- TODO: remove the bottom padding from the svg, and then remove the pt-2 -->
+		<label
+			for="filters-drawer"
+			class="btn btn-primary btn-square drawer-button absolute top-4 right-4 z-50 flex items-center justify-center pt-2 p-2"
+		>
 			<FilterIcon size="35" />
 		</label>
 		<!-- PAGE CONTENT -->
 
-		<div
-			bind:this={game_list_container}
-			class="grid grid-cols-3 gap-y-12 gap-x-8 w-10/12 mx-auto overflow-y-scroll"
-		>
-			{#each games as game}
-				<GameCard {game} />
-			{/each}
-			<InfiniteScroll
-				parent={game_list_container}
-				hasMore={total_pages > page}
-				threshold={2000}
-				on:loadMore={() => {
-					page++;
-					fetchData();
-				}}
-			/>
+		<div class="flex flex-col items-center gap-12 my-12">
+			<div class="grid grid-cols-3 gap-y-12 gap-x-8 w-10/12">
+				{#each games as game}
+					<GameCard {game} />
+				{/each}
+			</div>
+			<div class="flex flex-row gap-4 items-center">
+				<button
+					class="btn btn-primary"
+					class:btn-disabled={page <= 1}
+					on:click={() => {
+						page--;
+						load_game_page(page);
+					}}
+					disabled={page <= 1}
+				>
+					-
+				</button>
+				<span>
+					{page}
+				</span>
+				<button
+					class="btn btn-primary"
+					class:btn-disabled={page >= total_pages}
+					on:click={() => {
+						page++;
+						load_game_page(page);
+					}}
+					disabled={page >= total_pages}
+				>
+					+
+				</button>
+			</div>
 		</div>
+
 		<!-- END PAGE CONTENT -->
 	</div>
 	<div class="drawer-side">

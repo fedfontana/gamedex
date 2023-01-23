@@ -10,7 +10,6 @@ export const load: PageServerLoad = async () => {
 export const actions: Actions = {
     default: async ({ request }) => {
         const formData = Object.fromEntries(await request.formData());
-        //console.log("Form data: ", formData);
         try {
             const options = FilterSortSchema.parse(formData);
             return await load_games_paginated(options)

@@ -124,8 +124,6 @@ export async function load_games_paginated(options: Options, page = 1) {
 
     const total_pages = Math.ceil(total_game_count / GAMES_PER_PAGE);    
 
-    //console.log("Returning: ", games);
-
     return {
         games,
         total_pages,

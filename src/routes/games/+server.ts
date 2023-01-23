@@ -16,9 +16,6 @@ export const GET: RequestHandler = async ({ url }) => {
                     )
                 ) 
             : DEFAULT_OPTIONS;
-        if(encoded_options) {
-            console.log("DECODODE DEEZ NUTZ: ", options);
-        }
         return new Response(JSON.stringify(await load_games_paginated(options, page)));
     } catch (err) {
         if (err instanceof ZodError) {

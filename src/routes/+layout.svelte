@@ -19,7 +19,7 @@
 	});
 </script>
 
-<div class="max-w-screen max-h-screen flex flex-col">
+<div class="max-w-screen min-h-screen flex flex-col">
 	<Navbar />
 	<main class="overflow-hidden">
 		<slot />
