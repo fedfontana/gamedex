@@ -8,6 +8,7 @@
 	import { SORT_OPTIONS, type SortOption } from '$src/utils/enums';
 	import type { Game } from '@prisma/client';
 	import InfiniteScroll from '$components/InfiniteScroll.svelte';
+	import FilterIcon from './FilterIcon.svelte';
 
 	export let data: PageData;
 	export let form: { games: Game[]; total_pages: number; page: number } | undefined;
@@ -54,7 +55,9 @@
 
 	async function fetchData() {
 		console.log('Calling new data');
-		const response = await fetch(`/games?page=${page}&options=${encodeURIComponent(JSON.stringify(options))}`);
+		const response = await fetch(
+			`/games?page=${page}&options=${encodeURIComponent(JSON.stringify(options))}`
+		);
 		infinite_elements = (await response.json()).games as Game[];
 		console.log(infinite_elements);
 		console.log('Got ', infinite_elements.length, ' new entries');
@@ -81,14 +84,21 @@
 <!-- TODO: automatically close sidebar when search is successfull -->
 <!-- TODO: fix double scrolling bar on ther right in the list of games -->
 <!-- TODO: escape / from game names -->
+<!-- TODO: fix icons: they have padding on the bottom, so they're off-center/misaligned -->
 
-<div class="drawer">
+<div class="drawer relative">
 	<input id="filters-drawer" type="checkbox" class="drawer-toggle" />
-	<div class="drawer-content w-10/12 mx-auto">
-		<label for="filters-drawer" class="btn btn-primary drawer-button">Open filters</label>
+	<div class="drawer-content">
+		<!-- TODO: fix animation -->
+		<label for="filters-drawer" class="btn btn-primary btn-square drawer-button absolute top-4 right-4 z-50 flex items-center justify-center pt-2 p-2">
+			<FilterIcon size="35" />
+		</label>
 		<!-- PAGE CONTENT -->
 
-		<div bind:this={game_list_container} class="grid grid-cols-3 w-full gap-y-12 gap-x-8 my-12 max-h-screen overflow-y-scroll">
+		<div
+			bind:this={game_list_container}
+			class="grid grid-cols-3 gap-y-12 gap-x-8 w-10/12 mx-auto my-12 overflow-y-scroll"
+		>
 			{#each games as game}
 				<GameCard {game} />
 			{/each}
@@ -102,7 +112,6 @@
 				}}
 			/>
 		</div>
-
 		<!-- END PAGE CONTENT -->
 	</div>
 	<div class="drawer-side">
@@ -119,7 +128,7 @@
 							class="input input-bordered flex-grow"
 							bind:value={options.query}
 						/>
-						<button class="btn btn-square" type="submit">
+						<button class="btn btn-square btn-primary" type="submit">
 							<SearchIcon />
 						</button>
 					</div>
