@@ -66,3 +66,4 @@ Tech stack:
 - global stores for the various types of alerts, with ability to show more than one alert at a time with no overlap
 - fix typescript types, todos and bugs
 - fix autofocus message in /login
+- extract form stuff into separate components?

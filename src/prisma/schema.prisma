@@ -11,13 +11,18 @@ datasource db {
 }
 
 model Game {
-  id           Int       @id @default(autoincrement())
-  name         String    @unique @db.VarChar(128)
-  short_name   String    @unique @db.VarChar(64)
-  release_date DateTime?
-  art_url      String?   @db.VarChar(256)
-  developer    String?   @db.VarChar(128)
-  status       String
-  platform     String
-  play_time    Int
+  id                    Int       @id @default(autoincrement())
+  name                  String    @unique @db.VarChar(128)
+  short_name            String    @unique @db.VarChar(64)
+  release_date          DateTime?
+  art_url               String?   @db.VarChar(256)
+  developer             String?   @db.VarChar(128)
+  status                String
+  platform              String
+  play_time             Int
+// TODO min and max on new fields
+// TODO completion percentage => float
+  total_achievements    Int
+  obtained_achievements Int
+  completion_percentage Int
 }

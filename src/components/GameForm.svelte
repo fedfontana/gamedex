@@ -38,7 +38,10 @@
 			platform: ng?.platform ?? PLATFORMS[0],
 			play_time: form_string_to_int(ng?.play_time),
 			release_date: date_to_input_date_format(ng?.release_date),
-			status: ng?.status ?? STATUSES[0]
+			status: ng?.status ?? STATUSES[0],
+			total_achievements: ng?.total_achievements ?? 0,
+			obtained_achievements: ng?.obtained_achievements ?? 0,
+			completion_percentage: ng?.completion_percentage ?? 0
 		};
 
 		return new_game;
@@ -229,6 +232,73 @@
 			{#if field_errors?.play_time}
 				<label class="label flex flex-col items-baseline" for="play_time">
 					{#each field_errors.play_time as error}
+						<span class="label-text text-error">{error}</span>
+					{/each}
+				</label>
+			{/if}
+		</div>
+	</div>
+	<div class="flex flex-row gap-6 items-baseline justify-center">
+		<div class="form-control max-w-md">
+			<label class="label" for="total_achievements">
+				<span class="label-text"> total achievements </span>
+			</label>
+			<input
+				name="total_achievements"
+				type="number"
+				min="0"
+				placeholder="Name"
+				class="input input-bordered {field_errors?.total_achievements ? 'input-error' : ''}"
+				bind:value={game.total_achievements}
+			/>
+			{#if field_errors?.total_achievements}
+				<label class="label flex flex-col items-baseline" for="total_achievements">
+					{#each field_errors.total_achievements as error}
+						<span class="label-text text-error">{error}</span>
+					{/each}
+				</label>
+			{/if}
+		</div>
+
+		<div class="form-control max-w-md">
+			<label class="label" for="obtained_achievements">
+				<span class="label-text"> obtained achievements </span>
+			</label>
+			<input
+				name="obtained_achievements"
+				type="number"
+				min="0"
+				max={game.total_achievements}
+				placeholder="Name"
+				class="input input-bordered {field_errors?.obtained_achievements ? 'input-error' : ''}"
+				bind:value={game.obtained_achievements}
+			/>
+			{#if field_errors?.obtained_achievements}
+				<label class="label flex flex-col items-baseline" for="obtained_achievements">
+					{#each field_errors.obtained_achievements as error}
+						<span class="label-text text-error">{error}</span>
+					{/each}
+				</label>
+			{/if}
+		</div>
+
+		<div class="form-control max-w-md">
+			<label class="label" for="completion_percentage">
+				<span class="label-text"> completion percentage </span>
+			</label>
+			<!-- TODO: decimal point in percentage -->
+			<input
+				name="completion_percentage"
+				type="number"
+				min="0"
+				max="100"
+				placeholder="Name"
+				class="input input-bordered {field_errors?.completion_percentage ? 'input-error' : ''}"
+				bind:value={game.completion_percentage}
+			/>
+			{#if field_errors?.completion_percentage}
+				<label class="label flex flex-col items-baseline" for="completion_percentage">
+					{#each field_errors.completion_percentage as error}
 						<span class="label-text text-error">{error}</span>
 					{/each}
 				</label>

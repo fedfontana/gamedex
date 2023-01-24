@@ -80,7 +80,14 @@ export const Game = z.object({
             .int("Play time must be an integer")
             .nonnegative("Play time must be greater than 0")
     ),
+    total_achievements: z.number().int().min(0),
+    obtained_achievements: z.number().int().min(0),
+    completion_percentage: z.number().int().min(0).max(100),
 });
+
+// TODO add constraints on obtained achievements === 0 if game is not bought, same for completion % 
+// TODO find a way to make total_achievements nullable
+// TODO refine obtained achievements < total achievements
 
 export type Game = z.infer<typeof Game>;
 

@@ -4,10 +4,11 @@ MYSQL_USER=gamedex
 MYSQL_PASSWORD=gamedex_password
 MYSQL_CONTAINER_NAME=db
 
-.PHONY: up restore dump logs rm stop populate
+.PHONY: up restore dump logs rm stop populate push studio
 up:
+	mkdir mysql_data
 	docker run --name $(MYSQL_CONTAINER_NAME) \
-		-v mysql_data:/var/lib/mysql \
+		--mount type=bind,source=$(CURDIR)/mysql_data,target=/var/lib/mysql \
 		-e MYSQL_ROOT_PASSWORD=$(MYSQL_ROOT_PASSWORD) \
 		-e MYSQL_DATABASE=$(MYSQL_DATABASE) \
 		-e MYSQL_USER=$(MYSQL_USER) \
@@ -23,10 +24,15 @@ stop:
 
 rm: stop
 	docker rm $(MYSQL_CONTAINER_NAME)
-	docker volume rm mysql_data
+	rm -rf mysql_data
+
+push:
+	npx prisma db push
+
+studio:
+	npx prisma studio
 
 populate:
-	npx prisma db push
 	npm run populate
 
 dump: 

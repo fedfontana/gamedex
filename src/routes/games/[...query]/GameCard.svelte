@@ -5,11 +5,10 @@
 	import ConsoleIcon from '../../game/[short_name]/ConsoleIcon.svelte';
 	import TimerIcon from '../../game/[short_name]/TimerIcon.svelte';
 
-	//TODO refine prisma types: Game.status must be Status, etc
-
-	
 	export let game: Game;
 </script>
+
+<!-- TODO: refine prisma types: Game.status must be Status, etc -->
 
 <div class="card w-96 h-[30rem] bg-base-100 shadow-xl image-full">
 	<figure class="min-w-full min-h-full">

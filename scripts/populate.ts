@@ -39,15 +39,19 @@ async function main() {
             console.log("Finished parsing data");
 
             const games = data.map(entry => {
+                const total_achievements = Math.floor(Math.random() * 80);
                 const game: Game = {
                     name: entry.Name.substring(0, 128),
                     short_name: entry.Name.replace(' ', '_').toLowerCase().substring(0, 64),
                     release_date: new Date(entry.Year),
                     art_url: 'https://source.unsplash.com/random',
                     developer: entry.Publisher,
-                    status: STATUSES[Math.floor(Math.random() % STATUSES.length)] as Status,
+                    status: STATUSES[Math.floor(Math.random() * STATUSES.length)] as Status,
                     platform: entry.Platform as Platform, // Not really true, but idc
-                    play_time: Math.floor(Math.random() % 200),
+                    play_time: Math.floor(Math.random() * 200),
+                    total_achievements,
+                    obtained_achievements: Math.floor(Math.random() * total_achievements),
+                    completion_percentage: Math.floor(Math.random() * 100),
                 };
                 return game;
             });
@@ -61,6 +65,8 @@ async function main() {
                     if (err instanceof PrismaClientKnownRequestError) {
                         if (err.code === 'P2002') {
                             console.error("Unique constraint error. Skipping entry with name: ", game.name);
+                        } else {
+                            console.error("DB error. Skipping entry with name: ", game.name);
                         }
                     } else {
                         console.error("Unknown error. Skipping entry with name: ", game.name);

@@ -90,6 +90,14 @@
 			<CalendarIcon size="30" />
 			Release date: {game.release_date?.toDateString() ?? 'unknown'}
 		</span>
+
+		<span>
+			{game.obtained_achievements}/{game.total_achievements}
+		</span>
+
+		<span>
+			{game.completion_percentage}%
+		</span>
 	</div>
 </div>
 
