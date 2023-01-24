@@ -112,40 +112,48 @@
 		<!-- PAGE CONTENT -->
 
 		<!-- TODO if i dont put mb-24 the bottom navigation gets cut off, fix -->
-		<div class="flex flex-col items-center gap-12 my-12 mb-24">
-			<div class="grid grid-cols-3 gap-y-12 gap-x-8 w-10/12">
-				{#each games as game}
-					<GameCard {game} />
-				{/each}
+		{#if games.length > 0}
+			<div class="flex flex-col items-center gap-12 my-12 mb-24">
+				<div class="grid grid-cols-3 gap-y-12 gap-x-8 w-10/12">
+					{#each games as game}
+						<GameCard {game} />
+					{/each}
+				</div>
+				<div class="flex flex-row gap-4 items-center">
+					<button
+						class="btn btn-primary"
+						class:btn-disabled={page <= 1}
+						on:click={() => {
+							page--;
+							load_game_page(page);
+						}}
+						disabled={page <= 1}
+					>
+						-
+					</button>
+					<span>
+						{page}
+					</span>
+					<button
+						class="btn btn-primary"
+						class:btn-disabled={page >= total_pages}
+						on:click={() => {
+							page++;
+							load_game_page(page);
+						}}
+						disabled={page >= total_pages}
+					>
+						+
+					</button>
+				</div>
 			</div>
-			<div class="flex flex-row gap-4 items-center">
-				<button
-					class="btn btn-primary"
-					class:btn-disabled={page <= 1}
-					on:click={() => {
-						page--;
-						load_game_page(page);
-					}}
-					disabled={page <= 1}
-				>
-					-
-				</button>
-				<span>
-					{page}
-				</span>
-				<button
-					class="btn btn-primary"
-					class:btn-disabled={page >= total_pages}
-					on:click={() => {
-						page++;
-						load_game_page(page);
-					}}
-					disabled={page >= total_pages}
-				>
-					+
-				</button>
+		{:else}
+			<div class="mt-32 text-center">
+				<p class="text-xl font-semibold">
+					such content, much wow
+				</p>
 			</div>
-		</div>
+		{/if}
 
 		<!-- END PAGE CONTENT -->
 	</div>
