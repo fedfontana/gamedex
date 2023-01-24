@@ -16,7 +16,7 @@
 	const deleteGame = async () => {
 		called_delete = true;
 
-		const res = await fetch(`/games/${game.short_name}/delete`, {
+		const res = await fetch(`/games/${encodeURIComponent(game.short_name)}/delete`, {
 			method: 'DELETE'
 		});
 		if (!res.ok) {
@@ -39,7 +39,7 @@
 		</div>
 		{#if $is_logged_in}
 			<div class="flex flex-col gap-2 mx-auto w-48">
-				<a href="/games/{game.short_name}/edit" class="btn btn-warning shadow-xl"> edit </a>
+				<a href="/game/{encodeURIComponent(game.short_name)}/edit" class="btn btn-warning shadow-xl"> edit </a>
 				<label for="modal-delete-game" class="btn btn-error shadow-xl">delete</label>
 			</div>
 		{/if}
@@ -91,13 +91,37 @@
 			Release date: {game.release_date?.toDateString() ?? 'unknown'}
 		</span>
 
-		<span>
-			{game.obtained_achievements}/{game.total_achievements}
-		</span>
+		{#if game.total_achievements > 0 || game.completion_percentage > 0}
+			<span class="flex flex-row gap-4 items-center justify-evenly">
+				{#if game.total_achievements > 0}
+					<span class="flex flex-col items-center gap-1">
+						<div
+							class="tooltip tooltip-primary"
+							data-tip="{game.obtained_achievements}/{game.total_achievements}"
+						>
+							<div
+								class="radial-progress text-primary"
+								style="--value:{Math.floor(
+									(game.obtained_achievements / game.total_achievements) * 100
+								)};"
+							>
+								{Math.floor((game.obtained_achievements / game.total_achievements) * 100)}%
+							</div>
+						</div>
+						<p>Achievements</p>
+					</span>
+				{/if}
 
-		<span>
-			{game.completion_percentage}%
-		</span>
+				{#if game.completion_percentage > 0}
+					<span class="flex flex-col items-center gap-1">
+						<div class="radial-progress text-accent" style="--value:{game.completion_percentage};">
+							{game.completion_percentage}%
+						</div>
+						<p>Completion</p>
+					</span>
+				{/if}
+			</span>
+		{/if}
 	</div>
 </div>
 

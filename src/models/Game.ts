@@ -80,9 +80,26 @@ export const Game = z.object({
             .int("Play time must be an integer")
             .nonnegative("Play time must be greater than 0")
     ),
-    total_achievements: z.number().int().min(0),
-    obtained_achievements: z.number().int().min(0),
-    completion_percentage: z.number().int().min(0).max(100),
+    total_achievements: z.preprocess(
+        v => parseInt(z.string().parse(v), 10),
+        z.number({ required_error: "Total achievements is required" })
+            .int("Total achievements must be an integer")
+            .nonnegative("Total achievements must be greater than 0")
+    ),
+    obtained_achievements: z.preprocess(
+        v => parseInt(z.string().parse(v), 10),
+        z.number({ required_error: "Obtained achievements is required" })
+            .int("Obtained achievements must be an integer")
+            .nonnegative("Obtained achievements must be greater than 0")
+    ),
+    completion_percentage: 
+    z.preprocess(
+        v => parseInt(z.string().parse(v), 10),
+        z.number({ required_error: "Completion percentage is required" })
+            .int("Completion percentage must be an integer")
+            .nonnegative("Completion percentage must be greater than 0")
+            .max(100, "Completion percentage must be smaller or equal than 100")
+    ),
 });
 
 // TODO add constraints on obtained achievements === 0 if game is not bought, same for completion % 
@@ -90,14 +107,3 @@ export const Game = z.object({
 // TODO refine obtained achievements < total achievements
 
 export type Game = z.infer<typeof Game>;
-
-// Game = {
-//     name: string,
-//     short_name: string,
-//     art_url: url?,
-//     developer: string?,
-//     release_date: Date?,
-//     status: Status,
-//     platform: Platform?,
-//     play_time: int
-// }

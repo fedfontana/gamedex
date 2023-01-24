@@ -3,7 +3,7 @@
 </script>
 
 <svg
-	class="fill-accent-content"
+	class="fill-accent"
 	width={size}
 	height={size}
 	version="1.1"
