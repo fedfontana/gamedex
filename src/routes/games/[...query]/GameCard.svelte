@@ -7,6 +7,7 @@
 
 	//TODO refine prisma types: Game.status must be Status, etc
 
+	
 	export let game: Game;
 </script>
 
