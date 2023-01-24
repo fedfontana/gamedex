@@ -7,6 +7,9 @@ export const load: LayoutServerLoad = async ({ params }) => {
         where: {
             short_name: params.short_name,
         },
+        include: {
+            notes: true,
+        }
     });
 
     if (game === null) {

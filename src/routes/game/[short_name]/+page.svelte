@@ -24,6 +24,40 @@
 			console.error('Could not delete game for some reason. Res: ', res);
 		}
 	};
+
+	let new_note_content = '';
+
+	//TODO add errors under notes
+	async function add_new_note() {
+		if (new_note_content.length < 1 || new_note_content.length > 512) return;
+		//TODO handle errors
+		const res = await fetch(`/game/${encodeURIComponent(game.short_name)}/notes`, {
+			method: 'POST',
+			body: JSON.stringify({
+				gameId: game.id,
+				content: new_note_content
+			})
+		});
+
+		const id = (await res.json()).id as number;
+
+		if (res.ok) {
+			game.notes = [...game.notes, { id, gameId: game.id, content: new_note_content }];
+			new_note_content = '';
+		}
+	}
+
+	function remove_note_with_id(id: number) {
+		return async () => {
+			const res = await fetch(`/game/${encodeURIComponent(game.short_name)}/notes/${id}`, {
+				method: 'DELETE'
+			});
+			if (res.ok) {
+				let old_note_id = (await res.json()).id;
+				game.notes = game.notes.filter((n) => n.id != old_note_id);
+			}
+		};
+	}
 </script>
 
 <div class="w-10/12 mx-auto flex flex-row gap-8 mt-10">
@@ -39,14 +73,19 @@
 		</div>
 		{#if $is_logged_in}
 			<div class="flex flex-col gap-2 mx-auto w-48">
-				<a href="/game/{encodeURIComponent(game.short_name)}/edit" class="btn btn-warning shadow-xl"> edit </a>
+				<a
+					href="/game/{encodeURIComponent(game.short_name)}/edit"
+					class="btn btn-warning shadow-xl"
+				>
+					edit
+				</a>
 				<label for="modal-delete-game" class="btn btn-error shadow-xl">delete</label>
 			</div>
 		{/if}
 	</div>
 
 	<!-- central panel -->
-	<div class="flex flex-col justify-start items-start flex-[4]">
+	<div class="flex flex-col justify-start items-start flex-[4] gap-12">
 		<h2 class="text-3xl font-semibold">
 			{game.name}
 			{#if game.developer}
@@ -67,10 +106,51 @@
 			- dlcs
 			- events
 		 -->
+
+		<div class="flex flex-col justify-start items-start flex-[4] gap-6 w-full">
+			<!-- BEGIN NOTE PART -->
+			<div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box w-full">
+				<input type="checkbox" />
+				<div class="collapse-title text-xl font-medium">See notes</div>
+				<div class="collapse-content">
+					<div class="flex flex-col gap-4">
+						{#each game.notes as note}
+							<!-- TODO: these should not be textareas -->
+							<div class="flex flex-row gap-2">
+								<p
+									class="border border-base-content border-opacity-20 flex-grow rounded-btn px-4 py-2"
+								>
+									{note.content}
+								</p>
+								<button class="btn btn-error btn-square" on:click={remove_note_with_id(note.id)}>
+									R
+								</button>
+							</div>
+						{/each}
+						<div class="flex flex-row gap-2">
+							<textarea
+								class="textarea textarea-bordered w-full"
+								placeholder="Notes about the game..."
+								bind:value={new_note_content}
+							/>
+							<button
+								class="btn btn-primary btn-square"
+								on:click={add_new_note}
+								disabled={new_note_content.length < 1 || new_note_content.length > 512}
+							>
+								+
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- END NOTE PART -->
 	</div>
 
 	<!-- right panel -->
-	<div class="flex flex-col gap-3 bg-base-300 shadow-xl p-4 rounded-xl flex-[2]">
+	<!-- TODO: fix this growing when opening the central disclosures -->
+	<div class="flex flex-col gap-3 bg-base-300 shadow-xl p-4 rounded-xl flex-[2] max-h-fit">
 		<h3 class="text-lg font-semibold">Data</h3>
 		<span class="flex flex-row gap-1 items-center">
 			<ConsoleIcon size="30" />

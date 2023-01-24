@@ -34,14 +34,15 @@ Tech stack:
 - [X] less ugly home page
 
 ## V 0.4.0
-- [ ] add total achievement count
-- [ ] add achieved achievement count
-- [ ] add completion %
+- [X] add total achievement count
+- [X] add achieved achievement count
+- [X] add completion %
 
-- [ ] add game dlcs
+- [X] add notes
+  - add edit option?
 - [ ] add game useful links
-- [ ] add notes
 - [ ] add game events
+- [ ] add game dlcs
 
 ## V 0.5.0
 - add general events (like e3, ...) 
@@ -67,3 +68,6 @@ Tech stack:
 - fix typescript types, todos and bugs
 - fix autofocus message in /login
 - extract form stuff into separate components?
+- https://www.prisma.io/docs/reference/api-reference/prisma-client-reference#rejectonnotfound
+- wrappers to daisy stuff with more sensible stuff
+- wrapper around form fields with errors & so on

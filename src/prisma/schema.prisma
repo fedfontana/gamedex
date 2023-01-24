@@ -20,9 +20,19 @@ model Game {
   status                String
   platform              String
   play_time             Int
-// TODO min and max on new fields
-// TODO completion percentage => float
+  // TODO min and max on new fields
+  // TODO completion percentage => float
   total_achievements    Int
   obtained_achievements Int
   completion_percentage Int
+
+  // Notes
+  notes Note[]
+}
+
+model Note {
+  id     Int  @id @default(autoincrement())
+  game   Game @relation(fields: [gameId], references: [id])
+  gameId Int
+  content String @db.VarChar(512)
 }
