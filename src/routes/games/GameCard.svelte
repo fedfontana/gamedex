@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { Game } from '@prisma/client';
-	import BoxIcon from './[short_name]/BoxIcon.svelte';
-	import CalendarIcon from './[short_name]/CalendarIcon.svelte';
-	import ConsoleIcon from './[short_name]/ConsoleIcon.svelte';
-	import TimerIcon from './[short_name]/TimerIcon.svelte';
+	import BoxIcon from '../game/[short_name]/BoxIcon.svelte';
+	import CalendarIcon from '../game/[short_name]/CalendarIcon.svelte';
+	import ConsoleIcon from '../game/[short_name]/ConsoleIcon.svelte';
+	import TimerIcon from '../game/[short_name]/TimerIcon.svelte';
 
 	//TODO refine prisma types: Game.status must be Status, etc
 

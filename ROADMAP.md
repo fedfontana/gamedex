@@ -26,7 +26,7 @@ Tech stack:
   
 ## V 0.3.0
 - [X] theme switch
-  - [ ] change its location
+  - [X] change its location
 - [X] filter list
 - [X] sort list
 - [X] paginated list result

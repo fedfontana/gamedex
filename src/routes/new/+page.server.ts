@@ -6,9 +6,9 @@ import { Prisma } from "@prisma/client";
 import { is_logged_in } from "$src/utils/user";
 import type { FieldErrors } from "$types/types";
 
-export const load: ServerLoad = async ({ cookies }) => {
+export const load: ServerLoad = async ({ cookies, url }) => {
 	if(!is_logged_in(cookies)) {
-		throw redirect(307, "/login?next=/game/new");
+		throw redirect(307, `/login?next=${url.pathname}`);
 	}
 }
 
