@@ -110,7 +110,8 @@
 		</label>
 		<!-- PAGE CONTENT -->
 
-		<div class="flex flex-col items-center gap-12 my-12">
+		<!-- TODO if i dont put mb-24 the bottom navigation gets cut off, fix -->
+		<div class="flex flex-col items-center gap-12 my-12 mb-24">
 			<div class="grid grid-cols-3 gap-y-12 gap-x-8 w-10/12">
 				{#each games as game}
 					<GameCard {game} />
