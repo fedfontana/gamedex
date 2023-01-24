@@ -1,8 +1,12 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import Alert from '$components/Alert.svelte';
 	import { DAISYUI_THEMES } from '$src/constants';
 	import { is_logged_in } from '$src/stores';
+	import SearchIcon from './games/[...query]/SearchIcon.svelte';
 	let logout_error = false;
+
+	let game_query = '';
 </script>
 
 <div class="navbar bg-base-100 p-4">
@@ -10,9 +14,16 @@
 		<a class="btn btn-ghost normal-case text-4xl" href="/">gamedex</a>
 	</div>
 	<div class="flex-none gap-2">
-		<div class="form-control">
-			<input type="text" placeholder="Search" class="input input-bordered w-80" />
-		</div>
+		<form on:submit|preventDefault={() => {goto(`/games/${encodeURIComponent(game_query)}`);}} >
+			<div class="form-control">
+				<div class="input-group">
+					<input type="text" placeholder="Search" class="input input-bordered w-80" bind:value={game_query}/>
+					<button type="submit" class="btn btn-square btn-primary">
+						<SearchIcon />
+					</button>
+				</div>
+			</div>
+		</form>
 
 		<select data-choose-theme value="forest" class="select select-accent">
 			{#each DAISYUI_THEMES as theme}
