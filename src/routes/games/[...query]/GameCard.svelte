@@ -50,7 +50,7 @@
 		</div>
 
 		<div class="card-actions justify-end">
-			<a href="/games/{game.short_name}">
+			<a href="/game/{game.short_name}">
 				<button class="btn btn-primary"> Details </button>
 			</a>
 		</div>
