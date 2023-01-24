@@ -111,10 +111,10 @@
 		</label>
 		<!-- PAGE CONTENT -->
 
-		<!-- TODO if i dont put mb-24 the bottom navigation gets cut off, fix -->
 		{#if games.length > 0}
+			<!-- TODO make this round -->
 			<button
-				class="btn btn-primary absolute top-[calc(50%-3rem)] left-4 px-5"
+				class="btn btn-primary absolute top-[calc(50%-3rem)] left-4 py-2 font-semibold text-xl"
 				class:btn-disabled={page <= 1}
 				on:click={() => {
 					page--;
@@ -125,7 +125,7 @@
 				-
 			</button>
 			<button
-				class="btn btn-primary absolute top-[calc(50%-3rem)] right-4 px-5"
+				class="btn btn-primary absolute top-[calc(50%-3rem)] right-4 py-2 font-semibold text-xl"
 				class:btn-disabled={page >= total_pages}
 				on:click={() => {
 					page++;
@@ -135,11 +135,13 @@
 			>
 				+
 			</button>
-				<div class="grid grid-cols-3 gap-y-12 gap-x-8 w-10/12 mx-auto mt-12 mb-36">
-					{#each games as game}
-						<GameCard {game} />
-					{/each}
-				</div>
+	
+			<!-- TODO if i dont put mb-24 the bottom navigation gets cut off, fix -->
+			<div class="grid grid-cols-3 gap-y-12 gap-x-8 w-10/12 mx-auto mt-12 mb-36">
+				{#each games as game}
+					<GameCard {game} />
+				{/each}
+			</div>
 		{:else}
 			<div class="mt-32 text-center">
 				<p class="text-xl font-semibold">such content, much wow</p>
