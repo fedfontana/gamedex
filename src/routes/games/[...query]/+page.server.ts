@@ -1,9 +1,17 @@
 import type { Actions } from "@sveltejs/kit";
 import { ZodError } from 'zod';
-import type { PageServerLoad } from "./$types";
+import type { PageServerLoad } from "../$types";
 import { DEFAULT_OPTIONS, FilterSortSchema, load_games_paginated } from "./utils";
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ params }) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const q = (params as any).query as string;
+    if(q.length > 0) {
+        const options = JSON.parse(JSON.stringify(DEFAULT_OPTIONS));
+        options.query = q;
+        return await load_games_paginated(options, 1);
+    }
+
     return await load_games_paginated(DEFAULT_OPTIONS, 1);
 }
 

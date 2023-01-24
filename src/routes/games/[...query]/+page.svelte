@@ -8,6 +8,7 @@
 	import { SORT_OPTIONS, type SortOption } from '$src/utils/enums';
 	import type { Game } from '@prisma/client';
 	import FilterIcon from './FilterIcon.svelte';
+	import { page as p } from '$app/stores';
 
 	export let data: PageData;
 	export let form: { games: Game[]; total_pages: number; page: number } | undefined;
@@ -15,7 +16,7 @@
 	$: total_pages = form?.total_pages ?? data.total_pages; // in case something changes
 
 	let options = {
-		query: '',
+		query: $p.params.query,
 		sort_enabled: false,
 		sort_ascending: false,
 		sort_col: 'name' as SortOption,
