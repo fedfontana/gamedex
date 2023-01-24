@@ -7,11 +7,12 @@
 	import { applyAction, deserialize } from '$app/forms';
 	import { SORT_OPTIONS, type SortOption } from '$src/utils/enums';
 	import type { Game } from '@prisma/client';
+	import FilterIcon from './FilterIcon.svelte';
 
 	export let data: PageData;
-	export let form: { games: Game[] } | undefined;
+	export let form: { games: Game[]; total_pages: number; page: number } | undefined;
 
-	$: games = form?.games ?? data.games;
+	$: total_pages = form?.total_pages ?? data.total_pages; // in case something changes
 
 	let options = {
 		query: '',
@@ -32,7 +33,7 @@
 				formData.append(key, object[key]);
 				return formData;
 			}, new FormData());
-		
+
 		let form_data = getFormData(options);
 
 		const response = await fetch('/games', {
@@ -44,9 +45,38 @@
 		});
 
 		const result = deserialize(await response.text());
-
+		list_games = undefined;
 		applyAction(result);
 	};
+
+	////////////////////////////////////////////
+	////////////////////////////////////////////
+	////////////////////////////////////////////
+	////////////////////////////////////////////
+	////////////////////////////////////////////
+	////////////////////////////////////////////
+	// TODO: FIX DOUBLE SCROLLBAR ON THE RIGHT//
+	////////////////////////////////////////////
+	////////////////////////////////////////////
+	////////////////////////////////////////////
+	////////////////////////////////////////////
+	////////////////////////////////////////////
+	////////////////////////////////////////////
+
+	let list_games: Game[] | undefined = undefined;
+	let page = 1;
+
+	const load_game_page = async (page: number) => {
+		if (page < 1 || page > total_pages) return;
+
+		const response = await fetch(
+			`/games?page=${page}&options=${encodeURIComponent(JSON.stringify(options))}`
+		);
+
+		list_games = (await response.json()).games as Game[];
+	};
+
+	$: games = list_games ?? form?.games ?? data.games;
 </script>
 
 <!-- TODO: add filter rest/ full reset/ sort reset -->
@@ -65,17 +95,55 @@
 <!-- TODO: automatically close sidebar when search is successfull -->
 <!-- TODO: fix double scrolling bar on ther right in the list of games -->
 <!-- TODO: escape / from game names -->
+<!-- TODO: fix icons: they have padding on the bottom, so they're off-center/misaligned -->
+<!-- TODO: add some sort of shadow/box around the paringation thingy at the bottom -->
 
-<div class="drawer">
+<div class="drawer relative">
 	<input id="filters-drawer" type="checkbox" class="drawer-toggle" />
-	<div class="drawer-content w-10/12 mx-auto">
-		<label for="filters-drawer" class="btn btn-primary drawer-button">Open filters</label>
+	<div class="drawer-content">
+		<!-- TODO: remove the bottom padding from the svg, and then remove the pt-2 -->
+		<label
+			for="filters-drawer"
+			class="btn btn-primary btn-square drawer-button absolute top-6 left-12 z-50 flex items-center justify-center pt-2 p-2"
+		>
+			<FilterIcon size="35" />
+		</label>
 		<!-- PAGE CONTENT -->
 
-		<div class="grid grid-cols-3 w-full gap-y-12 gap-x-8 my-12">
-			{#each games as game}
-				<GameCard {game} />
-			{/each}
+		<!-- TODO if i dont put mb-24 the bottom navigation gets cut off, fix -->
+		<div class="flex flex-col items-center gap-12 my-12 mb-24">
+			<div class="grid grid-cols-3 gap-y-12 gap-x-8 w-10/12">
+				{#each games as game}
+					<GameCard {game} />
+				{/each}
+			</div>
+			<div class="flex flex-row gap-4 items-center">
+				<button
+					class="btn btn-primary"
+					class:btn-disabled={page <= 1}
+					on:click={() => {
+						page--;
+						load_game_page(page);
+					}}
+					disabled={page <= 1}
+				>
+					-
+				</button>
+				<span>
+					{page}
+				</span>
+				<button
+					class="btn btn-primary"
+					class:btn-disabled={page >= total_pages}
+					on:click={() => {
+						page++;
+						load_game_page(page);
+					}}
+					disabled={page >= total_pages}
+				>
+					+
+				</button>
+			</div>
 		</div>
 
 		<!-- END PAGE CONTENT -->
@@ -94,7 +162,7 @@
 							class="input input-bordered flex-grow"
 							bind:value={options.query}
 						/>
-						<button class="btn btn-square" type="submit">
+						<button class="btn btn-square btn-primary" type="submit">
 							<SearchIcon />
 						</button>
 					</div>

@@ -19,5 +19,9 @@
 	});
 </script>
 
-<Navbar />
-<slot />
+<div class="max-w-screen max-h-screen overflow-y-scroll flex flex-col">
+	<Navbar />
+	<main class="overflow-hidden">
+		<slot />
+	</main>
+</div>

@@ -1,140 +1,20 @@
-import prisma from "$src/db"
 import type { Actions } from "@sveltejs/kit";
+import { ZodError } from 'zod';
 import type { PageServerLoad } from "./$types";
-import { z, ZodError } from 'zod';
-
-const GAMES_PER_PAGE = 30;
+import { DEFAULT_OPTIONS, FilterSortSchema, load_games_paginated } from "./utils";
 
 export const load: PageServerLoad = async () => {
-    return {
-        games: await prisma.game.findMany({ take: GAMES_PER_PAGE }),
-    }
+    return await load_games_paginated(DEFAULT_OPTIONS, 1);
 }
-
-const SORT_COLS = ['name', 'release_date', 'play_time'] as const;
-type SortCol = (typeof SORT_COLS)[number];
-
-// TODO refine type of filters
-const FilterSortSchema = z.object({
-    query: z.preprocess(
-        v => {
-            if (typeof v === 'string') {
-                return v.trim() === '' ? null : v.trim()
-            }
-            return null;
-        },
-        z.string().nullable(),
-    ),
-    sort_enabled: z.preprocess(
-        v => v === 'true',
-        z.boolean(),
-    ),
-    sort_col: z.preprocess(
-        v => {
-            if (typeof v === 'string') {
-                return v.replace(' ', '_');
-            }
-            return null;
-        },
-        z.enum(SORT_COLS).nullish(),
-    ),
-    sort_ascending: z.preprocess(
-        v => v === 'true',
-        z.boolean(),
-    ),
-    show_filters: z.preprocess(
-        v => v === 'true',
-        z.boolean(),
-    ),
-    show_status_filters: z.preprocess(
-        v => v === 'true',
-        z.boolean(),
-    ),
-    status_filters: z.preprocess(
-        v => {
-            if (typeof v === 'string') {
-                return v.split(',').map(e => e.trim()).filter(e => e.length > 0);
-            }
-            return [];
-        },
-        z.array(z.string())
-    ),
-    show_platform_filters: z.preprocess(
-        v => v === 'true',
-        z.boolean(),
-    ),
-    platform_filters: z.preprocess(
-        v => {
-            if (typeof v === 'string') {
-                return v.split(',').map(e => e.trim()).filter(e => e.length > 0);
-            }
-            return [];
-        },
-        z.array(z.string())
-    ),
-});
 
 export const actions: Actions = {
     default: async ({ request }) => {
         const formData = Object.fromEntries(await request.formData());
-        console.log("Form data: ", formData);
         try {
             const options = FilterSortSchema.parse(formData);
-            console.log("parsed options: ", options);
-
-            const sort_options: { [k in SortCol]?: 'asc' | 'desc' } = {};
-            if (options.sort_enabled) {
-                sort_options[options.sort_col ?? 'name'] = options.sort_ascending ? 'asc' : 'desc';
-            }
-
-
-            const query_options = options.query ? {
-                OR: [
-                    {
-                        name: {
-                            contains: options.query,
-                        },
-                    },
-                    {
-                        short_name: {
-                            contains: options.query,
-                        },
-                    },
-                    {
-                        developer: {
-                            contains: options.query,
-                        },
-                    },
-                ],
-            } : {};
-
-            const status_filters = options.show_status_filters ? {
-                status: {
-                    in: options.status_filters,
-                }
-            } : {};
-
-
-            const platform_filters = options.show_platform_filters ? {
-                platform: {
-                    in: options.platform_filters,
-                }
-            } : {};
-
-            const games = await prisma.game.findMany({
-                //where: query_options,
-                orderBy: sort_options,
-                take: GAMES_PER_PAGE,
-                where: { ...query_options, ...status_filters, ...platform_filters },
-            });
-            console.log("pippo l'intonaco\n\n\n");
-            console.log("Returning: ", games);
-
-            return {
-                games,
-            }
-
+            return await load_games_paginated(options)
         } catch (err) {
+            // No need to return old values since they're bound in a form variable
             if (err instanceof ZodError) {
                 console.error("Zod error: ", err);
             }

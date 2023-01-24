@@ -27,9 +27,9 @@ Tech stack:
 ## V 0.3.0
 - [X] theme switch
   - [ ] change its location
-- [ ] filter list
-- [ ] sort list
-- [ ] infinite scrolling in list
+- [X] filter list
+- [X] sort list
+- [X] paginated list result
 - [ ] working search box in home
 - [ ] less ugly home page
 
