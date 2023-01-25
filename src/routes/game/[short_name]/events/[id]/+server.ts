@@ -5,7 +5,7 @@ import type { RequestHandler } from "../$types";
 export const DELETE: RequestHandler = async ({ params }) => {
     try {
         const id = parseInt(params.id);
-        const old_event = await prisma.usefulLink.delete({
+        const old_event = await prisma.gameEvent.delete({
             where: {
                 id,
             }

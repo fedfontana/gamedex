@@ -30,6 +30,12 @@
 		title: '',
 		url: ''
 	};
+	let new_event = {
+		name: '',
+		description: '',
+		begin_dt: '',
+		end_dt: ''
+	};
 
 	//TODO add errors under notes
 	async function add_new_note() {
@@ -74,6 +80,41 @@
 		}
 	}
 
+	async function add_new_event() {
+		if (new_event.name.length < 1 || new_event.name.length > 128) return;
+		if (new_event.begin_dt.length < 1) return;
+		//TODO handle errors
+		const res = await fetch(`/game/${encodeURIComponent(game.short_name)}/events`, {
+			method: 'POST',
+			body: JSON.stringify({
+				gameId: game.id,
+				...new_event
+			})
+		});
+
+		const id = (await res.json()).id as number;
+
+		if (res.ok) {
+			game.events = [
+				...game.events,
+				{
+					id,
+					gameId: game.id,
+					begin_dt: new Date(new_event.begin_dt),
+					end_dt: new_event.end_dt === '' ? null : new Date(new_event.end_dt),
+					description: new_event.description === '' ? null : new_event.description,
+					name: new_event.name
+				}
+			];
+			new_event = {
+				name: '',
+				description: '',
+				begin_dt: '',
+				end_dt: ''
+			};
+		}
+	}
+
 	function remove_note_with_id(id: number) {
 		return async () => {
 			const res = await fetch(`/game/${encodeURIComponent(game.short_name)}/notes/${id}`, {
@@ -94,6 +135,18 @@
 			if (res.ok) {
 				let old_link_id = (await res.json()).id;
 				game.useful_links = game.useful_links.filter((n) => n.id != old_link_id);
+			}
+		};
+	}
+
+	function remove_event_with_id(id: number) {
+		return async () => {
+			const res = await fetch(`/game/${encodeURIComponent(game.short_name)}/events/${id}`, {
+				method: 'DELETE'
+			});
+			if (res.ok) {
+				let old_event_id = (await res.json()).id;
+				game.events = game.events.filter((n) => n.id != old_event_id);
 			}
 		};
 	}
@@ -123,6 +176,7 @@
 		{/if}
 	</div>
 
+	<!-- TODO fix scrolling -->
 	<!-- central panel -->
 	<div class="flex flex-col justify-start items-start flex-[4] gap-12">
 		<h2 class="text-3xl font-semibold">
@@ -181,7 +235,7 @@
 		<!-- BEGIN USEFUL LINKS PART -->
 		<div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box w-full">
 			<input type="checkbox" />
-			<div class="collapse-title text-xl font-medium">See notes</div>
+			<div class="collapse-title text-xl font-medium">See links</div>
 			<div class="collapse-content">
 				<div class="flex flex-col gap-4">
 					{#each game.useful_links as link}
@@ -229,6 +283,79 @@
 			</div>
 		</div>
 		<!-- END USEFUL LINKS PART -->
+
+		<!-- BEGIN EVENTS PART -->
+		<div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box w-full">
+			<input type="checkbox" />
+			<div class="collapse-title text-xl font-medium">See events</div>
+			<div class="collapse-content">
+				<div class="flex flex-col gap-4">
+					{#each game.events as event}
+						<div class="flex flex-row gap-2">
+							<div class="flex flex-grow flex-col gap-2">
+								<h4 class="font-semibold text-lg">
+									{event.name}
+								</h4>
+								<span class="flex flex-row gap-2">
+									<p>
+										{event.begin_dt.toLocaleDateString()} {event.begin_dt.toLocaleTimeString()}
+									</p>
+									{#if event.end_dt}
+										<p>
+											--
+										</p>
+										<p>
+											{event.end_dt.toLocaleDateString()} {event.end_dt.toLocaleTimeString()}
+										</p>
+									{/if}
+								</span>
+								<p class="border border-base-content border-opacity-20 rounded-btn px-4 py-2">
+									{event.description}
+								</p>
+							</div>
+							<button class="btn btn-error btn-square" on:click={remove_event_with_id(event.id)}>
+								R
+							</button>
+						</div>
+					{/each}
+					<div class="flex flex-col gap-2">
+						<input
+							type="text"
+							class="input input-bordered"
+							placeholder="Event name"
+							bind:value={new_event.name}
+						/>
+						<textarea
+							class="textarea textarea-bordered"
+							placeholder="Event description"
+							bind:value={new_event.description}
+						/>
+						<input
+							type="datetime-local"
+							class="input input-bordered"
+							placeholder="Event begin date"
+							bind:value={new_event.begin_dt}
+						/>
+						<input
+							type="datetime-local"
+							class="input input-bordered"
+							placeholder="Event end date"
+							bind:value={new_event.end_dt}
+						/>
+						<button
+							class="btn btn-primary btn-square"
+							on:click={add_new_event}
+							disabled={new_event.name.length < 1 ||
+								new_event.name.length > 128 ||
+								new_event.begin_dt.length < 1}
+						>
+							+
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- END EVENTS PART -->
 	</div>
 
 	<!-- right panel -->

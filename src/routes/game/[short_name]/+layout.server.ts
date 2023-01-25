@@ -10,6 +10,7 @@ export const load: LayoutServerLoad = async ({ params }) => {
         include: {
             notes: true,
             useful_links: true,
+            events: true,
         }
     });
 
