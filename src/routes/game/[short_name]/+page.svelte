@@ -3,10 +3,7 @@
 	import { STATUSES, type Status } from '$models/Game';
 	import { is_logged_in } from '$src/stores';
 	import type { PageData } from './$types';
-	import BoxIcon from './BoxIcon.svelte';
-	import CalendarIcon from './CalendarIcon.svelte';
-	import ConsoleIcon from './ConsoleIcon.svelte';
-	import TimerIcon from './TimerIcon.svelte';
+	import { Calendar, Hourglass, DeviceGamepad, Box } from 'tabler-icons-svelte';
 
 	export let data: PageData;
 	const { game } = data;
@@ -472,22 +469,22 @@
 	<!-- TODO: fix this growing when opening the central disclosures -->
 	<div class="flex flex-col gap-3 bg-base-300 shadow-xl p-4 rounded-xl flex-[2] max-h-fit">
 		<h3 class="text-lg font-semibold">Data</h3>
-		<span class="flex flex-row gap-1 items-center">
-			<ConsoleIcon size="30" />
+		<span class="flex flex-row gap-2 items-center">
+			<DeviceGamepad class="stroke-accent" size={30} />
 			Platform: {game.platform}
 		</span>
 		{#if game.play_time > 0}
-			<span class="flex flex-row gap-1 items-center">
-				<TimerIcon size="30" />
+			<span class="flex flex-row gap-2 items-center">
+				<Hourglass class="stroke-accent" size={30} />
 				Play time: {game.play_time} hour(s)
 			</span>
 		{/if}
-		<span class="flex flex-row gap-1 items-center">
-			<BoxIcon size="30" />
+		<span class="flex flex-row gap-2 items-center">
+			<Box class="stroke-accent" size={30} />
 			Status: {game.status}
 		</span>
-		<span class="flex flex-row gap-1 items-center">
-			<CalendarIcon size="30" />
+		<span class="flex flex-row gap-2 items-center">
+			<Calendar class="stroke-accent" size={30} />
 			Release date: {game.release_date?.toDateString() ?? 'unknown'}
 		</span>
 

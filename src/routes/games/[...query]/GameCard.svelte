@@ -1,9 +1,6 @@
 <script lang="ts">
 	import type { Game } from '@prisma/client';
-	import BoxIcon from '../../game/[short_name]/BoxIcon.svelte';
-	import CalendarIcon from '../../game/[short_name]/CalendarIcon.svelte';
-	import ConsoleIcon from '../../game/[short_name]/ConsoleIcon.svelte';
-	import TimerIcon from '../../game/[short_name]/TimerIcon.svelte';
+	import { Calendar, Hourglass, DeviceGamepad, Box } from 'tabler-icons-svelte';
 
 	export let game: Game;
 </script>
@@ -28,23 +25,24 @@
 			{/if}
 		</div>
 
-		<div class="grow-[1] flex flex-col gap-1 text-md">
+		<div class="grow-[1] flex flex-col gap-2 text-md">
 			<span class="flex flex-row gap-1 items-center">
-				<ConsoleIcon size="25" />
+				<DeviceGamepad class="stroke-accent" size={30} />
 				Platform: {game.platform}
 			</span>
 			{#if game.play_time > 0}
-				<span class="flex flex-row gap-1 items-center">
-					<TimerIcon size="25" />
+				<span class="flex flex-row gap-2 items-center">
+					<Hourglass class="stroke-accent" size={30} />
+
 					Play time: {game.play_time} hour(s)
 				</span>
 			{/if}
-			<span class="flex flex-row gap-1 items-center">
-				<BoxIcon size="25" />
+			<span class="flex flex-row gap-2 items-center">
+				<Box class="stroke-accent" size={30} />
 				Status: {game.status}
 			</span>
-			<span class="flex flex-row gap-1 items-center">
-				<CalendarIcon size="25" />
+			<span class="flex flex-row gap-2 items-center">
+				<Calendar class="stroke-accent" size={30} />
 				Release date: {game.release_date ? (new Date(game.release_date)).toDateString() : 'unknown'}
 			</span>
 		</div>

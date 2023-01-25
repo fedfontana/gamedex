@@ -3,12 +3,12 @@
 	import { slide } from 'svelte/transition';
 	import type { PageData } from './$types';
 	import GameCard from './GameCard.svelte';
-	import SearchIcon from './SearchIcon.svelte';
 	import { applyAction, deserialize } from '$app/forms';
 	import { SORT_OPTIONS, type SortOption } from '$src/utils/enums';
 	import type { Game } from '@prisma/client';
-	import FilterIcon from './FilterIcon.svelte';
 	import { page as p } from '$app/stores';
+	import { Adjustments, Search } from 'tabler-icons-svelte';
+	import SearchIcon from './SearchIcon.svelte';
 
 	export let data: PageData;
 	export let form: { games: Game[]; total_pages: number; page: number } | undefined;
@@ -50,20 +50,6 @@
 		applyAction(result);
 	};
 
-	////////////////////////////////////////////
-	////////////////////////////////////////////
-	////////////////////////////////////////////
-	////////////////////////////////////////////
-	////////////////////////////////////////////
-	////////////////////////////////////////////
-	// TODO: FIX DOUBLE SCROLLBAR ON THE RIGHT//
-	////////////////////////////////////////////
-	////////////////////////////////////////////
-	////////////////////////////////////////////
-	////////////////////////////////////////////
-	////////////////////////////////////////////
-	////////////////////////////////////////////
-
 	let list_games: Game[] | undefined = undefined;
 	let page = 1;
 
@@ -96,18 +82,16 @@
 <!-- TODO: automatically close sidebar when search is successfull -->
 <!-- TODO: fix double scrolling bar on ther right in the list of games -->
 <!-- TODO: escape / from game names -->
-<!-- TODO: fix icons: they have padding on the bottom, so they're off-center/misaligned -->
 <!-- TODO: add some sort of shadow/box around the paringation thingy at the bottom -->
 
 <div class="drawer relative">
 	<input id="filters-drawer" type="checkbox" class="drawer-toggle" />
 	<div class="drawer-content">
-		<!-- TODO: remove the bottom padding from the svg, and then remove the pt-2 -->
 		<label
 			for="filters-drawer"
-			class="btn btn-primary btn-square drawer-button absolute top-6 left-12 z-50 flex items-center justify-center pt-2 p-2"
+			class="btn btn-primary btn-square drawer-button absolute top-6 left-12 z-50 flex items-center justify-center p-2"
 		>
-			<FilterIcon size="35" />
+			<Adjustments size={35} />
 		</label>
 		<!-- PAGE CONTENT -->
 
@@ -165,7 +149,7 @@
 							bind:value={options.query}
 						/>
 						<button class="btn btn-square btn-primary" type="submit">
-							<SearchIcon />
+							<Search class="pr-1" />
 						</button>
 					</div>
 				</div>

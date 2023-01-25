@@ -1,7 +1,7 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { is_logged_in } from '$src/stores';
-	import SearchIcon from './games/[...query]/SearchIcon.svelte';
+	import { Search } from 'tabler-icons-svelte';
 
 	let game_query = '';
 </script>
@@ -22,7 +22,7 @@
 						bind:value={game_query}
 					/>
 					<button type="submit" class="btn btn-square btn-primary">
-						<SearchIcon />
+						<Search class="pr-1" />
 					</button>
 				</div>
 			</div>
