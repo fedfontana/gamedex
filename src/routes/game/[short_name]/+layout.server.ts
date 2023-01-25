@@ -11,6 +11,7 @@ export const load: LayoutServerLoad = async ({ params }) => {
             notes: true,
             useful_links: true,
             events: true,
+            DLCs: true,
         }
     });
 

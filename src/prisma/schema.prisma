@@ -34,6 +34,9 @@ model Game {
 
   // Game events
   events GameEvent[]
+
+  // DLC
+  DLCs    DLC[]
 }
 
 model Note {
@@ -56,7 +59,16 @@ model GameEvent {
   game        Game      @relation(fields: [gameId], references: [id])
   gameId      Int
   name        String    @db.VarChar(128)
-  description String?    @db.VarChar(512)
+  description String?   @db.VarChar(512)
   begin_dt    DateTime
   end_dt      DateTime?
+}
+
+model DLC {
+  id     Int    @id @default(autoincrement())
+  game   Game   @relation(fields: [gameId], references: [id])
+  gameId Int
+  name   String @db.VarChar(128)
+  release_date DateTime?
+  status String
 }

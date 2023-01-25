@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Alert from '$components/Alert.svelte';
+	import { STATUSES, type Status } from '$models/Game';
 	import { is_logged_in } from '$src/stores';
 	import type { PageData } from './$types';
 	import BoxIcon from './BoxIcon.svelte';
@@ -35,6 +36,11 @@
 		description: '',
 		begin_dt: '',
 		end_dt: ''
+	};
+	let new_dlc = {
+		name: '',
+		release_date: '',
+		status: 'backlog' as Status
 	};
 
 	//TODO add errors under notes
@@ -115,6 +121,38 @@
 		}
 	}
 
+	async function add_new_dlc() {
+		if (new_dlc.name.length < 1 || new_dlc.name.length > 128) return;
+		//TODO handle errors
+		const res = await fetch(`/game/${encodeURIComponent(game.short_name)}/dlc`, {
+			method: 'POST',
+			body: JSON.stringify({
+				gameId: game.id,
+				...new_dlc
+			})
+		});
+
+		const id = (await res.json()).id as number;
+
+		if (res.ok) {
+			game.DLCs = [
+				...game.DLCs,
+				{
+					id,
+					gameId: game.id,
+					release_date: new_dlc.release_date === '' ? null : new Date(new_dlc.release_date),
+					name: new_dlc.name,
+					status: new_dlc.status
+				}
+			];
+			new_dlc = {
+				name: '',
+				release_date: '',
+				status: 'backlog'
+			};
+		}
+	}
+
 	function remove_note_with_id(id: number) {
 		return async () => {
 			const res = await fetch(`/game/${encodeURIComponent(game.short_name)}/notes/${id}`, {
@@ -147,6 +185,18 @@
 			if (res.ok) {
 				let old_event_id = (await res.json()).id;
 				game.events = game.events.filter((n) => n.id != old_event_id);
+			}
+		};
+	}
+
+	function remove_dlc_with_id(id: number) {
+		return async () => {
+			const res = await fetch(`/game/${encodeURIComponent(game.short_name)}/dlc/${id}`, {
+				method: 'DELETE'
+			});
+			if (res.ok) {
+				let old_dlc_id = (await res.json()).id;
+				game.DLCs = game.DLCs.filter((n) => n.id != old_dlc_id);
 			}
 		};
 	}
@@ -335,13 +385,11 @@
 						<input
 							type="datetime-local"
 							class="input input-bordered"
-							placeholder="Event begin date"
 							bind:value={new_event.begin_dt}
 						/>
 						<input
 							type="datetime-local"
 							class="input input-bordered"
-							placeholder="Event end date"
 							bind:value={new_event.end_dt}
 						/>
 						<button
@@ -358,6 +406,66 @@
 			</div>
 		</div>
 		<!-- END EVENTS PART -->
+
+		<!-- BEGIN DLC PART -->
+		<div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box w-full">
+			<input type="checkbox" />
+			<div class="collapse-title text-xl font-medium">See DLC</div>
+			<div class="collapse-content">
+				<div class="flex flex-col gap-4">
+					{#each game.DLCs as dlc}
+						<div class="flex flex-row gap-2">
+							<div class="flex flex-grow flex-col gap-2">
+								<h4 class="font-semibold text-lg">
+									{dlc.name}
+								</h4>
+								<span class="flex flex-row gap-2">
+									{#if dlc.release_date}
+										<p>
+											{dlc.release_date.toLocaleDateString()}
+										</p>
+									{:else}
+										<p>Unknown release date</p>
+									{/if}
+								</span>
+								<p>
+									{dlc.status}
+								</p>
+							</div>
+							<button class="btn btn-error btn-square" on:click={remove_dlc_with_id(dlc.id)}>
+								R
+							</button>
+						</div>
+					{/each}
+					<div class="flex flex-col gap-2">
+						<input
+							type="text"
+							class="input input-bordered"
+							placeholder="DLC name"
+							bind:value={new_dlc.name}
+						/>
+						<input
+							type="date"
+							class="input input-bordered"
+							bind:value={new_dlc.release_date}
+						/>
+						<select name="status" class="select select-bordered" bind:value={new_dlc.status}>
+							{#each STATUSES as status}
+								<option value={status}> {status} </option>
+							{/each}
+						</select>
+						<button
+							class="btn btn-primary btn-square"
+							on:click={add_new_dlc}
+							disabled={new_dlc.name.length < 1 || new_dlc.name.length > 128}
+						>
+							+
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- END DLC PART -->
 	</div>
 
 	<!-- right panel -->
