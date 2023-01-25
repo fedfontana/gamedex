@@ -40,9 +40,12 @@ Tech stack:
 
 - [X] add notes
   - add edit option?
-- [ ] add game useful links
-- [ ] add game events
+- [X] add game useful links
+- [X] add game events
 - [ ] add game dlcs
+
+## V 0.4.5
+- big refactor
 
 ## V 0.5.0
 - add general events (like e3, ...) 
