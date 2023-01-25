@@ -31,6 +31,9 @@ model Game {
 
   // Useful links
   useful_links UsefulLink[]
+
+  // Game events
+  events GameEvent[]
 }
 
 model Note {
@@ -46,4 +49,14 @@ model UsefulLink {
   gameId Int
   title  String @db.VarChar(128)
   url    String @db.VarChar(256)
+}
+
+model GameEvent {
+  id          Int       @id @default(autoincrement())
+  game        Game      @relation(fields: [gameId], references: [id])
+  gameId      Int
+  name        String    @db.VarChar(128)
+  description String?    @db.VarChar(512)
+  begin_dt    DateTime
+  end_dt      DateTime?
 }
