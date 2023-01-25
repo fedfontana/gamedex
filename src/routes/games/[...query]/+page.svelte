@@ -92,7 +92,7 @@
 		>
 			<Adjustments size={35} />
 		</label>
-		
+
 		<!-- PAGE CONTENT -->
 		{#if games.length > 0}
 			<button
@@ -117,9 +117,10 @@
 			>
 				<ChevronRight />
 			</button>
-	
+			
+			<!-- TODO fix double scrollbar -->
 			<!-- TODO if i dont put mb-24 the bottom navigation gets cut off, fix -->
-			<div class="grid grid-cols-3 gap-y-12 gap-x-8 w-10/12 mx-auto mt-12 mb-36">
+			<div class="grid grid-cols-3 gap-y-12 gap-x-8 w-10/12 mx-auto mt-12 mb-24">
 				{#each games as game}
 					<GameCard {game} />
 				{/each}

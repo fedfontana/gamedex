@@ -3,7 +3,8 @@
 	import { STATUSES, type Status } from '$models/Game';
 	import { is_logged_in } from '$src/stores';
 	import type { PageData } from './$types';
-	import { Calendar, Hourglass, DeviceGamepad, Box } from 'tabler-icons-svelte';
+	import { Calendar, Hourglass, DeviceGamepad, Box, Trash, Check } from 'tabler-icons-svelte';
+	//TODO change box icon into the box-sealed
 
 	export let data: PageData;
 	const { game } = data;
@@ -255,7 +256,7 @@
 									{note.content}
 								</p>
 								<button class="btn btn-error btn-square" on:click={remove_note_with_id(note.id)}>
-									R
+									<Trash />
 								</button>
 							</div>
 						{/each}
@@ -270,7 +271,7 @@
 								on:click={add_new_note}
 								disabled={new_note_content.length < 1 || new_note_content.length > 512}
 							>
-								+
+								<Check />
 							</button>
 						</div>
 					</div>
@@ -298,7 +299,7 @@
 								class="btn btn-error btn-square"
 								on:click={remove_useful_link_with_id(link.id)}
 							>
-								R
+								<Trash />
 							</button>
 						</div>
 					{/each}
@@ -323,7 +324,7 @@
 								new_useful_link.url.length < 1 ||
 								new_useful_link.url.length > 256}
 						>
-							+
+							<Check />
 						</button>
 					</div>
 				</div>
@@ -363,7 +364,7 @@
 								{/if}
 							</div>
 							<button class="btn btn-error btn-square" on:click={remove_event_with_id(event.id)}>
-								R
+								<Trash />
 							</button>
 						</div>
 					{/each}
@@ -396,7 +397,7 @@
 								new_event.name.length > 128 ||
 								new_event.begin_dt.length < 1}
 						>
-							+
+							<Check />
 						</button>
 					</div>
 				</div>
@@ -430,7 +431,7 @@
 								</p>
 							</div>
 							<button class="btn btn-error btn-square" on:click={remove_dlc_with_id(dlc.id)}>
-								R
+								<Trash />
 							</button>
 						</div>
 					{/each}
@@ -441,11 +442,7 @@
 							placeholder="DLC name"
 							bind:value={new_dlc.name}
 						/>
-						<input
-							type="date"
-							class="input input-bordered"
-							bind:value={new_dlc.release_date}
-						/>
+						<input type="date" class="input input-bordered" bind:value={new_dlc.release_date} />
 						<select name="status" class="select select-bordered" bind:value={new_dlc.status}>
 							{#each STATUSES as status}
 								<option value={status}> {status} </option>
@@ -456,7 +453,7 @@
 							on:click={add_new_dlc}
 							disabled={new_dlc.name.length < 1 || new_dlc.name.length > 128}
 						>
-							+
+							<Check />
 						</button>
 					</div>
 				</div>
