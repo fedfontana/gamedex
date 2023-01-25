@@ -7,7 +7,7 @@
 	import { SORT_OPTIONS, type SortOption } from '$src/utils/enums';
 	import type { Game } from '@prisma/client';
 	import { page as p } from '$app/stores';
-	import { Adjustments, Search } from 'tabler-icons-svelte';
+	import { Adjustments, ChevronLeft, ChevronRight, Search } from 'tabler-icons-svelte';
 
 	export let data: PageData;
 	export let form: { games: Game[]; total_pages: number; page: number } | undefined;
@@ -92,12 +92,11 @@
 		>
 			<Adjustments size={35} />
 		</label>
+		
 		<!-- PAGE CONTENT -->
-
 		{#if games.length > 0}
-			<!-- TODO make this round -->
 			<button
-				class="btn btn-primary absolute top-[calc(50%-3rem)] left-4 py-2 font-semibold text-xl"
+				class="btn btn-primary absolute top-[calc(50%-3rem)] left-4 font-semibold text-xl"
 				class:btn-disabled={page <= 1}
 				on:click={() => {
 					page--;
@@ -105,10 +104,10 @@
 				}}
 				disabled={page <= 1}
 			>
-				-
+				<ChevronLeft />
 			</button>
 			<button
-				class="btn btn-primary absolute top-[calc(50%-3rem)] right-4 py-2 font-semibold text-xl"
+				class="btn btn-primary absolute top-[calc(50%-3rem)] right-4 font-semibold text-xl"
 				class:btn-disabled={page >= total_pages}
 				on:click={() => {
 					page++;
@@ -116,7 +115,7 @@
 				}}
 				disabled={page >= total_pages}
 			>
-				+
+				<ChevronRight />
 			</button>
 	
 			<!-- TODO if i dont put mb-24 the bottom navigation gets cut off, fix -->
