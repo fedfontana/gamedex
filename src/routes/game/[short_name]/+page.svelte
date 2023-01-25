@@ -298,20 +298,22 @@
 								</h4>
 								<span class="flex flex-row gap-2">
 									<p>
-										{event.begin_dt.toLocaleDateString()} {event.begin_dt.toLocaleTimeString()}
+										{event.begin_dt.toLocaleDateString()}
+										{event.begin_dt.toLocaleTimeString()}
 									</p>
 									{#if event.end_dt}
+										<p>--</p>
 										<p>
-											--
-										</p>
-										<p>
-											{event.end_dt.toLocaleDateString()} {event.end_dt.toLocaleTimeString()}
+											{event.end_dt.toLocaleDateString()}
+											{event.end_dt.toLocaleTimeString()}
 										</p>
 									{/if}
 								</span>
-								<p class="border border-base-content border-opacity-20 rounded-btn px-4 py-2">
-									{event.description}
-								</p>
+								{#if event.description}
+									<p class="border border-base-content border-opacity-20 rounded-btn px-4 py-2">
+										{event.description}
+									</p>
+								{/if}
 							</div>
 							<button class="btn btn-error btn-square" on:click={remove_event_with_id(event.id)}>
 								R

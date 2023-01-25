@@ -7,7 +7,10 @@ import type { RequestHandler } from "./$types";
 export const POST: RequestHandler = async ({ request }) => {
     const body = await request.json();
     try {
+        console.log("body of the request: ", body);
         const event = GameEventsSchema.parse(body);
+        console.log("event after parsing: ", event);
+
         const new_event = await prisma.gameEvent.create({
             data: event,
         });
@@ -16,6 +19,6 @@ export const POST: RequestHandler = async ({ request }) => {
         // INFO: Prisma error code: P2025 - Record to delete does not exist
         // TODO handle 
         // TODO handle specific errors
-        throw error(401, { message: "Bad request" });
+        throw error(400, { message: "Bad request" });
     }
 }

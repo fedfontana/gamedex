@@ -15,6 +15,6 @@ export const POST: RequestHandler = async ({ request }) => {
     } catch(err) {
         // TODO handle 
         // TODO handle specific errors
-        throw error(401, { message: "Bad request" });
+        throw error(400, { message: "Bad request" });
     }
 }
