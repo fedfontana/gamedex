@@ -65,6 +65,9 @@
 	$: games = list_games ?? form?.games ?? data.games;
 </script>
 
+<!-- TODO: add back total queried game amount -->
+<!-- TODO: print number of pages and current page somewhere -->
+<!-- TODO: page should probably return to 1 when seeing a new query -->
 <!-- TODO: add filter rest/ full reset/ sort reset -->
 <!-- TODO: subsections for each platform manufacturer in filters -->
 <!-- TODO: reactive game grid -->
@@ -96,7 +99,7 @@
 		<!-- PAGE CONTENT -->
 		{#if games.length > 0}
 			<button
-				class="btn btn-primary absolute top-[calc(50%-3rem)] left-4 font-semibold text-xl"
+				class="btn btn-primary absolute top-[calc(50%-3rem)] left-4 font-semibold text-xl z-50"
 				class:btn-disabled={page <= 1}
 				on:click={() => {
 					page--;
@@ -107,7 +110,7 @@
 				<ChevronLeft />
 			</button>
 			<button
-				class="btn btn-primary absolute top-[calc(50%-3rem)] right-4 font-semibold text-xl"
+				class="btn btn-primary absolute top-[calc(50%-3rem)] right-4 font-semibold text-xl z-50"
 				class:btn-disabled={page >= total_pages}
 				on:click={() => {
 					page++;
