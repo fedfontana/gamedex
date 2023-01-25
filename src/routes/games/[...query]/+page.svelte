@@ -8,7 +8,6 @@
 	import type { Game } from '@prisma/client';
 	import { page as p } from '$app/stores';
 	import { Adjustments, Search } from 'tabler-icons-svelte';
-	import SearchIcon from './SearchIcon.svelte';
 
 	export let data: PageData;
 	export let form: { games: Game[]; total_pages: number; page: number } | undefined;
