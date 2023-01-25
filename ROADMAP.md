@@ -42,7 +42,7 @@ Tech stack:
   - add edit option?
 - [X] add game useful links
 - [X] add game events
-- [ ] add game dlcs
+- [X] add game dlcs
 
 ## V 0.4.5
 - big refactor
