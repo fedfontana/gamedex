@@ -6,7 +6,7 @@ MYSQL_CONTAINER_NAME=db
 
 .PHONY: up restore dump logs rm stop populate push studio
 up:
-	mkdir mysql_data
+	mkdir -p ./mysql_data
 	docker run --name $(MYSQL_CONTAINER_NAME) \
 		--mount type=bind,source=$(CURDIR)/mysql_data,target=/var/lib/mysql \
 		-e MYSQL_ROOT_PASSWORD=$(MYSQL_ROOT_PASSWORD) \

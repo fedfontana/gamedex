@@ -26,6 +26,10 @@
 	};
 
 	let new_note_content = '';
+	let new_useful_link = {
+		title: '',
+		url: ''
+	};
 
 	//TODO add errors under notes
 	async function add_new_note() {
@@ -47,6 +51,29 @@
 		}
 	}
 
+	async function add_new_useful_link() {
+		if (new_useful_link.title.length < 1 || new_useful_link.title.length > 128) return;
+		if (new_useful_link.url.length < 1 || new_useful_link.url.length > 256) return;
+		//TODO handle errors
+		const res = await fetch(`/game/${encodeURIComponent(game.short_name)}/links`, {
+			method: 'POST',
+			body: JSON.stringify({
+				gameId: game.id,
+				...new_useful_link
+			})
+		});
+
+		const id = (await res.json()).id as number;
+
+		if (res.ok) {
+			game.useful_links = [...game.useful_links, { id, gameId: game.id, ...new_useful_link }];
+			new_useful_link = {
+				title: '',
+				url: ''
+			};
+		}
+	}
+
 	function remove_note_with_id(id: number) {
 		return async () => {
 			const res = await fetch(`/game/${encodeURIComponent(game.short_name)}/notes/${id}`, {
@@ -55,6 +82,18 @@
 			if (res.ok) {
 				let old_note_id = (await res.json()).id;
 				game.notes = game.notes.filter((n) => n.id != old_note_id);
+			}
+		};
+	}
+
+	function remove_useful_link_with_id(id: number) {
+		return async () => {
+			const res = await fetch(`/game/${encodeURIComponent(game.short_name)}/links/${id}`, {
+				method: 'DELETE'
+			});
+			if (res.ok) {
+				let old_link_id = (await res.json()).id;
+				game.useful_links = game.useful_links.filter((n) => n.id != old_link_id);
 			}
 		};
 	}
@@ -99,13 +138,6 @@
 		<!-- {#if game.release_date && game.release_date > new Date()}
 			<Countdown end_time={game.release_date} />
 		{/if} -->
-		<!-- 
-			TODO: add 4 tabs with:
-			- useful links
-			- notes
-			- dlcs
-			- events
-		 -->
 
 		<div class="flex flex-col justify-start items-start flex-[4] gap-6 w-full">
 			<!-- BEGIN NOTE PART -->
@@ -115,7 +147,6 @@
 				<div class="collapse-content">
 					<div class="flex flex-col gap-4">
 						{#each game.notes as note}
-							<!-- TODO: these should not be textareas -->
 							<div class="flex flex-row gap-2">
 								<p
 									class="border border-base-content border-opacity-20 flex-grow rounded-btn px-4 py-2"
@@ -146,6 +177,58 @@
 			</div>
 		</div>
 		<!-- END NOTE PART -->
+
+		<!-- BEGIN USEFUL LINKS PART -->
+		<div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box w-full">
+			<input type="checkbox" />
+			<div class="collapse-title text-xl font-medium">See notes</div>
+			<div class="collapse-content">
+				<div class="flex flex-col gap-4">
+					{#each game.useful_links as link}
+						<div class="flex flex-row gap-2">
+							<p
+								class="border border-base-content border-opacity-20 flex-grow rounded-btn px-4 py-2"
+							>
+								<a href={link.url} target="_blank" rel="noreferrer" class="link link-primary"
+									>{link.title}</a
+								>
+							</p>
+							<button
+								class="btn btn-error btn-square"
+								on:click={remove_useful_link_with_id(link.id)}
+							>
+								R
+							</button>
+						</div>
+					{/each}
+					<div class="flex flex-col gap-2">
+						<input
+							type="text"
+							class="input input-bordered"
+							placeholder="Link title"
+							bind:value={new_useful_link.title}
+						/>
+						<input
+							type="text"
+							class="input input-bordered"
+							placeholder="Link content"
+							bind:value={new_useful_link.url}
+						/>
+						<button
+							class="btn btn-primary btn-square"
+							on:click={add_new_useful_link}
+							disabled={new_useful_link.title.length < 1 ||
+								new_useful_link.title.length > 128 ||
+								new_useful_link.url.length < 1 ||
+								new_useful_link.url.length > 256}
+						>
+							+
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- END USEFUL LINKS PART -->
 	</div>
 
 	<!-- right panel -->
