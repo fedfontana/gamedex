@@ -38,13 +38,17 @@ async function main() {
         .on("end", async () => {
             console.log("Finished parsing data");
 
+            const sizes = ["100", "150", "200", "300", "400", "500", "800"];
             const games = data.map(entry => {
+                const w = sizes[Math.floor(Math.random() * sizes.length)];
+                const h = sizes[Math.floor(Math.random() * sizes.length)];
+
                 const total_achievements = Math.floor(Math.random() * 80);
                 const game: Game = {
                     name: entry.Name.substring(0, 128),
                     short_name: entry.Name.replace(' ', '_').toLowerCase().substring(0, 64),
                     release_date: new Date(entry.Year),
-                    art_url: 'https://source.unsplash.com/random',
+                    art_url: `https://picsum.photos/${w}/${h}`,
                     developer: entry.Publisher,
                     status: STATUSES[Math.floor(Math.random() * STATUSES.length)] as Status,
                     platform: entry.Platform as Platform, // Not really true, but idc
