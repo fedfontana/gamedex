@@ -1,6 +1,6 @@
 import { is_logged_in } from "$src/utils/user";
 import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
-import { Game } from "$models/Game";
+import { GameSchema } from "$models/Game";
 import { ZodError } from "zod";
 import prisma from "$db";
 import { Prisma } from "@prisma/client";
@@ -23,7 +23,7 @@ export const actions: Actions = {
         const formData = Object.fromEntries(await request.formData());
 
         try {
-            const game = Game.parse(formData);
+            const game = GameSchema.parse(formData);
             await prisma.game.update({
                 where: {
                     //TODO handle no game with that short_name

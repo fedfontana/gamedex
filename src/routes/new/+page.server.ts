@@ -1,4 +1,4 @@
-import { Game } from "$models/Game";
+import { GameSchema } from "$models/Game";
 import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 import { ZodError } from "zod";
 import prisma from "$db";
@@ -22,7 +22,7 @@ export const actions: Actions = {
 		const formData = Object.fromEntries(await request.formData());
 
 		try {
-			const game = Game.parse(formData);
+			const game = GameSchema.parse(formData);
 			await prisma.game.create({
 				data: game,
 			});

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { STATUSES, PLATFORMS, Game } from '$models/Game';
+	import { STATUSES, PLATFORMS, type Game } from '$models/Game';
 	import type { FieldErrors } from '$types/types';
 	import DexInput from './DexInput.svelte';
 	import DexSelect from './DexSelect.svelte';

@@ -43,7 +43,7 @@ export const STATUSES = [
 ] as const;
 export type Status = (typeof STATUSES)[number];
 
-export const Game = z.object({
+export const GameSchema = z.object({
     name: z
         .string({ required_error: "Name is required" })
         .min(1, "Name is required")
@@ -106,4 +106,4 @@ export const Game = z.object({
 // TODO find a way to make total_achievements nullable
 // TODO refine obtained achievements < total achievements
 
-export type Game = z.infer<typeof Game>;
+export type Game = z.infer<typeof GameSchema>;
