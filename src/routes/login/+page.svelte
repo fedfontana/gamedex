@@ -1,49 +1,59 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import { enhance, type SubmitFunction } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { is_logged_in } from '$src/stores';
 	import { addToast } from '$src/toast';
-	import type { LoginFormResponse } from './proxy+page.server';
 
-	export let form: LoginFormResponse;
+	let errors: Record<string, string> | undefined = undefined;
+	let form_errors: string[] | undefined = undefined;
 
 	let next = $page.url.searchParams.get('next') ?? '/';
-	let tried_login = false;
 
-	// TODO this thing can be done in an easier way using use:enhance
-	$: {
-		if (tried_login && form) {
-			if (form.logged_in) {
-				$is_logged_in = true;
-				addToast({
-					type: "success",
-					title: "Login successfull"
-				});
-				addToast({
-					type: "info",
-					title: `You will be redirected to ${$page.url.origin}${next} in 2 seconds`,
-				})
-				setTimeout(() => {
-					goto(next);
-				}, 2000);
-			} else {
-				addToast({
-					type: "error",
-					title: "Error",
-					message: "There was an error logging you in",
-				});
+	const handle_login_submit: SubmitFunction = () => {
+		return async ({ form, result }) => {
+			switch (result.type) {
+				case 'success':
+					$is_logged_in = true;
+					addToast({
+						type: 'success',
+						title: 'Login successfull'
+					});
+					addToast({
+						type: 'info',
+						title: `You will be redirected to ${$page.url.origin}${next} in 2 seconds`
+					});
+					setTimeout(() => {
+						goto(next);
+					}, 2000);
+					break;
+				case 'failure':
+					form.reset();
+					errors = result.data?.errors;
+					form_errors = result.data?.form_errors;
+					break;
+				case 'error':
+					addToast({
+						type: 'error',
+						title: 'Error',
+						message: 'There was an error logging you in'
+					});
+					break;
 			}
-		}
-	}
+		};
+	};
 </script>
 
-<form method="POST" use:enhance class="flex flex-col gap-12 w-[28rem] mx-auto">
+<form
+	method="POST"
+	use:enhance={handle_login_submit}
+	class="flex flex-col gap-12 w-[28rem] mx-auto"
+>
 	<h2 class="mx-auto text-3xl font-semibold mb-6">Login</h2>
 
-	{#if form?.form_errors !== undefined}
+	{#if form_errors !== undefined}
 		<div class="flex flex-col items-center gap-2">
-			{#each form?.form_errors as error}
+			{#each form_errors as error}
 				<span class="text-error">
 					{error}
 				</span>
@@ -61,14 +71,14 @@
 				name="username"
 				type="text"
 				placeholder="Username"
-				class="input input-bordered {form?.errors?.username ? 'input-error' : ''}"
-				value={form?.values?.username ?? ''}
+				class="input input-bordered {errors?.username ? 'input-error' : ''}"
+				value=""
 				required
 				autofocus
 			/>
-			{#if form?.errors?.username}
+			{#if errors?.username}
 				<label class="label flex flex-col items-baseline" for="username">
-					{#each form.errors.username as error}
+					{#each errors.username as error}
 						<span class="label-text text-error">{error}</span>
 					{/each}
 				</label>
@@ -83,12 +93,12 @@
 				name="password"
 				type="password"
 				placeholder="Password"
-				class="input input-bordered {form?.errors?.password ? 'input-error' : ''}"
-				value={form?.values?.password ?? ''}
+				class="input input-bordered {errors?.password ? 'input-error' : ''}"
+				value=""
 			/>
-			{#if form?.errors?.password}
+			{#if errors?.password}
 				<label class="label flex flex-col items-baseline" for="password">
-					{#each form.errors.password as error}
+					{#each errors.password as error}
 						<span class="label-text text-error">{error}</span>
 					{/each}
 				</label>
@@ -97,12 +107,6 @@
 	</div>
 
 	<div class="w-full mx-auto flex justify-end">
-		<button
-			type="submit"
-			class="btn btn-primary max-w-xs"
-			on:click={() => {
-				tried_login = true;
-			}}>Login</button
-		>
+		<button type="submit" class="btn btn-primary max-w-xs"> Login </button>
 	</div>
 </form>
