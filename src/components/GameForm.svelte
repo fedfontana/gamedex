@@ -56,7 +56,7 @@
 <!-- TODO: add reset button? -->
 <!-- TODO: fix buttons being too wide off the sides of the form -->
 
-<form method="POST" use:enhance class="flex flex-col gap-6 w-10/12 mx-auto">
+<form method="POST" use:enhance class="flex flex-col gap-6 w-full mx-auto">
 	{#if form_errors !== undefined && form_errors.length > 0}
 		<div class="flex flex-col items-center gap-2">
 			{#each form_errors as error}
@@ -87,14 +87,13 @@
 		/>
 	</div>
 
-	<div class="flex flex-row gap-4 items-baseline justify-center">
+	<div class="flex flex-row gap-6 items-baseline justify-center">
 		<DexInput
 			name="art_url"
 			label="art url"
 			placeholder="Art url"
 			bind:value={game.art_url}
 			errors={field_errors?.art_url}
-			wrapper_classes="max-w-xs"
 			type="url"
 		/>
 
@@ -104,7 +103,6 @@
 			placeholder="Developer"
 			bind:value={game.developer}
 			errors={field_errors?.developer}
-			wrapper_classes="max-w-xs"
 			type="text"
 		/>
 
@@ -113,12 +111,11 @@
 			label="release date"
 			bind:value={game.release_date}
 			errors={field_errors?.release_date}
-			wrapper_classes="max-w-xs"
 			type="date"
 		/>
 	</div>
 
-	<div class="flex flex-row gap-4 items-baseline justify-center">
+	<div class="flex flex-row gap-6 items-baseline justify-center">
 		<DexSelect
 			name="status"
 			label="Status"
@@ -141,7 +138,6 @@
 			placeholder="Play time"
 			bind:value={game.play_time}
 			errors={field_errors?.play_time}
-			wrapper_classes="max-w-xs"
 			type="number"
 			min={0}
 		/>
@@ -169,7 +165,7 @@
 		<!-- TODO: decimal point in percentage -->
 		<DexInput
 			name="completion_percentage"
-			label="completion%"
+			label="completion %"
 			bind:value={game.completion_percentage}
 			errors={field_errors?.completion_percentage}
 			type="number"
@@ -178,7 +174,7 @@
 		/>
 	</div>
 
-	<div class="w-11/12 mx-auto flex justify-between">
+	<div class="w-10/12 mx-auto flex justify-between">
 		<button
 			class="btn btn-warning max-w-xs"
 			on:click|preventDefault={() => {
