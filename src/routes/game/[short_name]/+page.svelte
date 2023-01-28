@@ -115,90 +115,44 @@
 		}
 	};
 
-	let new_dlc = {
-		name: '',
-		release_date: '',
-		status: 'backlog' as Status
-	};
-
-	async function add_new_dlc() {
-		if (new_dlc.name.length < 1 || new_dlc.name.length > 128) return;
-		//TODO handle errors
-		const res = await fetch(`/game/${encodeURIComponent(game.short_name)}/dlc`, {
-			method: 'POST',
-			body: JSON.stringify({
-				gameId: game.id,
-				...new_dlc
-			})
+	async function remove_note_with_id(id: number) {
+		const res = await fetch(`/game/${encodeURIComponent(game.short_name)}/notes/${id}`, {
+			method: 'DELETE'
 		});
-
-		const id = (await res.json()).id as number;
-
 		if (res.ok) {
-			game.DLCs = [
-				...game.DLCs,
-				{
-					id,
-					gameId: game.id,
-					release_date: new_dlc.release_date === '' ? null : new Date(new_dlc.release_date),
-					name: new_dlc.name,
-					status: new_dlc.status
-				}
-			];
-			new_dlc = {
-				name: '',
-				release_date: '',
-				status: 'backlog'
-			};
+			let old_note_id = (await res.json()).id;
+			game.notes = game.notes.filter((n) => n.id != old_note_id);
 		}
 	}
 
-	function remove_note_with_id(id: number) {
-		return async () => {
-			const res = await fetch(`/game/${encodeURIComponent(game.short_name)}/notes/${id}`, {
-				method: 'DELETE'
-			});
-			if (res.ok) {
-				let old_note_id = (await res.json()).id;
-				game.notes = game.notes.filter((n) => n.id != old_note_id);
-			}
-		};
+	async function remove_useful_link_with_id(id: number) {
+		const res = await fetch(`/game/${encodeURIComponent(game.short_name)}/links/${id}`, {
+			method: 'DELETE'
+		});
+		if (res.ok) {
+			let old_link_id = (await res.json()).id;
+			game.useful_links = game.useful_links.filter((n) => n.id != old_link_id);
+		}
 	}
 
-	function remove_useful_link_with_id(id: number) {
-		return async () => {
-			const res = await fetch(`/game/${encodeURIComponent(game.short_name)}/links/${id}`, {
-				method: 'DELETE'
-			});
-			if (res.ok) {
-				let old_link_id = (await res.json()).id;
-				game.useful_links = game.useful_links.filter((n) => n.id != old_link_id);
-			}
-		};
+	async function remove_event_with_id(id: number) {
+		const res = await fetch(`/game/${encodeURIComponent(game.short_name)}/events/${id}`, {
+			method: 'DELETE'
+		});
+		if (res.ok) {
+			let old_event_id = (await res.json()).id;
+			game.events = game.events.filter((n) => n.id != old_event_id);
+		}
 	}
 
-	function remove_event_with_id(id: number) {
-		return async () => {
-			const res = await fetch(`/game/${encodeURIComponent(game.short_name)}/events/${id}`, {
-				method: 'DELETE'
-			});
-			if (res.ok) {
-				let old_event_id = (await res.json()).id;
-				game.events = game.events.filter((n) => n.id != old_event_id);
-			}
-		};
-	}
-
-	function remove_dlc_with_id(id: number) {
-		return async () => {
-			const res = await fetch(`/game/${encodeURIComponent(game.short_name)}/dlc/${id}`, {
-				method: 'DELETE'
-			});
-			if (res.ok) {
-				let old_dlc_id = (await res.json()).id;
-				game.DLCs = game.DLCs.filter((n) => n.id != old_dlc_id);
-			}
-		};
+	async function remove_dlc_with_id(id: number) {
+		const res = await fetch(`/game/${encodeURIComponent(game.short_name)}/dlc/${id}`, {
+			method: 'DELETE'
+		});
+		if (res.ok) {
+			let old_dlc_id = (await res.json()).id;
+			game.DLCs = game.DLCs.filter((n) => n.id != old_dlc_id);
+		}
 	}
 </script>
 
@@ -228,7 +182,7 @@
 
 	<!-- TODO fix scrolling -->
 	<!-- central panel -->
-	<div class="flex flex-col justify-start items-start flex-[4] gap-12">
+	<div class="flex flex-col justify-start items-start flex-[4] gap-12 mb-24">
 		<h2 class="text-3xl font-semibold">
 			{game.name}
 			{#if game.developer}
@@ -258,7 +212,12 @@
 									{note.content}
 								</p>
 								{#if $is_logged_in}
-									<button class="btn btn-error btn-square" on:click={remove_note_with_id(note.id)}>
+									<button
+										class="btn btn-error btn-square"
+										on:click={() => {
+											remove_note_with_id(note.id);
+										}}
+									>
 										<Trash />
 									</button>
 								{/if}
@@ -305,7 +264,9 @@
 							{#if $is_logged_in}
 								<button
 									class="btn btn-error btn-square"
-									on:click={remove_useful_link_with_id(link.id)}
+									on:click={() => {
+										remove_useful_link_with_id(link.id);
+									}}
 								>
 									<Trash />
 								</button>
@@ -325,7 +286,7 @@
 									name="title"
 									type="text"
 									placeholder="Link title"
-									value={''}
+									value=""
 									errors={errors?.links?.errors?.title}
 								/>
 								<div class="flex flex-row gap-2">
@@ -333,7 +294,7 @@
 										name="url"
 										type="text"
 										placeholder="Link content"
-										value={''}
+										value=""
 										errors={errors?.links?.errors?.url}
 									/>
 									<button class="btn btn-primary btn-square" type="submit">
@@ -380,7 +341,12 @@
 								{/if}
 							</div>
 							{#if $is_logged_in}
-								<button class="btn btn-error btn-square" on:click={remove_event_with_id(event.id)}>
+								<button
+									class="btn btn-error btn-square"
+									on:click={() => {
+										remove_event_with_id(event.id);
+									}}
+								>
 									<Trash />
 								</button>
 							{/if}
@@ -454,7 +420,12 @@
 								</p>
 							</div>
 							{#if $is_logged_in}
-								<button class="btn btn-error btn-square" on:click={remove_dlc_with_id(dlc.id)}>
+								<button
+									class="btn btn-error btn-square"
+									on:click={() => {
+										remove_dlc_with_id(dlc.id);
+									}}
+								>
 									<Trash />
 								</button>
 							{/if}
@@ -474,6 +445,7 @@
 								<DexInput
 									name="release_date"
 									type="date"
+									value=""
 									errors={errors?.dlcs?.errors?.release_date}
 								/>
 								<DexSelect
