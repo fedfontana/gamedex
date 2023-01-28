@@ -27,7 +27,7 @@
 	export let required = false;
 	export let autofocus = false;
 	export let errors: string[] | undefined;
-	export let value: string | number | null;
+	export let value: string | number | null | undefined = undefined;
 	export let label: string = '';
 	export let name: string;
 	export let type: HTMLInputType = 'text';

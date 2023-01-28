@@ -1,4 +1,5 @@
 import { NoteSchema } from "$models/Note";
+import { UsefulLinkSchema } from "$models/UsefulLinks";
 import prisma from "$src/db";
 import { is_logged_in } from "$src/utils/user";
 import type { FieldErrors } from "$types/types";
@@ -32,6 +33,36 @@ export const actions: Actions = {
 
             return fail(400, {
                 form_errors: ["An unkown error occurred while saving the note"],
+            });
+        }
+    },
+
+    link: async ({ cookies, request }) => {
+        if (!is_logged_in(cookies)) {
+            throw error(401, "Unauthorized");
+        }
+
+        const formData = Object.fromEntries(await request.formData());
+
+        try {
+            const link = UsefulLinkSchema.parse(formData);
+            const new_link = await prisma.usefulLink.create({
+                data: link,
+            })
+            console.log("Returning success")
+            return {
+                db_values: new_link,
+            }
+        } catch (err) {
+            if (err instanceof ZodError) {
+                console.error("Field errors from create useful link being returned to the client: ", err.flatten());
+                return fail(400, {
+                    errors: err.flatten().fieldErrors,
+                });
+            }
+
+            return fail(400, {
+                form_errors: ["An unkown error occurred while saving the link"],
             });
         }
     }

@@ -8,6 +8,7 @@
 	//import type { CreateNoteFormResponse } from './proxy+page.server';
 	import DexTextArea from '$components/DexTextArea.svelte';
 	import type { DexFormErrors } from './proxy+page.server';
+	import DexInput from '$components/DexInput.svelte';
 	//TODO change box icon into the box-sealed
 
 	export let data: PageData;
@@ -22,11 +23,10 @@
 
 	//TODO show form errors as toast
 
-	const submit_create_note: SubmitFunction = () => {
+	const submit_create_note: SubmitFunction = ({ data }) => {
 		return async ({ form, result }) => {
 			switch (result.type) {
 				case 'success':
-					console.log('Great!');
 					game.notes.push(result.data?.db_values);
 					game.notes = game.notes;
 					errors.notes = undefined;
@@ -37,6 +37,25 @@
 					break;
 				case 'failure':
 					errors.notes = result.data as DexFormErrors;
+					break;
+			}
+		};
+	};
+
+	const submit_create_useful_link: SubmitFunction = ({ data }) => {
+		return async ({ form, result }) => {
+			switch (result.type) {
+				case 'success':
+					game.useful_links.push(result.data?.db_values);
+					game.useful_links = game.useful_links;
+					errors.links = undefined;
+					form.reset();
+					break;
+				case 'error':
+					console.error('Error: ', result);
+					break;
+				case 'failure':
+					errors.links = result.data as DexFormErrors;
 					break;
 			}
 		};
@@ -57,10 +76,6 @@
 		}
 	};
 
-	let new_useful_link = {
-		title: '',
-		url: ''
-	};
 	let new_event = {
 		name: '',
 		description: '',
@@ -72,29 +87,6 @@
 		release_date: '',
 		status: 'backlog' as Status
 	};
-
-	async function add_new_useful_link() {
-		if (new_useful_link.title.length < 1 || new_useful_link.title.length > 128) return;
-		if (new_useful_link.url.length < 1 || new_useful_link.url.length > 256) return;
-		//TODO handle errors
-		const res = await fetch(`/game/${encodeURIComponent(game.short_name)}/links`, {
-			method: 'POST',
-			body: JSON.stringify({
-				gameId: game.id,
-				...new_useful_link
-			})
-		});
-
-		const id = (await res.json()).id as number;
-
-		if (res.ok) {
-			game.useful_links = [...game.useful_links, { id, gameId: game.id, ...new_useful_link }];
-			new_useful_link = {
-				title: '',
-				url: ''
-			};
-		}
-	}
 
 	async function add_new_event() {
 		if (new_event.name.length < 1 || new_event.name.length > 128) return;
@@ -286,7 +278,6 @@
 									/>
 
 									<button class="btn btn-primary btn-square" type="submit">
-										<!-- disabled={new_note_content.length < 1 || new_note_content.length > 512} -->
 										<Check />
 									</button>
 								</div>
@@ -313,38 +304,47 @@
 									>{link.title}</a
 								>
 							</p>
-							<button
-								class="btn btn-error btn-square"
-								on:click={remove_useful_link_with_id(link.id)}
-							>
-								<Trash />
-							</button>
+							{#if $is_logged_in}
+								<button
+									class="btn btn-error btn-square"
+									on:click={remove_useful_link_with_id(link.id)}
+								>
+									<Trash />
+								</button>
+							{/if}
 						</div>
 					{/each}
-					<div class="flex flex-col gap-2">
-						<input
-							type="text"
-							class="input input-bordered"
-							placeholder="Link title"
-							bind:value={new_useful_link.title}
-						/>
-						<input
-							type="text"
-							class="input input-bordered"
-							placeholder="Link content"
-							bind:value={new_useful_link.url}
-						/>
-						<button
-							class="btn btn-primary btn-square"
-							on:click={add_new_useful_link}
-							disabled={new_useful_link.title.length < 1 ||
-								new_useful_link.title.length > 128 ||
-								new_useful_link.url.length < 1 ||
-								new_useful_link.url.length > 256}
+					{#if $is_logged_in}
+						<form
+							action="?/link"
+							method="POST"
+							use:enhance={submit_create_useful_link}
+							class="w-full"
 						>
-							<Check />
-						</button>
-					</div>
+							<div class="flex flex-col gap-2">
+								<input type="number" name="gameId" class="hidden" bind:value={game.id} readonly />
+								<DexInput
+									name="title"
+									type="text"
+									placeholder="Link title"
+									value={''}
+									errors={errors?.links?.errors?.title}
+								/>
+								<div class="flex flex-row gap-2">
+									<DexInput
+									name="url"
+									type="text"
+									placeholder="Link content"
+									value={''}
+									errors={errors?.links?.errors?.url}
+									/>
+									<button class="btn btn-primary btn-square" type="submit">
+										<Check />
+									</button>
+								</div>
+							</div>
+						</form>
+					{/if}
 				</div>
 			</div>
 		</div>
