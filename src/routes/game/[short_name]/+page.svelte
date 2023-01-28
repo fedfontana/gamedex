@@ -356,20 +356,27 @@
 						<form action="?/events" method="POST" class="w-full" use:enhance={submit_create_event}>
 							<div class="flex flex-col gap-2">
 								<input type="number" name="gameId" class="hidden" bind:value={game.id} readonly />
-								<DexInput
-									type="text"
-									name="name"
-									placeholder="Event name"
-									value=""
-									errors={errors?.events?.errors?.name}
-									required
-								/>
+								<div class="flex flex-row gap-2">
+									<DexInput
+										type="text"
+										name="name"
+										placeholder="Event name"
+										value=""
+										errors={errors?.events?.errors?.name}
+										required
+									/>
+									<button class="btn btn-primary btn-square" type="submit">
+										<Check />
+									</button>
+								</div>
+
 								<DexTextArea
 									placeholder="Event description"
 									value=""
 									name="description"
 									errors={errors?.events?.errors?.description}
 								/>
+
 								<DexInput
 									type="datetime-local"
 									name="begin_dt"
@@ -383,9 +390,6 @@
 									value=""
 									errors={errors?.events?.errors?.end_dt}
 								/>
-								<button class="btn btn-primary btn-square" type="submit">
-									<Check />
-								</button>
 							</div>
 						</form>
 					{/if}
@@ -435,28 +439,32 @@
 						<form action="?/dlc" method="POST" class="w-full" use:enhance={submit_create_dlc}>
 							<div class="flex flex-col gap-2">
 								<input type="number" name="gameId" class="hidden" bind:value={game.id} readonly />
-								<DexInput
-									name="name"
-									type="text"
-									placeholder="DLC name"
-									value=""
-									errors={errors?.dlcs?.errors?.name}
-								/>
-								<DexInput
-									name="release_date"
-									type="date"
-									value=""
-									errors={errors?.dlcs?.errors?.release_date}
-								/>
-								<DexSelect
-									name="status"
-									value={STATUSES[0]}
-									options={[...STATUSES]}
-									errors={errors?.dlcs?.errors?.status}
-								/>
-								<button class="btn btn-primary btn-square" type="submit">
-									<Check />
-								</button>
+								<div class="flex flex-row gap-2">
+									<DexInput
+										name="name"
+										type="text"
+										placeholder="DLC name"
+										value=""
+										errors={errors?.dlcs?.errors?.name}
+									/>
+									<button class="btn btn-primary btn-square" type="submit">
+										<Check />
+									</button>
+								</div>
+								<div class="flex flex-row gap-2">
+									<DexInput
+										name="release_date"
+										type="date"
+										value=""
+										errors={errors?.dlcs?.errors?.release_date}
+									/>
+									<DexSelect
+										name="status"
+										value={STATUSES[0]}
+										options={[...STATUSES]}
+										errors={errors?.dlcs?.errors?.status}
+									/>
+								</div>
 							</div>
 						</form>
 					{/if}
