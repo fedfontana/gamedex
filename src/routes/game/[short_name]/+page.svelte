@@ -208,7 +208,7 @@
 						{#each game.DLCs as dlc}
 							<div class="flex flex-row gap-2">
 								<div
-									class="flex flex-grow flex-col gap-2 border border-neutral-content border-opacity-20 rounded-xl px-4 py-2"
+									class="flex flex-grow flex-col gap-2 border border-neutral-content border-opacity-20 rounded-box px-4 py-2"
 								>
 									<h4 class="font-semibold text-lg">
 										{dlc.name}
@@ -294,11 +294,14 @@
 					<div class="collapse-content flex flex-col gap-2">
 						{#each game.events as event}
 							<div class="flex flex-row gap-2">
-								<div class="flex flex-grow flex-col gap-2">
+								<div
+									class="flex flex-grow flex-col gap-2 border border-neutral-content border-opacity-20 rounded-box px-4 py-2"
+								>
 									<h4 class="font-semibold text-lg">
 										{event.name}
 									</h4>
 									<span class="flex flex-row gap-2">
+										<Calendar />
 										<p>
 											{event.begin_dt.toLocaleDateString()}
 											{event.begin_dt.toLocaleTimeString()}
@@ -312,11 +315,15 @@
 										{/if}
 									</span>
 									{#if event.description}
-										<p class="border border-base-content border-opacity-20 rounded-btn px-4 py-2">
-											{event.description}
-										</p>
+										<div class="flex flex-col gap-[2px]">
+											<h6 class="text-opacity-80 ml-2 text-xs">Description</h6>
+											<p class="border border-neutral-content border-opacity-20 rounded-box px-4 py-2">
+												{event.description}
+											</p>
+										</div>
 									{/if}
 								</div>
+
 								{#if $is_logged_in}
 									<button
 										class="btn btn-error btn-square"
@@ -391,8 +398,9 @@
 						{#each game.useful_links as link}
 							<div class="flex flex-row gap-2">
 								<p
-									class="border border-base-content border-opacity-20 flex-grow rounded-btn px-4 py-2"
+									class="flex flex-grow flex-col gap-2 border border-neutral-content border-opacity-20 rounded-box px-4 py-2"
 								>
+									<!-- border border-base-content -->
 									<a href={link.url} target="_blank" rel="noreferrer" class="link link-primary"
 										>{link.title}</a
 									>
@@ -456,7 +464,7 @@
 						{#each game.notes as note}
 							<div class="flex flex-row gap-2">
 								<p
-									class="border border-base-content border-opacity-20 flex-grow rounded-btn px-4 py-2"
+									class="flex flex-grow flex-col gap-2 border border-neutral-content border-opacity-20 rounded-box px-4 py-2"
 								>
 									{note.content}
 								</p>
