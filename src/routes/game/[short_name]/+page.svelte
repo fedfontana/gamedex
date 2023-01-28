@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Alert from '$components/Alert.svelte';
 	import { STATUSES } from '$models/Game';
 	import { is_logged_in } from '$src/stores';
 	import type { PageData } from './$types';
@@ -9,6 +8,7 @@
 	import type { DexFormErrors } from './proxy+page.server';
 	import DexInput from '$components/DexInput.svelte';
 	import DexSelect from '$components/DexSelect.svelte';
+	import { addToast } from '$src/toast';
 
 	export let data: PageData;
 	const { game } = data;
@@ -97,18 +97,21 @@
 		};
 	};
 
-	let called_delete = false;
-	let delete_ok = true;
-
 	const deleteGame = async () => {
-		called_delete = true;
-
-		const res = await fetch(`/games/${encodeURIComponent(game.short_name)}/delete`, {
+		const res = await fetch(`/game/${encodeURIComponent(game.short_name)}/delete`, {
 			method: 'DELETE'
 		});
 		if (!res.ok) {
-			delete_ok = false;
+			addToast({
+				type: 'error',
+				title: 'An error occurred while trying to delete the game'
+			});
 			console.error('Could not delete game for some reason. Res: ', res);
+		} else {
+			addToast({
+				type: 'success',
+				title: `Successfully deleted ${game.name}`
+			});
 		}
 	};
 
@@ -579,11 +582,3 @@
 		</div>
 	</div>
 </div>
-
-{#if called_delete}
-	{#if delete_ok}
-		<Alert kind="success" title="Successfully deleted {game.name}" />
-	{:else}
-		<Alert kind="error" title="An error occurred while trying to delete the game" />
-	{/if}
-{/if}

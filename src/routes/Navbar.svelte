@@ -1,9 +1,7 @@
 <script lang="ts">
-	import Alert from '$components/Alert.svelte';
 	import { DAISYUI_THEMES } from '$src/constants';
 	import { is_logged_in } from '$src/stores';
-
-	let logout_error = false;
+	import { addToast } from '$src/toast';
 </script>
 
 <div class="navbar bg-base-100 p-4">
@@ -41,7 +39,11 @@
 								if (res.ok) {
 									$is_logged_in = false;
 								} else {
-									logout_error = true;
+									addToast({
+										type: "error",
+										title: "Login error",
+										message: "There was an error loggin you out"
+									});
 								}
 							}}>Logout</button
 						>
@@ -55,7 +57,3 @@
 		{/if}
 	</div>
 </div>
-
-{#if logout_error}
-	<Alert kind="error" title="There was an error logging you out." />
-{/if}

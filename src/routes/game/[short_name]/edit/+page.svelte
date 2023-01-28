@@ -1,7 +1,7 @@
 <script lang="ts">
-	import Alert from '$components/Alert.svelte';
 	import GameForm from '$components/GameForm.svelte';
 	import type { Game } from '$models/Game';
+	import { addToast } from '$src/toast';
 	import type { PageData } from './$types';
 	import type { EditGameFormResponse } from './proxy+page.server';
 
@@ -9,6 +9,20 @@
 	export let form: EditGameFormResponse;
 
 	$: initial_data = (form?.values ?? data.game) as any as Game | undefined;
+
+	if(form) {
+		if((form?.form_errors?.length ?? 0) > 0 || Object.keys(form?.errors ?? {}).length > 0) {
+			addToast({
+				title: "Error updating the game",
+				type: "error",
+			});
+		} else {
+			addToast({
+				type: "success",
+				title: "Game updated successfully",
+			});
+		}
+	}
 </script>
 
 <div class="mx-auto w-8/12">
@@ -22,10 +36,4 @@
 	/>
 </div>
 
-{#if form}
-	{#if (form?.form_errors?.length ?? 0) > 0 || Object.keys(form?.errors ?? {}).length > 0}
-		<Alert title="Error updating the game" kind="error" />
-	{:else}
-		<Alert title="Game updated successfully" kind="success" />
-	{/if}
-{/if}
+

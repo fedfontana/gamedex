@@ -2,8 +2,8 @@
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import Alert from '$components/Alert.svelte';
 	import { is_logged_in } from '$src/stores';
+	import { addToast } from '$src/toast';
 	import type { LoginFormResponse } from './proxy+page.server';
 
 	export let form: LoginFormResponse;
@@ -11,13 +11,28 @@
 	let next = $page.url.searchParams.get('next') ?? '/';
 	let tried_login = false;
 
+	// TODO this thing can be done in an easier way using use:enhance
 	$: {
 		if (tried_login && form) {
 			if (form.logged_in) {
 				$is_logged_in = true;
+				addToast({
+					type: "success",
+					title: "Login successfull"
+				});
+				addToast({
+					type: "info",
+					title: `You will be redirected to ${$page.url.origin}${next} in 2 seconds`,
+				})
 				setTimeout(() => {
 					goto(next);
 				}, 2000);
+			} else {
+				addToast({
+					type: "error",
+					title: "Error",
+					message: "There was an error logging you in",
+				});
 			}
 		}
 	}
@@ -91,15 +106,3 @@
 		>
 	</div>
 </form>
-
-{#if form}
-	{#if form.logged_in}
-		<Alert
-			title="Successfully logged in"
-			message="You will be redirected to {$page.url.origin}{next} in 2 seconds"
-			kind="success"
-		/>
-	{:else}
-		<Alert title="Error logging in" kind="error" />
-	{/if}
-{/if}
