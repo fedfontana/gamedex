@@ -65,8 +65,6 @@
 	$: games = list_games ?? form?.games ?? data.games;
 </script>
 
-<!-- TODO: escape / from game names in all fetch calls -->
-
 <div class="drawer relative">
 	<input id="filters-drawer" type="checkbox" class="drawer-toggle" />
 	<div class="drawer-content">
