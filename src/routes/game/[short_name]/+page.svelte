@@ -208,7 +208,7 @@
 						{#each game.DLCs as dlc}
 							<div class="flex flex-row gap-2">
 								<div
-									class="flex flex-grow flex-col gap-2 border border-neutral-content border-opacity-20 rounded-box px-4 py-2"
+									class="flex flex-grow flex-col gap-2 border border-base-content border-opacity-20 rounded-box px-4 py-2"
 								>
 									<h4 class="font-semibold text-lg">
 										{dlc.name}
@@ -295,7 +295,7 @@
 						{#each game.events as event}
 							<div class="flex flex-row gap-2">
 								<div
-									class="flex flex-grow flex-col gap-2 border border-neutral-content border-opacity-20 rounded-box px-4 py-2"
+									class="flex flex-grow flex-col gap-2 border border-base-content border-opacity-20 rounded-box px-4 py-2"
 								>
 									<h4 class="font-semibold text-lg">
 										{event.name}
@@ -317,7 +317,7 @@
 									{#if event.description}
 										<div class="flex flex-col gap-[2px]">
 											<h6 class="text-opacity-80 ml-2 text-xs">Description</h6>
-											<p class="border border-neutral-content border-opacity-20 rounded-box px-4 py-2">
+											<p class="border border-base-content border-opacity-20 rounded-box px-4 py-2">
 												{event.description}
 											</p>
 										</div>
@@ -398,7 +398,7 @@
 						{#each game.useful_links as link}
 							<div class="flex flex-row gap-2">
 								<p
-									class="flex flex-grow flex-col gap-2 border border-neutral-content border-opacity-20 rounded-box px-4 py-2"
+									class="flex flex-grow flex-col gap-2 border border-base-content border-opacity-20 rounded-box px-4 py-2"
 								>
 									<!-- border border-base-content -->
 									<a href={link.url} target="_blank" rel="noreferrer" class="link link-primary"
@@ -464,7 +464,7 @@
 						{#each game.notes as note}
 							<div class="flex flex-row gap-2">
 								<p
-									class="flex flex-grow flex-col gap-2 border border-neutral-content border-opacity-20 rounded-box px-4 py-2"
+									class="flex flex-grow flex-col gap-2 border border-base-content border-opacity-20 rounded-box px-4 py-2"
 								>
 									{note.content}
 								</p>
