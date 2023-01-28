@@ -4,10 +4,43 @@
 	import { is_logged_in } from '$src/stores';
 	import type { PageData } from './$types';
 	import { Calendar, Hourglass, DeviceGamepad, Box, Trash, Check } from 'tabler-icons-svelte';
+	import { enhance, type SubmitFunction } from '$app/forms';
+	//import type { CreateNoteFormResponse } from './proxy+page.server';
+	import DexTextArea from '$components/DexTextArea.svelte';
+	import type { DexFormErrors } from './proxy+page.server';
 	//TODO change box icon into the box-sealed
 
 	export let data: PageData;
 	const { game } = data;
+
+	let errors: {
+		notes?: DexFormErrors;
+		links?: DexFormErrors;
+		events?: DexFormErrors;
+		dlcs?: DexFormErrors;
+	} = {};
+
+	//TODO show form errors as toast
+
+	const submit_create_note: SubmitFunction = () => {
+		return async ({ form, result }) => {
+			switch (result.type) {
+				case 'success':
+					console.log('Great!');
+					game.notes.push(result.data?.db_values);
+					game.notes = game.notes;
+					errors.notes = undefined;
+					form.reset();
+					break;
+				case 'error':
+					console.error('Error: ', result);
+					break;
+				case 'failure':
+					errors.notes = result.data as DexFormErrors;
+					break;
+			}
+		};
+	};
 
 	let called_delete = false;
 	let delete_ok = true;
@@ -24,7 +57,6 @@
 		}
 	};
 
-	let new_note_content = '';
 	let new_useful_link = {
 		title: '',
 		url: ''
@@ -40,26 +72,6 @@
 		release_date: '',
 		status: 'backlog' as Status
 	};
-
-	//TODO add errors under notes
-	async function add_new_note() {
-		if (new_note_content.length < 1 || new_note_content.length > 512) return;
-		//TODO handle errors
-		const res = await fetch(`/game/${encodeURIComponent(game.short_name)}/notes`, {
-			method: 'POST',
-			body: JSON.stringify({
-				gameId: game.id,
-				content: new_note_content
-			})
-		});
-
-		const id = (await res.json()).id as number;
-
-		if (res.ok) {
-			game.notes = [...game.notes, { id, gameId: game.id, content: new_note_content }];
-			new_note_content = '';
-		}
-	}
 
 	async function add_new_useful_link() {
 		if (new_useful_link.title.length < 1 || new_useful_link.title.length > 128) return;
@@ -241,7 +253,7 @@
 			<Countdown end_time={game.release_date} />
 		{/if} -->
 
-		<div class="flex flex-col justify-start items-start flex-[4] gap-6 w-full">
+		<div class="flex flex-col justify-start items-start gap-2 w-full">
 			<!-- BEGIN NOTE PART -->
 			<div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box w-full">
 				<input type="checkbox" />
@@ -255,25 +267,31 @@
 								>
 									{note.content}
 								</p>
-								<button class="btn btn-error btn-square" on:click={remove_note_with_id(note.id)}>
-									<Trash />
-								</button>
+								{#if $is_logged_in}
+									<button class="btn btn-error btn-square" on:click={remove_note_with_id(note.id)}>
+										<Trash />
+									</button>
+								{/if}
 							</div>
 						{/each}
-						<div class="flex flex-row gap-2">
-							<textarea
-								class="textarea textarea-bordered w-full"
-								placeholder="Notes about the game..."
-								bind:value={new_note_content}
-							/>
-							<button
-								class="btn btn-primary btn-square"
-								on:click={add_new_note}
-								disabled={new_note_content.length < 1 || new_note_content.length > 512}
-							>
-								<Check />
-							</button>
-						</div>
+						{#if $is_logged_in}
+							<form method="POST" action="?/note" use:enhance={submit_create_note} class="w-full">
+								<div class="flex flex-row gap-2">
+									<!-- Using bind value so that form.reset() doesn't break subsequent form submissions -->
+									<input type="number" name="gameId" class="hidden" bind:value={game.id} readonly />
+									<DexTextArea
+										name="content"
+										placeholder="Notes about the game..."
+										errors={errors?.notes?.errors?.content}
+									/>
+
+									<button class="btn btn-primary btn-square" type="submit">
+										<!-- disabled={new_note_content.length < 1 || new_note_content.length > 512} -->
+										<Check />
+									</button>
+								</div>
+							</form>
+						{/if}
 					</div>
 				</div>
 			</div>

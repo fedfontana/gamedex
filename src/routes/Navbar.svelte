@@ -21,7 +21,7 @@
 			<div class="dropdown dropdown-end">
 				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 				<!-- svelte-ignore a11y-label-has-associated-control -->
-				<label tabindex="0" class="btn btn-ghost btn-circle avatar">
+				<label tabindex="0" class="btn btn-ghost btn-circle avatar btn-outline">
 					<div class="w-10 rounded-full">
 						<img src="/icon.png" alt="Admin's propics" />
 					</div>
