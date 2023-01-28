@@ -24,7 +24,8 @@
 
 	//TODO show form errors as toast
 
-	const submit_create_note: SubmitFunction = ({ data }) => {
+	//TODO these and the delete functions are way too similar and could probably be generalized
+	const submit_create_note: SubmitFunction = () => {
 		return async ({ form, result }) => {
 			switch (result.type) {
 				case 'success':
@@ -43,7 +44,7 @@
 		};
 	};
 
-	const submit_create_useful_link: SubmitFunction = ({ data }) => {
+	const submit_create_useful_link: SubmitFunction = () => {
 		return async ({ form, result }) => {
 			switch (result.type) {
 				case 'success':
@@ -62,7 +63,7 @@
 		};
 	};
 
-	const submit_create_event: SubmitFunction = ({ data }) => {
+	const submit_create_event: SubmitFunction = () => {
 		return async ({ form, result }) => {
 			switch (result.type) {
 				case 'success':
@@ -81,7 +82,7 @@
 		};
 	};
 
-	const submit_create_dlc: SubmitFunction = ({ data }) => {
+	const submit_create_dlc: SubmitFunction = () => {
 		return async ({ form, result }) => {
 			switch (result.type) {
 				case 'success':
@@ -243,240 +244,244 @@
 					</div>
 				</div>
 			</div>
-		</div>
-		<!-- END NOTE PART -->
+			<!-- END NOTE PART -->
 
-		<!-- BEGIN USEFUL LINKS PART -->
-		<div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box w-full">
-			<input type="checkbox" />
-			<div class="collapse-title text-xl font-medium">See links</div>
-			<div class="collapse-content">
-				<div class="flex flex-col gap-4">
-					{#each game.useful_links as link}
-						<div class="flex flex-row gap-2">
-							<p
-								class="border border-base-content border-opacity-20 flex-grow rounded-btn px-4 py-2"
-							>
-								<a href={link.url} target="_blank" rel="noreferrer" class="link link-primary"
-									>{link.title}</a
+			<!-- BEGIN USEFUL LINKS PART -->
+			<div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box w-full">
+				<input type="checkbox" />
+				<div class="collapse-title text-xl font-medium">See links</div>
+				<div class="collapse-content">
+					<div class="flex flex-col gap-4">
+						{#each game.useful_links as link}
+							<div class="flex flex-row gap-2">
+								<p
+									class="border border-base-content border-opacity-20 flex-grow rounded-btn px-4 py-2"
 								>
-							</p>
-							{#if $is_logged_in}
-								<button
-									class="btn btn-error btn-square"
-									on:click={() => {
-										remove_useful_link_with_id(link.id);
-									}}
-								>
-									<Trash />
-								</button>
-							{/if}
-						</div>
-					{/each}
-					{#if $is_logged_in}
-						<form
-							action="?/link"
-							method="POST"
-							use:enhance={submit_create_useful_link}
-							class="w-full"
-						>
-							<div class="flex flex-col gap-2">
-								<input type="number" name="gameId" class="hidden" bind:value={game.id} readonly />
-								<DexInput
-									name="title"
-									type="text"
-									placeholder="Link title"
-									value=""
-									errors={errors?.links?.errors?.title}
-								/>
-								<div class="flex flex-row gap-2">
-									<DexInput
-										name="url"
-										type="text"
-										placeholder="Link content"
-										value=""
-										errors={errors?.links?.errors?.url}
-									/>
-									<button class="btn btn-primary btn-square" type="submit">
-										<Check />
+									<a href={link.url} target="_blank" rel="noreferrer" class="link link-primary"
+										>{link.title}</a
+									>
+								</p>
+								{#if $is_logged_in}
+									<button
+										class="btn btn-error btn-square"
+										on:click={() => {
+											remove_useful_link_with_id(link.id);
+										}}
+									>
+										<Trash />
 									</button>
-								</div>
-							</div>
-						</form>
-					{/if}
-				</div>
-			</div>
-		</div>
-		<!-- END USEFUL LINKS PART -->
-
-		<!-- BEGIN EVENTS PART -->
-		<div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box w-full">
-			<input type="checkbox" />
-			<div class="collapse-title text-xl font-medium">See events</div>
-			<div class="collapse-content">
-				<div class="flex flex-col gap-4">
-					{#each game.events as event}
-						<div class="flex flex-row gap-2">
-							<div class="flex flex-grow flex-col gap-2">
-								<h4 class="font-semibold text-lg">
-									{event.name}
-								</h4>
-								<span class="flex flex-row gap-2">
-									<p>
-										{event.begin_dt.toLocaleDateString()}
-										{event.begin_dt.toLocaleTimeString()}
-									</p>
-									{#if event.end_dt}
-										<p>--</p>
-										<p>
-											{event.end_dt.toLocaleDateString()}
-											{event.end_dt.toLocaleTimeString()}
-										</p>
-									{/if}
-								</span>
-								{#if event.description}
-									<p class="border border-base-content border-opacity-20 rounded-btn px-4 py-2">
-										{event.description}
-									</p>
 								{/if}
 							</div>
-							{#if $is_logged_in}
-								<button
-									class="btn btn-error btn-square"
-									on:click={() => {
-										remove_event_with_id(event.id);
-									}}
-								>
-									<Trash />
-								</button>
-							{/if}
-						</div>
-					{/each}
-					{#if $is_logged_in}
-						<form action="?/events" method="POST" class="w-full" use:enhance={submit_create_event}>
-							<div class="flex flex-col gap-2">
-								<input type="number" name="gameId" class="hidden" bind:value={game.id} readonly />
-								<div class="flex flex-row gap-2">
+						{/each}
+						{#if $is_logged_in}
+							<form
+								action="?/link"
+								method="POST"
+								use:enhance={submit_create_useful_link}
+								class="w-full"
+							>
+								<div class="flex flex-col gap-2">
+									<input type="number" name="gameId" class="hidden" bind:value={game.id} readonly />
 									<DexInput
+										name="title"
 										type="text"
-										name="name"
-										placeholder="Event name"
+										placeholder="Link title"
 										value=""
-										errors={errors?.events?.errors?.name}
+										errors={errors?.links?.errors?.title}
+									/>
+									<div class="flex flex-row gap-2">
+										<DexInput
+											name="url"
+											type="text"
+											placeholder="Link content"
+											value=""
+											errors={errors?.links?.errors?.url}
+										/>
+										<button class="btn btn-primary btn-square" type="submit">
+											<Check />
+										</button>
+									</div>
+								</div>
+							</form>
+						{/if}
+					</div>
+				</div>
+			</div>
+			<!-- END USEFUL LINKS PART -->
+
+			<!-- BEGIN EVENTS PART -->
+			<div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box w-full">
+				<input type="checkbox" />
+				<div class="collapse-title text-xl font-medium">See events</div>
+				<div class="collapse-content">
+					<div class="flex flex-col gap-4">
+						{#each game.events as event}
+							<div class="flex flex-row gap-2">
+								<div class="flex flex-grow flex-col gap-2">
+									<h4 class="font-semibold text-lg">
+										{event.name}
+									</h4>
+									<span class="flex flex-row gap-2">
+										<p>
+											{event.begin_dt.toLocaleDateString()}
+											{event.begin_dt.toLocaleTimeString()}
+										</p>
+										{#if event.end_dt}
+											<p>--</p>
+											<p>
+												{event.end_dt.toLocaleDateString()}
+												{event.end_dt.toLocaleTimeString()}
+											</p>
+										{/if}
+									</span>
+									{#if event.description}
+										<p class="border border-base-content border-opacity-20 rounded-btn px-4 py-2">
+											{event.description}
+										</p>
+									{/if}
+								</div>
+								{#if $is_logged_in}
+									<button
+										class="btn btn-error btn-square"
+										on:click={() => {
+											remove_event_with_id(event.id);
+										}}
+									>
+										<Trash />
+									</button>
+								{/if}
+							</div>
+						{/each}
+						{#if $is_logged_in}
+							<form
+								action="?/events"
+								method="POST"
+								class="w-full"
+								use:enhance={submit_create_event}
+							>
+								<div class="flex flex-col gap-2">
+									<input type="number" name="gameId" class="hidden" bind:value={game.id} readonly />
+									<div class="flex flex-row gap-2">
+										<DexInput
+											type="text"
+											name="name"
+											placeholder="Event name"
+											value=""
+											errors={errors?.events?.errors?.name}
+											required
+										/>
+										<button class="btn btn-primary btn-square" type="submit">
+											<Check />
+										</button>
+									</div>
+
+									<DexTextArea
+										placeholder="Event description"
+										value=""
+										name="description"
+										errors={errors?.events?.errors?.description}
+									/>
+
+									<DexInput
+										type="datetime-local"
+										name="begin_dt"
+										value=""
+										errors={errors?.events?.errors?.begin_dt}
 										required
 									/>
-									<button class="btn btn-primary btn-square" type="submit">
-										<Check />
-									</button>
+									<DexInput
+										type="datetime-local"
+										name="end_dt"
+										value=""
+										errors={errors?.events?.errors?.end_dt}
+									/>
 								</div>
-
-								<DexTextArea
-									placeholder="Event description"
-									value=""
-									name="description"
-									errors={errors?.events?.errors?.description}
-								/>
-
-								<DexInput
-									type="datetime-local"
-									name="begin_dt"
-									value=""
-									errors={errors?.events?.errors?.begin_dt}
-									required
-								/>
-								<DexInput
-									type="datetime-local"
-									name="end_dt"
-									value=""
-									errors={errors?.events?.errors?.end_dt}
-								/>
-							</div>
-						</form>
-					{/if}
+							</form>
+						{/if}
+					</div>
 				</div>
 			</div>
-		</div>
-		<!-- END EVENTS PART -->
+			<!-- END EVENTS PART -->
 
-		<!-- BEGIN DLC PART -->
-		<div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box w-full">
-			<input type="checkbox" />
-			<div class="collapse-title text-xl font-medium">See DLC</div>
-			<div class="collapse-content">
-				<div class="flex flex-col gap-4">
-					{#each game.DLCs as dlc}
-						<div class="flex flex-row gap-2">
-							<div class="flex flex-grow flex-col gap-2">
-								<h4 class="font-semibold text-lg">
-									{dlc.name}
-								</h4>
-								<span class="flex flex-row gap-2">
-									{#if dlc.release_date}
-										<p>
-											{dlc.release_date.toLocaleDateString()}
-										</p>
-									{:else}
-										<p>Unknown release date</p>
-									{/if}
-								</span>
-								<p>
-									{dlc.status}
-								</p>
-							</div>
-							{#if $is_logged_in}
-								<button
-									class="btn btn-error btn-square"
-									on:click={() => {
-										remove_dlc_with_id(dlc.id);
-									}}
-								>
-									<Trash />
-								</button>
-							{/if}
-						</div>
-					{/each}
-					{#if $is_logged_in}
-						<form action="?/dlc" method="POST" class="w-full" use:enhance={submit_create_dlc}>
-							<div class="flex flex-col gap-2">
-								<input type="number" name="gameId" class="hidden" bind:value={game.id} readonly />
-								<div class="flex flex-row gap-2">
-									<DexInput
-										name="name"
-										type="text"
-										placeholder="DLC name"
-										value=""
-										errors={errors?.dlcs?.errors?.name}
-									/>
-									<button class="btn btn-primary btn-square" type="submit">
-										<Check />
+			<!-- BEGIN DLC PART -->
+			<div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box w-full">
+				<input type="checkbox" />
+				<div class="collapse-title text-xl font-medium">See DLC</div>
+				<div class="collapse-content">
+					<div class="flex flex-col gap-4">
+						{#each game.DLCs as dlc}
+							<div class="flex flex-row gap-2">
+								<div class="flex flex-grow flex-col gap-2">
+									<h4 class="font-semibold text-lg">
+										{dlc.name}
+									</h4>
+									<span class="flex flex-row gap-2">
+										{#if dlc.release_date}
+											<p>
+												{dlc.release_date.toLocaleDateString()}
+											</p>
+										{:else}
+											<p>Unknown release date</p>
+										{/if}
+									</span>
+									<p>
+										{dlc.status}
+									</p>
+								</div>
+								{#if $is_logged_in}
+									<button
+										class="btn btn-error btn-square"
+										on:click={() => {
+											remove_dlc_with_id(dlc.id);
+										}}
+									>
+										<Trash />
 									</button>
-								</div>
-								<div class="flex flex-row gap-2">
-									<DexInput
-										name="release_date"
-										type="date"
-										value=""
-										errors={errors?.dlcs?.errors?.release_date}
-									/>
-									<DexSelect
-										name="status"
-										value={STATUSES[0]}
-										options={[...STATUSES]}
-										errors={errors?.dlcs?.errors?.status}
-									/>
-								</div>
+								{/if}
 							</div>
-						</form>
-					{/if}
+						{/each}
+						{#if $is_logged_in}
+							<form action="?/dlc" method="POST" class="w-full" use:enhance={submit_create_dlc}>
+								<div class="flex flex-col gap-2">
+									<input type="number" name="gameId" class="hidden" bind:value={game.id} readonly />
+									<div class="flex flex-row gap-2">
+										<DexInput
+											name="name"
+											type="text"
+											placeholder="DLC name"
+											value=""
+											errors={errors?.dlcs?.errors?.name}
+										/>
+										<button class="btn btn-primary btn-square" type="submit">
+											<Check />
+										</button>
+									</div>
+									<div class="flex flex-row gap-2">
+										<DexInput
+											name="release_date"
+											type="date"
+											value=""
+											errors={errors?.dlcs?.errors?.release_date}
+										/>
+										<DexSelect
+											name="status"
+											value={STATUSES[0]}
+											options={[...STATUSES]}
+											errors={errors?.dlcs?.errors?.status}
+										/>
+									</div>
+								</div>
+							</form>
+						{/if}
+					</div>
 				</div>
 			</div>
+			<!-- END DLC PART -->
 		</div>
-		<!-- END DLC PART -->
 	</div>
 
 	<!-- right panel -->
-	<!-- TODO: fix this growing when opening the central disclosures -->
-	<div class="flex flex-col gap-3 bg-base-300 shadow-xl p-4 rounded-xl flex-[2] max-h-fit">
+	<div class="flex flex-col gap-3 bg-base-300 shadow-xl p-6 rounded-xl flex-[2] h-fit">
 		<h3 class="text-lg font-semibold">Data</h3>
 		<span class="flex flex-row gap-2 items-center">
 			<DeviceGamepad class="stroke-accent" size={30} />
@@ -500,7 +505,7 @@
 		{#if game.total_achievements > 0 || game.completion_percentage > 0}
 			<span class="flex flex-row gap-4 items-center justify-evenly">
 				{#if game.total_achievements > 0}
-					<span class="flex flex-col items-center gap-1">
+					<span class="flex flex-col items-center gap-1 w-5/12">
 						<div
 							class="tooltip tooltip-primary"
 							data-tip="{game.obtained_achievements}/{game.total_achievements}"
@@ -519,7 +524,7 @@
 				{/if}
 
 				{#if game.completion_percentage > 0}
-					<span class="flex flex-col items-center gap-1">
+					<span class="flex flex-col items-center gap-1 w-5/12">
 						<div class="radial-progress text-accent" style="--value:{game.completion_percentage};">
 							{game.completion_percentage}%
 						</div>
