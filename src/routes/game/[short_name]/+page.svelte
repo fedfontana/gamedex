@@ -61,6 +61,25 @@
 		};
 	};
 
+	const submit_create_event: SubmitFunction = ({ data }) => {
+		return async ({ form, result }) => {
+			switch (result.type) {
+				case 'success':
+					game.events.push(result.data?.db_values);
+					game.events = game.events;
+					errors.events = undefined;
+					form.reset();
+					break;
+				case 'error':
+					console.error('Error: ', result);
+					break;
+				case 'failure':
+					errors.events = result.data as DexFormErrors;
+					break;
+			}
+		};
+	};
+
 	let called_delete = false;
 	let delete_ok = true;
 
@@ -76,52 +95,11 @@
 		}
 	};
 
-	let new_event = {
-		name: '',
-		description: '',
-		begin_dt: '',
-		end_dt: ''
-	};
 	let new_dlc = {
 		name: '',
 		release_date: '',
 		status: 'backlog' as Status
 	};
-
-	async function add_new_event() {
-		if (new_event.name.length < 1 || new_event.name.length > 128) return;
-		if (new_event.begin_dt.length < 1) return;
-		//TODO handle errors
-		const res = await fetch(`/game/${encodeURIComponent(game.short_name)}/events`, {
-			method: 'POST',
-			body: JSON.stringify({
-				gameId: game.id,
-				...new_event
-			})
-		});
-
-		const id = (await res.json()).id as number;
-
-		if (res.ok) {
-			game.events = [
-				...game.events,
-				{
-					id,
-					gameId: game.id,
-					begin_dt: new Date(new_event.begin_dt),
-					end_dt: new_event.end_dt === '' ? null : new Date(new_event.end_dt),
-					description: new_event.description === '' ? null : new_event.description,
-					name: new_event.name
-				}
-			];
-			new_event = {
-				name: '',
-				description: '',
-				begin_dt: '',
-				end_dt: ''
-			};
-		}
-	}
 
 	async function add_new_dlc() {
 		if (new_dlc.name.length < 1 || new_dlc.name.length > 128) return;
@@ -332,11 +310,11 @@
 								/>
 								<div class="flex flex-row gap-2">
 									<DexInput
-									name="url"
-									type="text"
-									placeholder="Link content"
-									value={''}
-									errors={errors?.links?.errors?.url}
+										name="url"
+										type="text"
+										placeholder="Link content"
+										value={''}
+										errors={errors?.links?.errors?.url}
 									/>
 									<button class="btn btn-primary btn-square" type="submit">
 										<Check />
@@ -381,43 +359,50 @@
 									</p>
 								{/if}
 							</div>
-							<button class="btn btn-error btn-square" on:click={remove_event_with_id(event.id)}>
-								<Trash />
-							</button>
+							{#if $is_logged_in}
+								<button class="btn btn-error btn-square" on:click={remove_event_with_id(event.id)}>
+									<Trash />
+								</button>
+							{/if}
 						</div>
 					{/each}
-					<div class="flex flex-col gap-2">
-						<input
-							type="text"
-							class="input input-bordered"
-							placeholder="Event name"
-							bind:value={new_event.name}
-						/>
-						<textarea
-							class="textarea textarea-bordered"
-							placeholder="Event description"
-							bind:value={new_event.description}
-						/>
-						<input
-							type="datetime-local"
-							class="input input-bordered"
-							bind:value={new_event.begin_dt}
-						/>
-						<input
-							type="datetime-local"
-							class="input input-bordered"
-							bind:value={new_event.end_dt}
-						/>
-						<button
-							class="btn btn-primary btn-square"
-							on:click={add_new_event}
-							disabled={new_event.name.length < 1 ||
-								new_event.name.length > 128 ||
-								new_event.begin_dt.length < 1}
-						>
-							<Check />
-						</button>
-					</div>
+					{#if $is_logged_in}
+						<form action="?/events" method="POST" class="w-full" use:enhance={submit_create_event}>
+							<div class="flex flex-col gap-2">
+								<input type="number" name="gameId" class="hidden" bind:value={game.id} readonly />
+								<DexInput
+									type="text"
+									name="name"
+									placeholder="Event name"
+									value=""
+									errors={errors?.events?.errors?.name}
+									required
+								/>
+								<DexTextArea
+									placeholder="Event description"
+									value=""
+									name="description"
+									errors={errors?.events?.errors?.description}
+								/>
+								<DexInput
+									type="datetime-local"
+									name="begin_dt"
+									value=""
+									errors={errors?.events?.errors?.begin_dt}
+									required
+								/>
+								<DexInput
+									type="datetime-local"
+									name="end_dt"
+									value=""
+									errors={errors?.events?.errors?.end_dt}
+								/>
+								<button class="btn btn-primary btn-square" type="submit">
+									<Check />
+								</button>
+							</div>
+						</form>
+					{/if}
 				</div>
 			</div>
 		</div>
