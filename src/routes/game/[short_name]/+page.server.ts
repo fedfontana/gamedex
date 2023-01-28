@@ -1,3 +1,4 @@
+import { DLCSchema } from "$models/DLC";
 import { GameEventsSchema } from "$models/GameEvents";
 import { NoteSchema } from "$models/Note";
 import { UsefulLinkSchema } from "$models/UsefulLinks";
@@ -94,6 +95,36 @@ export const actions: Actions = {
 
             return fail(400, {
                 form_errors: ["An unkown error occurred while saving the event"],
+            });
+        }
+    },
+
+    dlc: async ({ cookies, request }) => {
+        if (!is_logged_in(cookies)) {
+            throw error(401, "Unauthorized");
+        }
+
+        const formData = Object.fromEntries(await request.formData());
+
+        try {
+            const dlc = DLCSchema.parse(formData);
+            const new_dlc = await prisma.dLC.create({
+                data: dlc,
+            })
+            console.log("Returning success")
+            return {
+                db_values: new_dlc,
+            }
+        } catch (err) {
+            if (err instanceof ZodError) {
+                console.error("Field errors from create dlc being returned to the client: ", err.flatten());
+                return fail(400, {
+                    errors: err.flatten().fieldErrors,
+                });
+            }
+
+            return fail(400, {
+                form_errors: ["An unkown error occurred while saving the dlc"],
             });
         }
     }

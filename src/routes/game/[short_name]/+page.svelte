@@ -9,6 +9,7 @@
 	import DexTextArea from '$components/DexTextArea.svelte';
 	import type { DexFormErrors } from './proxy+page.server';
 	import DexInput from '$components/DexInput.svelte';
+	import DexSelect from '$components/DexSelect.svelte';
 	//TODO change box icon into the box-sealed
 
 	export let data: PageData;
@@ -75,6 +76,25 @@
 					break;
 				case 'failure':
 					errors.events = result.data as DexFormErrors;
+					break;
+			}
+		};
+	};
+
+	const submit_create_dlc: SubmitFunction = ({ data }) => {
+		return async ({ form, result }) => {
+			switch (result.type) {
+				case 'success':
+					game.DLCs.push(result.data?.db_values);
+					game.DLCs = game.DLCs;
+					errors.dlcs = undefined;
+					form.reset();
+					break;
+				case 'error':
+					console.error('Error: ', result);
+					break;
+				case 'failure':
+					errors.dlcs = result.data as DexFormErrors;
 					break;
 			}
 		};
@@ -433,32 +453,41 @@
 									{dlc.status}
 								</p>
 							</div>
-							<button class="btn btn-error btn-square" on:click={remove_dlc_with_id(dlc.id)}>
-								<Trash />
-							</button>
+							{#if $is_logged_in}
+								<button class="btn btn-error btn-square" on:click={remove_dlc_with_id(dlc.id)}>
+									<Trash />
+								</button>
+							{/if}
 						</div>
 					{/each}
-					<div class="flex flex-col gap-2">
-						<input
-							type="text"
-							class="input input-bordered"
-							placeholder="DLC name"
-							bind:value={new_dlc.name}
-						/>
-						<input type="date" class="input input-bordered" bind:value={new_dlc.release_date} />
-						<select name="status" class="select select-bordered" bind:value={new_dlc.status}>
-							{#each STATUSES as status}
-								<option value={status}> {status} </option>
-							{/each}
-						</select>
-						<button
-							class="btn btn-primary btn-square"
-							on:click={add_new_dlc}
-							disabled={new_dlc.name.length < 1 || new_dlc.name.length > 128}
-						>
-							<Check />
-						</button>
-					</div>
+					{#if $is_logged_in}
+						<form action="?/dlc" method="POST" class="w-full" use:enhance={submit_create_dlc}>
+							<div class="flex flex-col gap-2">
+								<input type="number" name="gameId" class="hidden" bind:value={game.id} readonly />
+								<DexInput
+									name="name"
+									type="text"
+									placeholder="DLC name"
+									value=""
+									errors={errors?.dlcs?.errors?.name}
+								/>
+								<DexInput
+									name="release_date"
+									type="date"
+									errors={errors?.dlcs?.errors?.release_date}
+								/>
+								<DexSelect
+									name="status"
+									value={STATUSES[0]}
+									options={[...STATUSES]}
+									errors={errors?.dlcs?.errors?.status}
+								/>
+								<button class="btn btn-primary btn-square" type="submit">
+									<Check />
+								</button>
+							</div>
+						</form>
+					{/if}
 				</div>
 			</div>
 		</div>

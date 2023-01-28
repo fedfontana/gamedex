@@ -2,7 +2,14 @@ import { z } from 'zod';
 import { STATUSES } from './Game';
 
 export const DLCSchema = z.object({
-    gameId: z.number().int(),
+    gameId: z.preprocess(
+        v => {
+            if(typeof v === "number") return v;
+            if(typeof v === "string") return parseInt(v);
+            return "";
+        },
+        z.number().int(),
+    ),
     name: z
         .string({ required_error: "Name is required" })
         .min(1, "Name is required")
