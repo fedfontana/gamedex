@@ -199,24 +199,36 @@
 		{/if} -->
 
 		<div class="flex flex-col justify-start items-start gap-2 w-full">
-			<!-- BEGIN NOTE PART -->
+			<!-- BEGIN DLC PART -->
 			<div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box w-full">
 				<input type="checkbox" />
-				<div class="collapse-title text-xl font-medium">Notes</div>
+				<div class="collapse-title text-2xl font-semibold">DLCs</div>
 				<div class="collapse-content">
 					<div class="flex flex-col gap-4">
-						{#each game.notes as note}
+						{#each game.DLCs as dlc}
 							<div class="flex flex-row gap-2">
-								<p
-									class="border border-base-content border-opacity-20 flex-grow rounded-btn px-4 py-2"
-								>
-									{note.content}
-								</p>
+								<div class="flex flex-grow flex-col gap-2">
+									<h4 class="font-semibold text-lg">
+										{dlc.name}
+									</h4>
+									<span class="flex flex-row gap-2">
+										{#if dlc.release_date}
+											<p>
+												{dlc.release_date.toLocaleDateString()}
+											</p>
+										{:else}
+											<p>Unknown release date</p>
+										{/if}
+									</span>
+									<p>
+										{dlc.status}
+									</p>
+								</div>
 								{#if $is_logged_in}
 									<button
 										class="btn btn-error btn-square"
 										on:click={() => {
-											remove_note_with_id(note.id);
+											remove_dlc_with_id(dlc.id);
 										}}
 									>
 										<Trash />
@@ -225,103 +237,54 @@
 							</div>
 						{/each}
 						{#if $is_logged_in}
-							{#if game.notes.length > 0}
+							{#if game.DLCs.length > 0}
 								<div class="divider" />
 							{/if}
 							<form
+								action="?/dlc"
 								method="POST"
-								action="?/note"
-								use:enhance={submit_create_note}
-								class="w-full flex flex-row gap-2"
-							>
-								<h4 class="font-semibold text-xl">Add a note</h4>
-								<!-- Using bind value so that form.reset() doesn't break subsequent form submissions -->
-								<input type="number" name="gameId" class="hidden" bind:value={game.id} readonly />
-								<DexTextArea
-									name="content"
-									placeholder="Notes about the game..."
-									errors={errors?.notes?.errors?.content}
-								/>
-
-								<button class="btn btn-primary btn-square" type="submit">
-									<Check />
-								</button>
-							</form>
-						{/if}
-					</div>
-				</div>
-			</div>
-			<!-- END NOTE PART -->
-
-			<!-- BEGIN USEFUL LINKS PART -->
-			<div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box w-full">
-				<input type="checkbox" />
-				<div class="collapse-title text-xl font-medium">Useful links</div>
-				<div class="collapse-content">
-					<div class="flex flex-col gap-4">
-						{#each game.useful_links as link}
-							<div class="flex flex-row gap-2">
-								<p
-									class="border border-base-content border-opacity-20 flex-grow rounded-btn px-4 py-2"
-								>
-									<a href={link.url} target="_blank" rel="noreferrer" class="link link-primary"
-										>{link.title}</a
-									>
-								</p>
-								{#if $is_logged_in}
-									<button
-										class="btn btn-error btn-square"
-										on:click={() => {
-											remove_useful_link_with_id(link.id);
-										}}
-									>
-										<Trash />
-									</button>
-								{/if}
-							</div>
-						{/each}
-						{#if $is_logged_in}
-							{#if game.useful_links.length > 0}
-								<div class="divider" />
-							{/if}
-							<form
-								action="?/link"
-								method="POST"
-								use:enhance={submit_create_useful_link}
 								class="w-full flex flex-col gap-2"
+								use:enhance={submit_create_dlc}
 							>
-								<h4 class="text-xl font-semibold">Add a link</h4>
+								<h4 class="text-xl font-medium">Add a DLC</h4>
 								<input type="number" name="gameId" class="hidden" bind:value={game.id} readonly />
-								<DexInput
-									name="title"
-									type="text"
-									placeholder="Link title"
-									value=""
-									errors={errors?.links?.errors?.title}
-								/>
 								<div class="flex flex-row gap-2">
 									<DexInput
-										name="url"
+										name="name"
 										type="text"
-										placeholder="Link content"
+										placeholder="DLC name"
 										value=""
-										errors={errors?.links?.errors?.url}
+										errors={errors?.dlcs?.errors?.name}
 									/>
 									<button class="btn btn-primary btn-square" type="submit">
 										<Check />
 									</button>
+								</div>
+								<div class="flex flex-row gap-2">
+									<DexInput
+										name="release_date"
+										type="date"
+										value=""
+										errors={errors?.dlcs?.errors?.release_date}
+									/>
+									<DexSelect
+										name="status"
+										value={STATUSES[0]}
+										options={[...STATUSES]}
+										errors={errors?.dlcs?.errors?.status}
+									/>
 								</div>
 							</form>
 						{/if}
 					</div>
 				</div>
 			</div>
-			<!-- END USEFUL LINKS PART -->
+			<!-- END DLC PART -->
 
 			<!-- BEGIN EVENTS PART -->
 			<div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box w-full">
 				<input type="checkbox" />
-				<div class="collapse-title text-xl font-medium">Events</div>
+				<div class="collapse-title text-2xl font-semibold">Events</div>
 				<div class="collapse-content">
 					<div class="flex flex-col gap-4">
 						{#each game.events as event}
@@ -371,7 +334,7 @@
 								class="w-full flex flex-col gap-2"
 								use:enhance={submit_create_event}
 							>
-								<h4 class="text-xl font-semibold">Add an event</h4>
+								<h4 class="text-xl font-medium">Add an event</h4>
 								<input type="number" name="gameId" class="hidden" bind:value={game.id} readonly />
 								<div class="flex flex-row gap-2">
 									<DexInput
@@ -414,36 +377,26 @@
 			</div>
 			<!-- END EVENTS PART -->
 
-			<!-- BEGIN DLC PART -->
+			<!-- BEGIN USEFUL LINKS PART -->
 			<div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box w-full">
 				<input type="checkbox" />
-				<div class="collapse-title text-xl font-medium">DLCs</div>
+				<div class="collapse-title text-2xl font-semibold">Useful links</div>
 				<div class="collapse-content">
 					<div class="flex flex-col gap-4">
-						{#each game.DLCs as dlc}
+						{#each game.useful_links as link}
 							<div class="flex flex-row gap-2">
-								<div class="flex flex-grow flex-col gap-2">
-									<h4 class="font-semibold text-lg">
-										{dlc.name}
-									</h4>
-									<span class="flex flex-row gap-2">
-										{#if dlc.release_date}
-											<p>
-												{dlc.release_date.toLocaleDateString()}
-											</p>
-										{:else}
-											<p>Unknown release date</p>
-										{/if}
-									</span>
-									<p>
-										{dlc.status}
-									</p>
-								</div>
+								<p
+									class="border border-base-content border-opacity-20 flex-grow rounded-btn px-4 py-2"
+								>
+									<a href={link.url} target="_blank" rel="noreferrer" class="link link-primary"
+										>{link.title}</a
+									>
+								</p>
 								{#if $is_logged_in}
 									<button
 										class="btn btn-error btn-square"
 										on:click={() => {
-											remove_dlc_with_id(dlc.id);
+											remove_useful_link_with_id(link.id);
 										}}
 									>
 										<Trash />
@@ -452,49 +405,98 @@
 							</div>
 						{/each}
 						{#if $is_logged_in}
-							{#if game.DLCs.length > 0}
+							{#if game.useful_links.length > 0}
 								<div class="divider" />
 							{/if}
 							<form
-								action="?/dlc"
+								action="?/link"
 								method="POST"
+								use:enhance={submit_create_useful_link}
 								class="w-full flex flex-col gap-2"
-								use:enhance={submit_create_dlc}
 							>
-								<h4 class="text-xl font-semibold">Add a DLC</h4>
+								<h4 class="text-xl font-medium">Add a link</h4>
 								<input type="number" name="gameId" class="hidden" bind:value={game.id} readonly />
+								<DexInput
+									name="title"
+									type="text"
+									placeholder="Link title"
+									value=""
+									errors={errors?.links?.errors?.title}
+								/>
 								<div class="flex flex-row gap-2">
 									<DexInput
-										name="name"
+										name="url"
 										type="text"
-										placeholder="DLC name"
+										placeholder="Link content"
 										value=""
-										errors={errors?.dlcs?.errors?.name}
+										errors={errors?.links?.errors?.url}
 									/>
 									<button class="btn btn-primary btn-square" type="submit">
 										<Check />
 									</button>
-								</div>
-								<div class="flex flex-row gap-2">
-									<DexInput
-										name="release_date"
-										type="date"
-										value=""
-										errors={errors?.dlcs?.errors?.release_date}
-									/>
-									<DexSelect
-										name="status"
-										value={STATUSES[0]}
-										options={[...STATUSES]}
-										errors={errors?.dlcs?.errors?.status}
-									/>
 								</div>
 							</form>
 						{/if}
 					</div>
 				</div>
 			</div>
-			<!-- END DLC PART -->
+			<!-- END USEFUL LINKS PART -->
+
+			<!-- BEGIN NOTE PART -->
+			<div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box w-full">
+				<input type="checkbox" />
+				<div class="collapse-title text-2xl font-semibold">Notes</div>
+				<div class="collapse-content">
+					<div class="flex flex-col gap-4">
+						{#each game.notes as note}
+							<div class="flex flex-row gap-2">
+								<p
+									class="border border-base-content border-opacity-20 flex-grow rounded-btn px-4 py-2"
+								>
+									{note.content}
+								</p>
+								{#if $is_logged_in}
+									<button
+										class="btn btn-error btn-square"
+										on:click={() => {
+											remove_note_with_id(note.id);
+										}}
+									>
+										<Trash />
+									</button>
+								{/if}
+							</div>
+						{/each}
+						{#if $is_logged_in}
+							{#if game.notes.length > 0}
+								<div class="divider" />
+							{/if}
+							<form
+								method="POST"
+								action="?/note"
+								use:enhance={submit_create_note}
+								class="w-full flex flex-col gap-2"
+							>
+								<h4 class="text-xl font-medium">Add a note</h4>
+								<!-- Using bind value so that form.reset() doesn't break subsequent form submissions -->
+								<div class="flex flex-row gap-2">
+									<input type="number" name="gameId" class="hidden" bind:value={game.id} readonly />
+									<DexTextArea
+										name="content"
+										placeholder="Notes about the game..."
+										errors={errors?.notes?.errors?.content}
+									/>
+
+									<button class="btn btn-primary btn-square" type="submit">
+										<Check />
+									</button>
+								</div>
+							</form>
+						{/if}
+					</div>
+				</div>
+			</div>
+			<!-- END NOTE PART -->
 		</div>
 	</div>
 

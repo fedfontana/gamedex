@@ -10,7 +10,7 @@
 	export let options: string[] | number[];
 </script>
 
-<div class="form-control w-full max-w-xs {wrapper_classes}">
+<div class="form-control w-full {wrapper_classes}">
 	{#if label}
 		<label class="label" for={name}>
 			<span class="label-text"> {label} </span>
