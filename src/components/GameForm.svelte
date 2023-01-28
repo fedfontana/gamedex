@@ -52,10 +52,6 @@
 	let game = to_form_values(initial_data);
 </script>
 
-<!-- TODO: sometimes sending data too many times makes it so that the old values are not filled in? -->
-<!-- TODO: add reset button? -->
-<!-- TODO: fix buttons being too wide off the sides of the form -->
-
 <form method="POST" use:enhance class="flex flex-col gap-6 w-full mx-auto">
 	{#if form_errors !== undefined && form_errors.length > 0}
 		<div class="flex flex-col items-center gap-2">
@@ -162,7 +158,6 @@
 			max={game.total_achievements}
 		/>
 
-		<!-- TODO: decimal point in percentage -->
 		<DexInput
 			name="completion_percentage"
 			label="completion %"

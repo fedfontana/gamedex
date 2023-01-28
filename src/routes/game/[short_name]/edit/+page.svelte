@@ -22,7 +22,6 @@
 	/>
 </div>
 
-<!-- TODO: fix bug, after one try has been made, the error variant does not work for subsequent errors (resets on success) -->
 {#if form}
 	{#if (form?.form_errors?.length ?? 0) > 0 || Object.keys(form?.errors ?? {}).length > 0}
 		<Alert title="Error updating the game" kind="error" />

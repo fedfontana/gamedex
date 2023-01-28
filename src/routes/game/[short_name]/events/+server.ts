@@ -17,7 +17,6 @@ export const POST: RequestHandler = async ({ request }) => {
         return new Response(JSON.stringify(new_event));
     } catch(err) {
         // INFO: Prisma error code: P2025 - Record to delete does not exist
-        // TODO handle 
         // TODO handle specific errors
         throw error(400, { message: "Bad request" });
     }

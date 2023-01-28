@@ -9,7 +9,6 @@ export function is_logged_in(cookies: Cookies) {
     try {
         const data = jwt.verify(token, env.JWT_SECRET, { maxAge: env.JWT_DURATION ??  14 * 24 * 60 * 60 });
 
-        //TODO type jwt token content
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return (data as any)?.data?.authenticated !== undefined && (data as any).data.authenticated === true;
     } catch(err) {

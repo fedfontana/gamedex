@@ -102,8 +102,4 @@ export const GameSchema = z.object({
     ),
 });
 
-// TODO add constraints on obtained achievements === 0 if game is not bought, same for completion % 
-// TODO find a way to make total_achievements nullable
-// TODO refine obtained achievements < total achievements
-
 export type Game = z.infer<typeof GameSchema>;

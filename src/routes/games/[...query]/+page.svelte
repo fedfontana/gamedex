@@ -65,26 +65,7 @@
 	$: games = list_games ?? form?.games ?? data.games;
 </script>
 
-<!-- TODO: add back total queried game amount -->
-<!-- TODO: print number of pages and current page somewhere -->
-<!-- TODO: page should probably return to 1 when seeing a new query -->
-<!-- TODO: add filter rest/ full reset/ sort reset -->
-<!-- TODO: subsections for each platform manufacturer in filters -->
-<!-- TODO: reactive game grid -->
-<!-- TODO: fix sidebar not being on the far right sie-->
-<!-- TODO: add svelte:head with title in the whole website -->
-<!-- TODO: add special screen if no results are found -->
-<!-- TODO: add screen with button to add a game with that short_name if the user lands on /games/<short_name>[/edit] (only if logged in ofc) -->
-<!-- TODO: change filter icon and put it on the right -->
-<!-- TODO: add animation when new games pop up in the list (scale? fade? fly? ) -->
-<!-- TODO: move theme selection -->
-<!-- TODO: add new custom personal theme -->
-<!-- TODO: add license -->
-<!-- TODO: change selected text color based on theme? -->
-<!-- TODO: automatically close sidebar when search is successfull -->
-<!-- TODO: fix double scrolling bar on ther right in the list of games -->
-<!-- TODO: escape / from game names -->
-<!-- TODO: add some sort of shadow/box around the paringation thingy at the bottom -->
+<!-- TODO: escape / from game names in all fetch calls -->
 
 <div class="drawer relative">
 	<input id="filters-drawer" type="checkbox" class="drawer-toggle" />
@@ -121,8 +102,6 @@
 				<ChevronRight />
 			</button>
 			
-			<!-- TODO fix double scrollbar -->
-			<!-- TODO if i dont put mb-24 the bottom navigation gets cut off, fix -->
 			<div class="grid grid-cols-3 gap-y-12 gap-x-8 w-10/12 mx-auto mt-12 mb-24">
 				{#each games as game}
 					<GameCard {game} />

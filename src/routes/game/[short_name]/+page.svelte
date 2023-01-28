@@ -1,16 +1,14 @@
 <script lang="ts">
 	import Alert from '$components/Alert.svelte';
-	import { STATUSES, type Status } from '$models/Game';
+	import { STATUSES } from '$models/Game';
 	import { is_logged_in } from '$src/stores';
 	import type { PageData } from './$types';
 	import { Calendar, Hourglass, DeviceGamepad, Box, Trash, Check } from 'tabler-icons-svelte';
 	import { enhance, type SubmitFunction } from '$app/forms';
-	//import type { CreateNoteFormResponse } from './proxy+page.server';
 	import DexTextArea from '$components/DexTextArea.svelte';
 	import type { DexFormErrors } from './proxy+page.server';
 	import DexInput from '$components/DexInput.svelte';
 	import DexSelect from '$components/DexSelect.svelte';
-	//TODO change box icon into the box-sealed
 
 	export let data: PageData;
 	const { game } = data;
@@ -21,8 +19,6 @@
 		events?: DexFormErrors;
 		dlcs?: DexFormErrors;
 	} = {};
-
-	//TODO show form errors as toast
 
 	//TODO these and the delete functions are way too similar and could probably be generalized
 	const submit_create_note: SubmitFunction = () => {
@@ -181,7 +177,6 @@
 		{/if}
 	</div>
 
-	<!-- TODO fix scrolling -->
 	<!-- central panel -->
 	<div class="flex flex-col justify-start items-start flex-[4] gap-12 mb-24">
 		<h2 class="text-3xl font-semibold">
@@ -192,11 +187,6 @@
 				</span>
 			{/if}
 		</h2>
-
-		<!-- TODO fix this and add it back -->
-		<!-- {#if game.release_date && game.release_date > new Date()}
-			<Countdown end_time={game.release_date} />
-		{/if} -->
 
 		<div class="flex flex-col justify-start items-start gap-2 w-full">
 			<!-- BEGIN DLC PART -->
