@@ -1,33 +1,45 @@
 <script lang="ts">
+	import type { SubmitFunction } from '$app/forms';
 	import GameForm from '$components/GameForm.svelte';
-	import type { Game } from '$models/Game';
 	import { addToast } from '$src/toast';
-	import type { CreateGameFormResponse } from './proxy+page.server';
 
-	export let form: CreateGameFormResponse;
+	let field_errors: Record<string, string> | undefined = undefined;
+	let form_errors: string[] | undefined = undefined;
 
-	$: initial_data = form?.values as any as Game | undefined;
-
-	$: {
-		if ((form?.form_errors?.length ?? 0) > 0 || Object.keys(form?.errors ?? {}).length > 0) {
-			form.form_errors?.forEach(err => addToast({ type: "error", title: "Error creatin the game", message: err}));
-		} else {
-			addToast({
-				type: "success",
-				title: "Game created successfully",
-			});
-		}
-	}
-
+	const enhance_function: SubmitFunction = ({ data }) => {
+		console.log("Sending request with this data: ", Object.fromEntries(data));
+		return async ({ result }) => {
+			switch (result.type) {
+				case 'success':
+					addToast({
+						type: 'success',
+						title: 'Game updated successfully'
+					});
+					field_errors = undefined;
+					form_errors = undefined;
+					break;
+				case 'failure':
+					field_errors = result.data?.field_errors;
+					form_errors = result.data?.form_errors;
+					break;
+				case 'error':
+					addToast({
+						title: 'Error updating the game',
+						type: 'error'
+					});
+					break;
+			}
+		};
+	};
 </script>
 
-<div class="w-8/12 mx-auto">
+<div class="mx-auto w-8/12">
 	<h2 class="mx-auto text-3xl font-semibold w-fit mt-6 mb-10">Add new game</h2>
 
 	<GameForm
-		form_errors={form?.form_errors}
-		{initial_data}
-		field_errors={form?.errors}
+		{form_errors}
+		{field_errors}
 		button_text="Create game"
+		{enhance_function}
 	/>
 </div>
