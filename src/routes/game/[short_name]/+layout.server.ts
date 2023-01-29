@@ -21,7 +21,6 @@ export const load: LayoutServerLoad = async ({ params }) => {
         })
     }
     
-    console.log("Game: ", game);
     return {
         game,
     }

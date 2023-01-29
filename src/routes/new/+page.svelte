@@ -7,7 +7,6 @@
 	let form_errors: string[] | undefined = undefined;
 
 	const enhance_function: SubmitFunction = ({ data }) => {
-		console.log("Sending request with this data: ", Object.fromEntries(data));
 		return async ({ result }) => {
 			switch (result.type) {
 				case 'success':
@@ -36,10 +35,5 @@
 <div class="mx-auto w-8/12">
 	<h2 class="mx-auto text-3xl font-semibold w-fit mt-6 mb-10">Add new game</h2>
 
-	<GameForm
-		{form_errors}
-		{field_errors}
-		button_text="Create game"
-		{enhance_function}
-	/>
+	<GameForm {form_errors} {field_errors} button_text="Create game" {enhance_function} />
 </div>

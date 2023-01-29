@@ -20,8 +20,7 @@ export const actions: Actions = {
             const note = NoteSchema.parse(formData);
             const new_note = await prisma.note.create({
                 data: note,
-            })
-            console.log("Returning success")
+            });
             return {
                 db_values: new_note,
             }
@@ -51,7 +50,6 @@ export const actions: Actions = {
             const new_link = await prisma.usefulLink.create({
                 data: link,
             })
-            console.log("Returning success")
             return {
                 db_values: new_link,
             }
@@ -80,8 +78,7 @@ export const actions: Actions = {
             const event = GameEventsSchema.parse(formData);
             const new_event = await prisma.gameEvent.create({
                 data: event,
-            })
-            console.log("Returning success")
+            });
             return {
                 db_values: new_event,
             }
@@ -110,8 +107,7 @@ export const actions: Actions = {
             const dlc = DLCSchema.parse(formData);
             const new_dlc = await prisma.dLC.create({
                 data: dlc,
-            })
-            console.log("Returning success")
+            });
             return {
                 db_values: new_dlc,
             }

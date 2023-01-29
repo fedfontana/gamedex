@@ -9,6 +9,7 @@
 	import DexInput from '$components/DexInput.svelte';
 	import DexSelect from '$components/DexSelect.svelte';
 	import { addToast } from '$src/toast';
+	import Collapse from '$components/Collapse.svelte';
 
 	export let data: PageData;
 	const { game } = data;
@@ -194,10 +195,8 @@
 		<div class="flex flex-col justify-start items-start gap-2 w-full">
 			<!-- BEGIN DLC PART -->
 			{#if $is_logged_in || game.DLCs.length > 0}
-				<div class="collapse collapse-arrow border border-base-300 bg-base-100 rounded-box w-full">
-					<input type="checkbox" />
-					<div class="collapse-title text-2xl font-semibold">DLCs</div>
-					<div class="collapse-content flex flex-col gap-2">
+				<Collapse title="DLCs">
+					<div class="flex flex-col gap-2">
 						{#each game.DLCs as dlc}
 							<div class="flex flex-row gap-2">
 								<div
@@ -275,9 +274,9 @@
 							</form>
 						{/if}
 					</div>
-				</div>
+				</Collapse>
 			{/if}
-			<!-- END DLC PART -->
+			<!-- END TMP -->
 
 			<!-- BEGIN EVENTS PART -->
 			{#if $is_logged_in || game.events.length > 0}

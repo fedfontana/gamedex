@@ -5,7 +5,6 @@ import type { RequestHandler } from "../$types";
 export const DELETE: RequestHandler = async ({ params }) => {
     try {
         const id = parseInt(params.id);
-        console.log("Id: ", id, " with type: ", typeof id);
         const old_note = await prisma.note.delete({
             where: {
                 id,

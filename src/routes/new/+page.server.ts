@@ -30,7 +30,7 @@ export const actions: Actions = {
 			if (err instanceof ZodError) {
 				console.error(err.flatten());
 				return fail(400, {
-					errors: err.flatten().fieldErrors,
+					field_errors: err.flatten().fieldErrors,
 				});
 			} else if (err instanceof Prisma.PrismaClientKnownRequestError) {
 				if (err.code === 'P2002') {

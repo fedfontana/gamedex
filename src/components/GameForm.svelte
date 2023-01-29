@@ -24,6 +24,7 @@
 	export let button_text: string = 'Confirm';
 	export let enhance_function: SubmitFunction = () => {};
 
+	
 	const deep_copy = (g: Object) =>  JSON.parse(JSON.stringify(g));
 	let game = deep_copy(initial_data);
 </script>
@@ -131,7 +132,6 @@
 			errors={field_errors?.obtained_achievements}
 			type="number"
 			min={0}
-			max={game.total_achievements}
 		/>
 
 		<DexInput

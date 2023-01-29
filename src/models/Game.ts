@@ -100,6 +100,14 @@ export const GameSchema = z.object({
             .nonnegative("Completion percentage must be greater than 0")
             .max(100, "Completion percentage must be smaller or equal than 100")
     ),
+}).superRefine(({total_achievements, obtained_achievements}, ctx) => {
+    if(obtained_achievements > total_achievements) {
+        ctx.addIssue({
+            code: "custom",
+            message: "Obtained achievements must be smaller than total achievements",
+            path: ["obtained_achievements"]
+        });
+    }
 });
 
 export type Game = z.infer<typeof GameSchema>;
