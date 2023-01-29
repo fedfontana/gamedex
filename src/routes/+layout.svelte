@@ -24,6 +24,12 @@
 	const options = ["info", "success", "warning", "error"] as const;
 </script>
 
+<svelte:head>
+	<title>
+		gamedex
+	</title>
+</svelte:head>
+
 <div class="max-w-screen min-h-screen overflow-y-scroll flex flex-col">
 	<Navbar />
 	<main class="overflow-hidden">
