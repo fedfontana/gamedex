@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Game } from '@prisma/client';
-	import { Calendar, Hourglass, DeviceGamepad, Box } from 'tabler-icons-svelte';
+	import { Calendar, Hourglass, DeviceGamepad, Box, Trophy } from 'tabler-icons-svelte';
 
 	export let game: Game;
 </script>
@@ -43,6 +43,12 @@
 				<Calendar class="stroke-accent" size={30} />
 				Release date: {game.release_date ? (new Date(game.release_date)).toDateString() : 'unknown'}
 			</span>
+			{#if game.total_achievements > 0} 
+			<span class="flex flex-row gap-2 items-center">
+				<Trophy class="stroke-accent" size={30} />
+				Achievements: {game.obtained_achievements}/{game.total_achievements}
+			</span>
+			{/if}
 		</div>
 
 		<div class="card-actions justify-end">
