@@ -73,7 +73,7 @@ async function main() {
                             console.error("DB error. Skipping entry with name: ", game.name);
                         }
                     } else {
-                        console.error("Unknown error. Skipping entry with name: ", game.name);
+                        console.error("Error. Skipping entry with name: ", game.name, "\nError:", err);
                     }
                 }
             })
