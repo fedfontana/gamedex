@@ -14,12 +14,11 @@ export const GET: RequestHandler = async ({ url }) => {
                 JSON.parse(
                     decodeURIComponent(encoded_options)
                     )
-                ) 
+                )
             : DEFAULT_OPTIONS;
         return new Response(JSON.stringify(await load_games_paginated(options, page)));
     } catch (err) {
         if (err instanceof ZodError) {
-            console.error("Zod error: ", err);
             throw error(401, { message: err.message })
         }
         throw error(401, { message: "Bad request" })

@@ -12,7 +12,6 @@ export const DELETE: RequestHandler = async ({ params }) => {
         });
         return new Response(JSON.stringify({ id: old_dlc.id }));
     } catch(err) {
-        console.error("Error in delete DLC: ", err);
         throw error(400, { message: "Error while deleting the DLC" });
     }
 }

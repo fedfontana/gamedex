@@ -3,19 +3,27 @@
 	import { slide } from 'svelte/transition';
 	import type { PageData } from './$types';
 	import GameCard from './GameCard.svelte';
-	import { applyAction, deserialize } from '$app/forms';
+	import { applyAction, deserialize, enhance, type SubmitFunction } from '$app/forms';
 	import { SORT_OPTIONS, type SortOption } from '$src/utils/enums';
 	import type { Game } from '@prisma/client';
 	import { page as p } from '$app/stores';
 	import { Adjustments, ChevronLeft, ChevronRight, Search } from 'tabler-icons-svelte';
 	import Drawer from '$components/Drawer.svelte';
+	import { addToast } from '$src/toast';
 
 	export let data: PageData;
-	export let form:
-		| { games: Game[]; total_pages: number; page: number; total_games_count: number }
-		| undefined;
 
-	$: total_pages = form?.total_pages ?? data.total_pages; // in case something changes
+	let games = data.games;
+	let total_games_count = data.total_game_count;
+	let total_pages = data.total_pages;
+
+	let page = 1;
+
+	let drawer_open = false;
+
+	// export let form:
+	// 	| { games: Game[]; total_pages: number; page: number; total_games_count: number }
+	// 	| undefined;
 
 	let options = {
 		query: $p.params.query,
@@ -48,15 +56,26 @@
 		});
 
 		const result = deserialize(await response.text());
-		list_games = undefined;
-		list_total_games_count = undefined;
-		page = 1;
-		applyAction(result);
+		switch (result.type) {
+			case 'success':
+				games = (result.data?.games as Game[] | undefined) ?? [];
+				total_games_count = (result.data?.total_game_count as number | undefined) ?? 0;
+				total_pages = result.data?.total_pages ?? 1;
+				page = 1;
+				if (games.length > 0) {
+					drawer_open = false;
+				}
+				break;
+			case 'error':
+			case 'failure':
+				addToast({
+					type: 'error',
+					title: 'Error',
+					message: 'Could not complete your query'
+				});
+				break;
+		}
 	};
-
-	let list_games: Game[] | undefined = undefined;
-	let list_total_games_count: number | undefined = undefined;
-	let page = 1;
 
 	const load_game_page = async (page: number) => {
 		if (page < 1 || page > total_pages) return;
@@ -65,14 +84,9 @@
 			`/games?page=${page}&options=${encodeURIComponent(JSON.stringify(options))}`
 		);
 		const res = await response.json();
-		list_games = res.games as Game[];
-		list_total_games_count = res.total_games_count as number;
+		games = res.games as Game[];
+		total_games_count = res.total_game_count as number;
 	};
-
-	$: games = list_games ?? form?.games ?? data.games;
-	$: total_games_count = list_total_games_count ?? form?.total_games_count ?? data.total_game_count;
-
-	let drawer_open = false;
 </script>
 
 <div class="relative">

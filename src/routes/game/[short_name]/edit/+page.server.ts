@@ -38,7 +38,6 @@ export const actions: Actions = {
             }
         } catch (err) {
             if (err instanceof ZodError) {
-                console.error(err.flatten());
                 return fail(400, {
                     errors: err.flatten().fieldErrors,
                 });

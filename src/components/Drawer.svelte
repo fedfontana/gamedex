@@ -4,7 +4,7 @@
 </script>
 
 <div class="drawer">
-	<input id={name} type="checkbox" class="drawer-toggle" bind:value={open} />
+	<input id={name} type="checkbox" class="drawer-toggle" bind:checked={open} />
 	<div class="drawer-content">
 		<label
 			for={name}

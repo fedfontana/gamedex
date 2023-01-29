@@ -1,5 +1,4 @@
-import type { Actions } from "@sveltejs/kit";
-import { ZodError } from 'zod';
+import { fail, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "../$types";
 import { DEFAULT_OPTIONS, FilterSortSchema, load_games_paginated } from "./utils";
 
@@ -23,9 +22,7 @@ export const actions: Actions = {
             return await load_games_paginated(options)
         } catch (err) {
             // No need to return old values since they're bound in a form variable
-            if (err instanceof ZodError) {
-                console.error("Zod error: ", err);
-            }
+            return fail(400);
         }
     }
 };

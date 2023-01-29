@@ -26,7 +26,6 @@ export const actions: Actions = {
             }
         } catch (err) {
             if (err instanceof ZodError) {
-                console.error("Field errors from create note being returned to the client: ", err.flatten());
                 return fail(400, {
                     errors: err.flatten().fieldErrors,
                 });
@@ -55,7 +54,6 @@ export const actions: Actions = {
             }
         } catch (err) {
             if (err instanceof ZodError) {
-                console.error("Field errors from create useful link being returned to the client: ", err.flatten());
                 return fail(400, {
                     errors: err.flatten().fieldErrors,
                 });
@@ -84,7 +82,6 @@ export const actions: Actions = {
             }
         } catch (err) {
             if (err instanceof ZodError) {
-                console.error("Field errors from create event being returned to the client: ", err.flatten());
                 return fail(400, {
                     errors: err.flatten().fieldErrors,
                 });
@@ -113,7 +110,6 @@ export const actions: Actions = {
             }
         } catch (err) {
             if (err instanceof ZodError) {
-                console.error("Field errors from create dlc being returned to the client: ", err.flatten());
                 return fail(400, {
                     errors: err.flatten().fieldErrors,
                 });
