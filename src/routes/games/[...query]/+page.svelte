@@ -8,9 +8,12 @@
 	import type { Game } from '@prisma/client';
 	import { page as p } from '$app/stores';
 	import { Adjustments, ChevronLeft, ChevronRight, Search } from 'tabler-icons-svelte';
+	import Drawer from '$components/Drawer.svelte';
 
 	export let data: PageData;
-	export let form: { games: Game[]; total_pages: number; page: number, total_games_count: number } | undefined;
+	export let form:
+		| { games: Game[]; total_pages: number; page: number; total_games_count: number }
+		| undefined;
 
 	$: total_pages = form?.total_pages ?? data.total_pages; // in case something changes
 
@@ -61,71 +64,68 @@
 		const response = await fetch(
 			`/games?page=${page}&options=${encodeURIComponent(JSON.stringify(options))}`
 		);
-		const res = await response.json()
+		const res = await response.json();
 		list_games = res.games as Game[];
 		list_total_games_count = res.total_games_count as number;
 	};
 
 	$: games = list_games ?? form?.games ?? data.games;
 	$: total_games_count = list_total_games_count ?? form?.total_games_count ?? data.total_game_count;
+
+	let drawer_open = false;
 </script>
 
-<div class="drawer relative">
-	<input id="filters-drawer" type="checkbox" class="drawer-toggle" />
-	<div class="drawer-content">
-		<label
-			for="filters-drawer"
+<div class="relative">
+	<Drawer name="filters-drawer" bind:open={drawer_open}>
+		<div
+			slot="open_btn"
 			class="btn btn-primary btn-square drawer-button absolute top-6 left-12 z-50 flex items-center justify-center p-2"
 		>
 			<Adjustments size={35} />
-		</label>
+		</div>
 
-		<!-- PAGE CONTENT -->
-		{#if games.length > 0}
-			<button
-				class="btn btn-primary absolute top-[calc(50%-3rem)] left-4 font-semibold text-xl z-50"
-				class:btn-disabled={page <= 1}
-				on:click={() => {
-					page--;
-					load_game_page(page);
-				}}
-				disabled={page <= 1}
-			>
-				<ChevronLeft />
-			</button>
-			<button
-				class="btn btn-primary absolute top-[calc(50%-3rem)] right-4 font-semibold text-xl z-50"
-				class:btn-disabled={page >= total_pages}
-				on:click={() => {
-					page++;
-					load_game_page(page);
-				}}
-				disabled={page >= total_pages}
-			>
-				<ChevronRight />
-			</button>
-			<div class="flex flex-col gap-16 items-center mt-12 mb-16">
-				<div class="grid grid-cols-3 gap-y-12 gap-x-8 w-10/12">
-					{#each games as game}
-					<GameCard {game} />
-					{/each}
+		<svelte:fragment slot="content">
+			{#if games.length > 0}
+				<button
+					class="btn btn-primary absolute top-[calc(50%-3rem)] left-4 font-semibold text-xl z-50"
+					class:btn-disabled={page <= 1}
+					on:click={() => {
+						page--;
+						load_game_page(page);
+					}}
+					disabled={page <= 1}
+				>
+					<ChevronLeft />
+				</button>
+				<button
+					class="btn btn-primary absolute top-[calc(50%-3rem)] right-4 font-semibold text-xl z-50"
+					class:btn-disabled={page >= total_pages}
+					on:click={() => {
+						page++;
+						load_game_page(page);
+					}}
+					disabled={page >= total_pages}
+				>
+					<ChevronRight />
+				</button>
+				<div class="flex flex-col gap-16 items-center mt-12 mb-16">
+					<div class="grid grid-cols-3 gap-y-12 gap-x-8 w-10/12">
+						{#each games as game}
+							<GameCard {game} />
+						{/each}
+					</div>
+					<p class="font-semibold text-md">
+						Page {page} of {total_pages}. {total_games_count} games matched your query.
+					</p>
 				</div>
-				<p class="font-semibold text-md">
-					Page {page} of {total_pages}. {total_games_count} games matched your query. 
-				</p>
-			</div>
-		{:else}
-			<div class="mt-32 text-center">
-				<p class="text-xl font-semibold">such content, much wow</p>
-			</div>
-		{/if}
+			{:else}
+				<div class="mt-32 text-center">
+					<p class="text-xl font-semibold">such content, much wow</p>
+				</div>
+			{/if}
+		</svelte:fragment>
 
-		<!-- END PAGE CONTENT -->
-	</div>
-	<div class="drawer-side">
-		<label for="filters-drawer" class="drawer-overlay" />
-		<div class="p-4 w-1/3 bg-base-100 text-base-content">
-			<!-- DRAWER CONTENT -->
+		<svelte:fragment slot="drawer">
 			<form method="POST" on:submit|preventDefault={handleSubmit}>
 				<div class="form-control">
 					<div class="input-group">
@@ -141,7 +141,7 @@
 						</button>
 					</div>
 				</div>
-	
+
 				<!-- BEGIN SORTING OPTIONS -->
 				<div class="form-control">
 					<label class="label cursor-pointer">
@@ -267,7 +267,6 @@
 				{/if}
 				<!-- END FILTER OPTIONS -->
 			</form>
-			<!-- END DRAWER CONTENT -->
-		</div>
-	</div>
+		</svelte:fragment>
+	</Drawer>
 </div>
