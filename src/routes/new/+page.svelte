@@ -7,12 +7,13 @@
 	let form_errors: string[] | undefined = undefined;
 
 	const enhance_function: SubmitFunction = ({ data }) => {
+		const name = data.get("name");
 		return async ({ result }) => {
 			switch (result.type) {
 				case 'success':
 					addToast({
 						type: 'success',
-						title: 'Game updated successfully'
+						title: `${name ?? "Game"} added successfully`
 					});
 					field_errors = undefined;
 					form_errors = undefined;
@@ -23,7 +24,7 @@
 					break;
 				case 'error':
 					addToast({
-						title: 'Error updating the game',
+						title: 'Error adding the game',
 						type: 'error'
 					});
 					break;
