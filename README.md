@@ -1,7 +1,11 @@
 # Gamedex
 
-Gaming backlog trackers
+Gaming backlog tracker
 
-
-#### Icons
-Icons from [the noun project](https://thenounproject.com)
+## Dev
+```sh
+make up
+make push
+make populate
+npm run dev
+```

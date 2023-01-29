@@ -37,7 +37,7 @@ populate:
 
 dump: 
 	docker exec $(MYSQL_CONTAINER_NAME) \
-		sh -c 'exec mysqldump --all-databases -uroot -p$(MYSQL_ROOT_PASSWORD)' > $(PWD)/dump.sql
+		sh -c 'exec mysqldump $(MYSQL_DATABASE) -uroot -p$(MYSQL_ROOT_PASSWORD)' > $(PWD)/dump.sql
 
 restore: dump.sql
 	docker exec -i $(MYSQL_CONTAINER_NAME) \ 
