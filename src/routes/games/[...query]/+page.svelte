@@ -10,7 +10,7 @@
 	import { Adjustments, ChevronLeft, ChevronRight, Search } from 'tabler-icons-svelte';
 
 	export let data: PageData;
-	export let form: { games: Game[]; total_pages: number; page: number } | undefined;
+	export let form: { games: Game[]; total_pages: number; page: number, total_games_count: number } | undefined;
 
 	$: total_pages = form?.total_pages ?? data.total_pages; // in case something changes
 
@@ -46,10 +46,13 @@
 
 		const result = deserialize(await response.text());
 		list_games = undefined;
+		list_total_games_count = undefined;
+		page = 1;
 		applyAction(result);
 	};
 
 	let list_games: Game[] | undefined = undefined;
+	let list_total_games_count: number | undefined = undefined;
 	let page = 1;
 
 	const load_game_page = async (page: number) => {
@@ -58,11 +61,13 @@
 		const response = await fetch(
 			`/games?page=${page}&options=${encodeURIComponent(JSON.stringify(options))}`
 		);
-
-		list_games = (await response.json()).games as Game[];
+		const res = await response.json()
+		list_games = res.games as Game[];
+		list_total_games_count = res.total_games_count as number;
 	};
 
 	$: games = list_games ?? form?.games ?? data.games;
+	$: total_games_count = list_total_games_count ?? form?.total_games_count ?? data.total_game_count;
 </script>
 
 <div class="drawer relative">
@@ -99,11 +104,15 @@
 			>
 				<ChevronRight />
 			</button>
-			
-			<div class="grid grid-cols-3 gap-y-12 gap-x-8 w-10/12 mx-auto mt-12 mb-24">
-				{#each games as game}
+			<div class="flex flex-col gap-16 items-center mt-12 mb-16">
+				<div class="grid grid-cols-3 gap-y-12 gap-x-8 w-10/12">
+					{#each games as game}
 					<GameCard {game} />
-				{/each}
+					{/each}
+				</div>
+				<p class="font-semibold text-md">
+					Page {page} of {total_pages}. {total_games_count} games matched your query. 
+				</p>
 			</div>
 		{:else}
 			<div class="mt-32 text-center">
@@ -132,27 +141,7 @@
 						</button>
 					</div>
 				</div>
-				<!-- {
-					Game = {
-					    name: string,
-							- sort
-							- search
-					    short_name: string,
-							- search
-					    art_url: url?,
-					    developer: string?,
-							- search
-					    release_date: Date?,
-							- sort
-					    status: Status,
-							- filter
-					    platform: Platform?,
-							- filter
-					    play_time: int
-							- sort
-					}
-				} -->
-
+	
 				<!-- BEGIN SORTING OPTIONS -->
 				<div class="form-control">
 					<label class="label cursor-pointer">

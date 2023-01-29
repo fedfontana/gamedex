@@ -128,5 +128,6 @@ export async function load_games_paginated(options: Options, page = 1) {
         games,
         total_pages,
         page,
+        total_game_count,
     };
 }
