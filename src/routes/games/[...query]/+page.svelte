@@ -9,7 +9,7 @@
 	import { Adjustments, ChevronLeft, ChevronRight, Search } from 'tabler-icons-svelte';
 	import Drawer from '$components/Drawer.svelte';
 	import { addToast } from '$src/toast';
-	import { SORT_COLS, type SortCol } from './consts';
+	import { DEFAULT_OPTIONS, SORT_COLS, type SortCol } from './consts';
 
 	export let data: PageData;
 
@@ -83,6 +83,10 @@
 		games = res.games as Game[];
 		total_games_count = res.total_game_count as number;
 	};
+
+	function reset_options() {
+		options = JSON.parse(JSON.stringify(DEFAULT_OPTIONS));
+	}
 </script>
 
 <div class="relative">
@@ -188,7 +192,7 @@
 										value={sort_col}
 										class="radio checked:bg-primary-focus"
 									/>
-									<span class="label-text"> {sort_col.replaceAll("_", " ")} </span>
+									<span class="label-text"> {sort_col.replaceAll('_', ' ')} </span>
 								</label>
 							</div>
 						{/each}
@@ -275,6 +279,7 @@
 						<!-- END PLATFORM FILTERS -->
 					</div>
 				{/if}
+				<button type="button" class="btn btn-warning btn-square px-12 py-2" on:click={reset_options}> reset </button>
 				<!-- END FILTER OPTIONS -->
 			</form>
 		</svelte:fragment>
