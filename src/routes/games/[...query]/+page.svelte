@@ -3,13 +3,13 @@
 	import { slide } from 'svelte/transition';
 	import type { PageData } from './$types';
 	import GameCard from './GameCard.svelte';
-	import { applyAction, deserialize, enhance, type SubmitFunction } from '$app/forms';
-	import { SORT_OPTIONS, type SortOption } from '$src/utils/enums';
+	import { deserialize } from '$app/forms';
 	import type { Game } from '@prisma/client';
 	import { page as p } from '$app/stores';
 	import { Adjustments, ChevronLeft, ChevronRight, Search } from 'tabler-icons-svelte';
 	import Drawer from '$components/Drawer.svelte';
 	import { addToast } from '$src/toast';
+	import { SORT_COLS, type SortCol } from './consts';
 
 	export let data: PageData;
 
@@ -21,15 +21,11 @@
 
 	let drawer_open = false;
 
-	// export let form:
-	// 	| { games: Game[]; total_pages: number; page: number; total_games_count: number }
-	// 	| undefined;
-
 	let options = {
 		query: $p.params.query,
 		sort_enabled: false,
 		sort_ascending: false,
-		sort_col: 'name' as SortOption,
+		sort_col: 'name' as SortCol,
 		show_filters: false,
 		show_status_filters: false,
 		status_filters: [] as Status[],
@@ -182,17 +178,17 @@
 							</label>
 						</div>
 
-						{#each SORT_OPTIONS as sort_option}
+						{#each SORT_COLS as sort_col}
 							<div class="form-control" transition:slide>
 								<label class="label cursor-pointer justify-start gap-3">
 									<input
 										type="radio"
 										name="sort_col"
 										bind:group={options.sort_col}
-										value={sort_option}
+										value={sort_col}
 										class="radio checked:bg-primary-focus"
 									/>
-									<span class="label-text"> {sort_option} </span>
+									<span class="label-text"> {sort_col.replaceAll("_", " ")} </span>
 								</label>
 							</div>
 						{/each}

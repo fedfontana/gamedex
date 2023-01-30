@@ -1,6 +1,7 @@
 import { fail, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "../$types";
-import { DEFAULT_OPTIONS, FilterSortSchema, load_games_paginated } from "./utils";
+import { DEFAULT_OPTIONS } from "./consts";
+import { FilterSortSchema, load_games_paginated } from "./utils";
 
 export const load: PageServerLoad = async ({ params }) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

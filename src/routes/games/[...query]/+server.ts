@@ -1,6 +1,7 @@
 import { error, type RequestHandler } from "@sveltejs/kit";
 import { ZodError } from "zod";
-import { DEFAULT_OPTIONS, FilterSortSchema, load_games_paginated } from "./utils";
+import { DEFAULT_OPTIONS } from "./consts";
+import { FilterSortSchema, load_games_paginated } from "./utils";
 
 export const GET: RequestHandler = async ({ url }) => {
     const page = parseInt(url.searchParams.get('page') ?? '0');
