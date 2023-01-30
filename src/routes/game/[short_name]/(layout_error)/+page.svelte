@@ -5,7 +5,7 @@
 	import { Calendar, Hourglass, DeviceGamepad, Box, Trash, Check } from 'tabler-icons-svelte';
 	import { enhance, type SubmitFunction } from '$app/forms';
 	import DexTextArea from '$components/DexTextArea.svelte';
-	import type { DexFormErrors } from './proxy+page.server';
+	import type { DexFormErrors } from '../proxy+page.server';
 	import DexInput from '$components/DexInput.svelte';
 	import DexSelect from '$components/DexSelect.svelte';
 	import { addToast } from '$src/toast';

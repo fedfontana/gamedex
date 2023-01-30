@@ -3,7 +3,7 @@
 	import GameForm from '$components/GameForm.svelte';
 	import type { Game } from '$models/Game';
 	import { addToast } from '$src/toast';
-	import type { PageData } from './$types';
+	import type { PageData } from '../edit/$types';
 
 	export let data: PageData;
 
