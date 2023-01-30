@@ -161,7 +161,7 @@
 	<!-- left panel -->
 	<div class="flex flex-col gap-4 flex-[2]">
 		<!-- top part -->
-		<div class="max-w-xs rounded-xl overflow-hidden shadow-xl">
+		<div class="max-w-xs rounded-box overflow-hidden shadow-xl">
 			<img
 				src={game.art_url ?? 'https://static-cdn.jtvnw.net/ttv-boxart/498566-500x640.jpg'}
 				alt="{game.name} art"
@@ -506,7 +506,7 @@
 	</div>
 
 	<!-- right panel -->
-	<div class="flex flex-col gap-3 bg-base-300 shadow-xl p-6 rounded-xl flex-[2] h-fit">
+	<div class="flex flex-col gap-3 bg-base-300 shadow-xl p-6 rounded-box flex-[2] h-fit">
 		<h3 class="text-lg font-semibold">Data</h3>
 		<span class="flex flex-row gap-2 items-center">
 			<DeviceGamepad class="stroke-accent" size={30} />

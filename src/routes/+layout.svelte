@@ -30,7 +30,7 @@
 	</title>
 </svelte:head>
 
-<div class="max-w-screen min-h-screen overflow-y-scroll flex flex-col">
+<div class="max-w-screen min-h-screen overflow-y-scroll flex flex-col selection:bg-accent-focus selection:text-primary-content">
 	<Navbar />
 	<main class="overflow-hidden">
 		<slot />
