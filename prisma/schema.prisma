@@ -2,71 +2,81 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+    provider = "mysql"
+    url      = env("DATABASE_URL")
 }
 
 model Game {
-  id                    Int       @id @default(autoincrement())
-  name                  String    @unique @db.VarChar(128)
-  short_name            String    @unique @db.VarChar(64)
-  release_date          DateTime?
-  art_url               String?   @db.VarChar(256)
-  developer             String?   @db.VarChar(128)
-  status                String
-  platform              String
-  play_time             Int
-  total_achievements    Int
-  obtained_achievements Int
-  completion_percentage Int
+    id                    Int       @id @default(autoincrement())
+    name                  String    @unique @db.VarChar(128)
+    short_name            String    @unique @db.VarChar(64)
+    release_date          DateTime?
+    art_url               String?   @db.VarChar(256)
+    developer             String?   @db.VarChar(128)
+    status                String
+    platform              String
+    play_time             Int
+    total_achievements    Int
+    obtained_achievements Int
+    completion_percentage Int
 
-  // Notes
-  notes Note[]
+    // Notes
+    notes Note[]
 
-  // Useful links
-  useful_links UsefulLink[]
+    // Useful links
+    useful_links UsefulLink[]
 
-  // Game events
-  events GameEvent[]
+    // Game events
+    events GameEvent[]
 
-  // DLC
-  DLCs    DLC[]
+    // DLC
+    DLCs DLC[]
 }
 
 model Note {
-  id      Int    @id @default(autoincrement())
-  game    Game   @relation(fields: [gameId], references: [id])
-  gameId  Int
-  content String @db.VarChar(512)
+    id      Int    @id @default(autoincrement())
+    game    Game   @relation(fields: [gameId], references: [id])
+    gameId  Int
+    content String @db.VarChar(512)
 }
 
 model UsefulLink {
-  id     Int    @id @default(autoincrement())
-  game   Game   @relation(fields: [gameId], references: [id])
-  gameId Int
-  title  String @db.VarChar(128)
-  url    String @db.VarChar(256)
+    id     Int    @id @default(autoincrement())
+    game   Game   @relation(fields: [gameId], references: [id])
+    gameId Int
+    title  String @db.VarChar(128)
+    url    String @db.VarChar(256)
 }
 
 model GameEvent {
-  id          Int       @id @default(autoincrement())
-  game        Game      @relation(fields: [gameId], references: [id])
-  gameId      Int
-  name        String    @db.VarChar(128)
-  description String?   @db.VarChar(512)
-  begin_dt    DateTime
-  end_dt      DateTime?
+    id          Int       @id @default(autoincrement())
+    game        Game      @relation(fields: [gameId], references: [id])
+    gameId      Int
+    name        String    @db.VarChar(128)
+    description String?   @db.VarChar(512)
+    begin_dt    DateTime
+    end_dt      DateTime?
 }
 
 model DLC {
-  id     Int    @id @default(autoincrement())
-  game   Game   @relation(fields: [gameId], references: [id])
-  gameId Int
-  name   String @db.VarChar(128)
-  release_date DateTime?
-  status String
+    id           Int       @id @default(autoincrement())
+    game         Game      @relation(fields: [gameId], references: [id])
+    gameId       Int
+    name         String    @db.VarChar(128)
+    release_date DateTime?
+    status       String
+}
+
+model Event {
+    id            Int      @id @default(autoincrement())
+    name          String   @unique @db.VarChar(128)
+    description   String?  @db.VarChar(512)
+    art_url       String?  @db.VarChar(256)
+    streaming_url String?  @db.VarChar(256)
+    begin_dt      DateTime
+    end_dt        DateTime
 }

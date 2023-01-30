@@ -30,10 +30,15 @@
 		<span class="text-center">
 			or
 			<a class="link link-secondary btn btn-link" href="/games">see the whole backlog</a>
+			|
+			<a class="link link-secondary btn btn-link" href="/events">see all the events</a>
 		</span>
 	</div>
 
 	{#if $is_logged_in}
-		<a class="link link-secondary btn btn-link" href="/new">add new entry</a>
+		<span class="text-center">
+			<a class="link link-secondary btn btn-link" href="/new">add new game</a> |
+			<a class="link link-secondary btn btn-link" href="/events/new">add new event</a>
+		</span>
 	{/if}
 </div>

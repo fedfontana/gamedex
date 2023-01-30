@@ -27,4 +27,4 @@ export const GameEventsSchema = z.object({
     ),
 });
 
-export type Note = z.infer<typeof GameEventsSchema>;
+export type GameEvent = z.infer<typeof GameEventsSchema>;

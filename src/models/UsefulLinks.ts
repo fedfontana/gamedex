@@ -19,4 +19,4 @@ export const UsefulLinkSchema = z.object({
         .min(1, "Each url must contain at least 1 character")
         .max(256, "Each url may contain a max amount of 256 characters"),
 });
-export type Note = z.infer<typeof UsefulLinkSchema>;
+export type UsefulLink = z.infer<typeof UsefulLinkSchema>;
