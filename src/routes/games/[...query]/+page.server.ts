@@ -1,5 +1,5 @@
 import { fail, type Actions } from "@sveltejs/kit";
-import type { PageServerLoad } from "../$types";
+import type { PageServerLoad } from "./$types";
 import { DEFAULT_OPTIONS } from "./consts";
 import { FilterSortSchema, load_games_paginated } from "./utils";
 

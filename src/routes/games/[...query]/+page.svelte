@@ -1,5 +1,15 @@
 <script lang="ts">
-	import { PLATFORMS, STATUSES, type Platform, type Status } from '$models/Game';
+	import {
+		MOBILE_PLATFORMS,
+		NINTENDO_CONSOLES,
+		OTHER_PLATFORMS,
+		PC_PLATFORMS,
+		SONY_CONSOLES,
+		STATUSES,
+		XBOX_CONSOLES,
+		type Platform,
+		type Status
+	} from '$models/Game';
 	import { slide } from 'svelte/transition';
 	import type { PageData } from './$types';
 	import GameCard from './GameCard.svelte';
@@ -10,6 +20,7 @@
 	import Drawer from '$components/Drawer.svelte';
 	import { addToast } from '$src/toast';
 	import { DEFAULT_OPTIONS, SORT_COLS, type SortCol } from './consts';
+	import PlatformFamilyCheckboxes from './PlatformFamilyCheckboxes.svelte';
 
 	export let data: PageData;
 
@@ -259,27 +270,47 @@
 						</div>
 
 						{#if options.show_platform_filters}
-							<div class="grid grid-cols-2">
-								{#each PLATFORMS as platform}
-									<div class="form-control" transition:slide>
-										<label class="label cursor-pointer justify-start gap-3">
-											<input
-												type="checkbox"
-												name="platform_filters"
-												value={platform}
-												bind:group={options.platform_filters}
-												class="checkbox checkbox-primary"
-											/>
-											<span class="label-text"> {platform} </span>
-										</label>
-									</div>
-								{/each}
-							</div>
+							<PlatformFamilyCheckboxes
+								name="Nintendo"
+								platforms={NINTENDO_CONSOLES}
+								bind:option_group={options.platform_filters}
+							/>
+							<PlatformFamilyCheckboxes
+								name="XBOX"
+								platforms={XBOX_CONSOLES}
+								bind:option_group={options.platform_filters}
+							/>
+							<PlatformFamilyCheckboxes
+								name="PlayStation"
+								platforms={SONY_CONSOLES}
+								bind:option_group={options.platform_filters}
+							/>
+							<PlatformFamilyCheckboxes
+								name="Pc"
+								platforms={PC_PLATFORMS}
+								bind:option_group={options.platform_filters}
+							/>
+							<PlatformFamilyCheckboxes
+								name="Mobile"
+								platforms={MOBILE_PLATFORMS}
+								bind:option_group={options.platform_filters}
+							/>
+							<PlatformFamilyCheckboxes
+								name="Other"
+								platforms={OTHER_PLATFORMS}
+								bind:option_group={options.platform_filters}
+							/>
 						{/if}
 						<!-- END PLATFORM FILTERS -->
 					</div>
 				{/if}
-				<button type="button" class="btn btn-warning btn-square px-12 py-2" on:click={reset_options}> reset </button>
+				<button
+					type="button"
+					class="btn btn-warning btn-square px-12 py-2"
+					on:click={reset_options}
+				>
+					reset
+				</button>
 				<!-- END FILTER OPTIONS -->
 			</form>
 		</svelte:fragment>
