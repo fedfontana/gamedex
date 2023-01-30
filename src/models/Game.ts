@@ -1,19 +1,6 @@
 import { z } from 'zod';
 
-export const PLATFORMS = [
-    'PS5',
-    'PS4',
-    'PS3',
-    'PS2',
-    'PS1',
-    'PSP',
-    'PSVita',
-    'XBX',
-    'XB1',
-    'XB360',
-    'Steam',
-    'Epic Store',
-    'PC',
+export const NINTENDO_CONSOLES = [
     'DS',
     '3DS',
     'Switch',
@@ -25,10 +12,42 @@ export const PLATFORMS = [
     'GBA',
     'GBC',
     'Nintendo64',
+] as const;
+export const XBOX_CONSOLES = [
+    'XBX',
+    'XB1',
+    'XB360',
+] as const;
+export const SONY_CONSOLES = [
+    'PS5',
+    'PS4',
+    'PS3',
+    'PS2',
+    'PS1',
+    'PSP',
+    'PSVita',
+] as const;
+export const MOBILE_PLATFORMS = [
     'iOS',
     'android',
+] as const;
+export const PC_PLATFORMS = [
+    'Steam',
+    'Epic Store',
+    'PC',
+] as const;
+export const OTHER_PLATFORMS = [
     'Sega Genesis',
-    'Atari 2600'
+    'Atari 2600',
+] as const;
+
+export const PLATFORMS = [
+    ...SONY_CONSOLES,
+    ...XBOX_CONSOLES,
+    ...PC_PLATFORMS,
+    ...NINTENDO_CONSOLES,
+    ...MOBILE_PLATFORMS,
+    ...OTHER_PLATFORMS,
 ] as const;
 export type Platform = (typeof PLATFORMS)[number];
 
@@ -92,16 +111,16 @@ export const GameSchema = z.object({
             .int("Obtained achievements must be an integer")
             .nonnegative("Obtained achievements must be greater than 0")
     ),
-    completion_percentage: 
-    z.preprocess(
-        v => parseInt(z.string().parse(v), 10),
-        z.number({ required_error: "Completion percentage is required" })
-            .int("Completion percentage must be an integer")
-            .nonnegative("Completion percentage must be greater than 0")
-            .max(100, "Completion percentage must be smaller or equal than 100")
-    ),
-}).superRefine(({total_achievements, obtained_achievements}, ctx) => {
-    if(obtained_achievements > total_achievements) {
+    completion_percentage:
+        z.preprocess(
+            v => parseInt(z.string().parse(v), 10),
+            z.number({ required_error: "Completion percentage is required" })
+                .int("Completion percentage must be an integer")
+                .nonnegative("Completion percentage must be greater than 0")
+                .max(100, "Completion percentage must be smaller or equal than 100")
+        ),
+}).superRefine(({ total_achievements, obtained_achievements }, ctx) => {
+    if (obtained_achievements > total_achievements) {
         ctx.addIssue({
             code: "custom",
             message: "Obtained achievements must be smaller than total achievements",
