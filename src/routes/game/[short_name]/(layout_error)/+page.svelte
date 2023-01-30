@@ -32,7 +32,10 @@
 					form.reset();
 					break;
 				case 'error':
-					console.error('Error: ', result);
+					addToast({
+						type: 'error',
+						title: 'Error creating note'
+					});
 					break;
 				case 'failure':
 					errors.notes = result.data as DexFormErrors;
@@ -51,7 +54,10 @@
 					form.reset();
 					break;
 				case 'error':
-					console.error('Error: ', result);
+					addToast({
+						type: 'error',
+						title: 'Error creating link'
+					});
 					break;
 				case 'failure':
 					errors.links = result.data as DexFormErrors;
@@ -70,7 +76,10 @@
 					form.reset();
 					break;
 				case 'error':
-					console.error('Error: ', result);
+					addToast({
+						type: 'error',
+						title: 'Error creating event'
+					});
 					break;
 				case 'failure':
 					errors.events = result.data as DexFormErrors;
@@ -89,7 +98,10 @@
 					form.reset();
 					break;
 				case 'error':
-					console.error('Error: ', result);
+					addToast({
+						type: 'error',
+						title: 'Error creating DLC'
+					});
 					break;
 				case 'failure':
 					errors.dlcs = result.data as DexFormErrors;
