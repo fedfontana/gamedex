@@ -60,5 +60,6 @@
 		{field_errors}
 		button_text="Edit game"
 		{enhance_function}
+		readonly_short_name={true}
 	/>
 </div>

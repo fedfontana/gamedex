@@ -19,6 +19,8 @@
 		completion_percentage: 0
 	};
 
+	export let readonly_short_name = false;
+
 	export let form_errors: string[] | undefined;
 	export let field_errors: FieldErrors | undefined;
 	export let button_text: string = 'Confirm';
@@ -57,6 +59,7 @@
 			value={game.short_name}
 			errors={field_errors?.short_name}
 			required
+			readonly={readonly_short_name}
 		/>
 	</div>
 

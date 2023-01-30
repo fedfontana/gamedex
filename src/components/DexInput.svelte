@@ -36,6 +36,8 @@
 	export let input_classes = '';
 	export let min: number | undefined = undefined;
 	export let max: number | undefined = undefined;
+	export let readonly = false;
+	export let disabled = false;
 </script>
 
 <div class="form-control w-full {wrapper_classes}">
@@ -60,6 +62,8 @@
 		{max}
 		{required}
 		{autofocus}
+		{readonly}
+		disabled={disabled || readonly}
 	/>
 	{#if errors && errors.length > 0}
 		<label class="label flex flex-col items-baseline" for={name}>
