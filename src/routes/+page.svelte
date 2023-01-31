@@ -41,4 +41,7 @@
 			<a class="link link-secondary btn btn-link" href="/events/new">add new event</a>
 		</span>
 	{/if}
+	<span class="text-center">
+		<a class="link link-secondary btn btn-link" href="/nextup">tmp nextup link</a>
+	</span>
 </div>

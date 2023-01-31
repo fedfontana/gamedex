@@ -22,6 +22,7 @@
 					form_errors = undefined;
 					break;
 				case 'failure':
+					console.log("Failure")
 					field_errors = result.data?.field_errors;
 					form_errors = result.data?.form_errors;
 					break;
@@ -91,6 +92,7 @@
 				value=""
 				errors={field_errors?.begin_dt}
 				type="datetime-local"
+				required
 			/>
 
 			<DexInput
@@ -99,6 +101,7 @@
 				value=""
 				errors={field_errors?.end_dt}
 				type="datetime-local"
+				required
 			/>
 		</div>
 		<div class="flex flex-row gap-6 items-baseline justify-center">
