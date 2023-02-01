@@ -21,9 +21,26 @@ export const GET: RequestHandler = async ({ url }) => {
     }
     try {
         const options = ReqSchema.parse(req);
-        const start_dt = new Date(options.year, options.month);
-        // month in the date constructor is the 0-based index of the month in the year
-        const end_dt = options.month === 12 ? new Date(options.year + 1, 0) : new Date(options.year, options.month - 1);
+
+        return new Response(
+            JSON.stringify(
+                await get_full_events_for_month(options.year, options.month)
+            )
+        );
+    } catch (err) {
+        if (err instanceof ZodError) {
+            throw error(400, "Bad request");
+        }
+        throw error(500, "Could not fetch events for the month");
+    }
+}
+
+export async function get_full_events_for_month(year: number, month: number) {
+    const start_dt = new Date(year, month);
+    // month in the date constructor is the 0-based index of the month in the year
+    const end_dt = month === 12 ? new Date(year + 1, 0) : new Date(year, month - 1);
+    try {
+
         const games = await prisma.game.findMany({
             where: {
                 AND: [
@@ -120,12 +137,8 @@ export const GET: RequestHandler = async ({ url }) => {
                 };
             }),
         ];
-
-        return new Response(JSON.stringify(res));
+        return res;
     } catch (err) {
-        if (err instanceof ZodError) {
-            throw error(400, "Bad request");
-        }
-        throw error(500, "Could not fetch events for the month");
+        throw error(500, "Could not fetch events");
     }
 }
