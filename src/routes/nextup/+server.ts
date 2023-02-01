@@ -29,28 +29,29 @@ export const GET: RequestHandler = async ({ url }) => {
                 AND: [
                     {
                         release_date: {
-                            gte: start_dt,
+                            lte: start_dt,
                         },
                     },
                     {
                         release_date: {
-                            lt: end_dt,
+                            gt: end_dt,
                         },
                     },
                 ],
             },
         });
+        console.log("Got ", games.length, "games");
         const dlcs = await prisma.dLC.findMany({
             where: {
                 AND: [
                     {
                         release_date: {
-                            gte: start_dt,
+                            lte: start_dt,
                         },
                     },
                     {
                         release_date: {
-                            lt: end_dt,
+                            gt: end_dt,
                         },
                     },
                 ],
@@ -61,12 +62,12 @@ export const GET: RequestHandler = async ({ url }) => {
                 OR: [
                     {
                         begin_dt: {
-                            lt: end_dt,
+                            gt: end_dt,
                         },
                     },
                     {
                         end_dt: {
-                            gte: start_dt,
+                            lte: start_dt,
                         }
                     },
                 ],
@@ -77,12 +78,12 @@ export const GET: RequestHandler = async ({ url }) => {
                 OR: [
                     {
                         begin_dt: {
-                            lt: end_dt,
+                            gt: end_dt,
                         },
                     },
                     {
                         end_dt: {
-                            gte: start_dt,
+                            lte: start_dt,
                         }
                     },
                 ],
@@ -91,24 +92,28 @@ export const GET: RequestHandler = async ({ url }) => {
 
         const res: CalendarMonthEvent[] = [
             ...games.map(g => {
+                console.log("Game with name: ", g.name);
                 return <CalendarMonthEvent>{
                     type: "game",
                     data: g
                 };
             }),
             ...dlcs.map(dlc => {
+                console.log("DLC with name: ", dlc.name);
                 return <CalendarMonthEvent>{
                     type: "DLC",
                     data: dlc
                 };
             }),
             ...game_events.map(ge => {
+                console.log("GameEvent with name: ", ge.name);
                 return <CalendarMonthEvent>{
                     type: "game_event",
                     data: ge
                 };
             }),
             ...events.map(e => {
+                console.log("Event with name: ", e.name);
                 return <CalendarMonthEvent>{
                     type: "event",
                     data: e

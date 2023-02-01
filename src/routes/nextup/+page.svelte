@@ -35,12 +35,12 @@
 					end: '2023-01-19T17:31:00+09:00',
 					isReadOnly: true,
 				},
-				...data.map((e, i) => {
+				...data.map(e => {
 					console.log('processing e: ', e);
 					switch (e.type) {
 						case 'game':
 							return {
-								id: i.toString(),
+								id: `game${e.data.id}`,
 								calendarId: '1',
 								isReadOnly: true,
                                 category: 'task',
@@ -50,7 +50,7 @@
 							} as const;
 						case 'DLC':
 							return {
-								id: i.toString(),
+								id: `dlc${e.data.id}`,
 								calendarId: '1',
 								isReadOnly: true,
                                 category: 'task',
@@ -60,7 +60,7 @@
 							} as const;
 						case 'game_event':
 							return {
-								id: i.toString(),
+								id: `game_event${e.data.id}`,
 								calendarId: '1',
 								isReadOnly: true,
                                 category: 'task',
@@ -71,7 +71,7 @@
 							} as const;
 						case 'event':
 							return {
-								id: i.toString(),
+								id: `event${e.data.id}`,
 								calendarId: '1',
 								isReadOnly: true,
                                 category: 'task',
