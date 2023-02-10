@@ -138,6 +138,9 @@
 				startDayOfWeek: 1
 			}
 		});
+
+		// Add new events
+		calendar.createEvents(calendar_events.events);
 	});
 </script>
 
