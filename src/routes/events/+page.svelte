@@ -2,7 +2,7 @@
 	import { enhance, type SubmitFunction } from '$app/forms';
 	import { page } from '$app/stores';
 	import { addToast } from '$src/toast';
-	import { Search } from 'tabler-icons-svelte';
+	import { IconSearch as Search } from '@tabler/icons-svelte';
 	import type { PageData } from './$types';
 	import EventCard from './EventCard.svelte';
 
@@ -10,7 +10,8 @@
 
 	function delete_with_id(id: number) {
 		return () => {
-			data.events = data.events.filter((e) => e.id !== id);
+			//TODO rm any
+			data.events = data.events.filter((e: any) => e.id !== id);
 		};
 	}
 

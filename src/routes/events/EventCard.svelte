@@ -2,7 +2,7 @@
 	import { is_logged_in } from '$src/stores';
 	import { addToast } from '$src/toast';
 	import type { Event } from '@prisma/client';
-	import { Calendar, Trash } from 'tabler-icons-svelte';
+	import { IconCalendar as Calendar, IconTrash as Trash } from '@tabler/icons-svelte';
 
 	export let event: Event;
 	export let delete_func: () => void;
@@ -32,14 +32,16 @@
 		<span class="flex flex-row gap-2">
 			<Calendar />
 			{event.begin_dt.toLocaleDateString()}
-            {event.begin_dt.getHours()}:{event.begin_dt.getMinutes()} --
+			{event.begin_dt.getHours()}:{event.begin_dt.getMinutes()} --
 			{event.end_dt.toLocaleDateString()}
 			{event.end_dt.getHours()}:{event.end_dt.getMinutes()}
 		</span>
 		{#if event.streaming_url}
 			<h4>
 				Follow it live
-				<a href={event.streaming_url} target="_blank" rel="noreferrer" class="link link-accent"> here </a>
+				<a href={event.streaming_url} target="_blank" rel="noreferrer" class="link link-accent">
+					here
+				</a>
 			</h4>
 		{/if}
 		{#if event.description || $is_logged_in}
