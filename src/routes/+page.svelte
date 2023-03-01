@@ -1,7 +1,7 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { is_logged_in } from '$src/stores';
-	import { Search } from 'tabler-icons-svelte';
+	import { IconSearch as Search } from '@tabler/icons-svelte';
 
 	let game_query = '';
 </script>

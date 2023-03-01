@@ -2,7 +2,14 @@
 	import { STATUSES } from '$models/Game';
 	import { is_logged_in } from '$src/stores';
 	import type { PageData } from './$types';
-	import { Calendar, Hourglass, DeviceGamepad, Box, Trash, Check } from 'tabler-icons-svelte';
+	import {
+		IconCalendar as Calendar,
+		IconHourglass as Hourglass,
+		IconDeviceGamepad as DeviceGamepad,
+		IconBox as Box,
+		IconTrash as Trash,
+		IconCheck as Check
+	} from '@tabler/icons-svelte';
 	import { enhance, type SubmitFunction } from '$app/forms';
 	import DexTextArea from '$components/DexTextArea.svelte';
 	import type { DexFormErrors } from '../proxy+page.server';

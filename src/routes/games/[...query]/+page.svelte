@@ -16,7 +16,12 @@
 	import { deserialize } from '$app/forms';
 	import type { Game } from '@prisma/client';
 	import { page as p } from '$app/stores';
-	import { Adjustments, ChevronLeft, ChevronRight, Search } from 'tabler-icons-svelte';
+	import { 
+		IconAdjustments as Adjustments, 
+		IconChevronLeft as ChevronLeft, 
+		IconChevronRight as ChevronRight, 
+		IconSearch as Search 
+	} from '@tabler/icons-svelte';
 	import Drawer from '$components/Drawer.svelte';
 	import { addToast } from '$src/toast';
 	import { DEFAULT_OPTIONS, SORT_COLS, type SortCol } from './consts';

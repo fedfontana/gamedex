@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import { fade, fly } from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 	import type { ToastType } from '$src/toast';
-	import { InfoCircle, AlertTriangle, AlertOctagon, Check } from 'tabler-icons-svelte';
 
 	const dispatch = createEventDispatcher();
 
