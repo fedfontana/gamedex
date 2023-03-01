@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { addToast } from '$src/toast';
 	import type { PageData } from './$types';
-	import type { CalendarMonthEvent } from './types';
+	import CalendarEventCard from './CalendarEventCard.svelte';
 
 	let req = {
 		month: new Date().getMonth() + 1,
@@ -65,13 +65,8 @@
 </div>
 <div class="flex flex-col gap-12 items-center w-full mb-24s">
 	<div class="flex flex-col gap-6 items-center mx-auto w-8/12 mt-12">
-		{#each data.calendar_events as e}
-			<div class="border w-full">
-				<h1 class="text-red-600">{e.type}</h1>
-				<p class="flex flex-wrap">
-					{JSON.stringify(e.data, null, 2)}
-				</p>
-			</div>
+		{#each data.calendar_events as event}
+			<CalendarEventCard {event} />
 		{/each}
 	</div>
 </div>
