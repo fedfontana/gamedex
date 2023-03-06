@@ -1,4 +1,4 @@
-# Gamedex
+<img src="static/Gamedex.svg" width="60%" />
 
 Gaming backlog tracker
 
@@ -9,3 +9,6 @@ make push
 make populate
 npm run dev
 ```
+
+## Credits
+Logo and icon by [Milo](https://twitter.com/itsmemjlo)
